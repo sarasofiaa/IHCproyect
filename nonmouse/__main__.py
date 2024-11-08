@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-# NonMouse
-# Author: Yuki Takeyama
-# Date: 2023/04/09
-
 import cv2
 import time
 import keyboard
@@ -12,7 +5,6 @@ import platform
 import numpy as np
 import mediapipe as mp
 from pynput.mouse import Button, Controller
-
 from nonmouse.args import *
 from nonmouse.utils import *
 
@@ -27,8 +19,6 @@ elif pf == 'Darwin':
     hotkey = 'Command'
 elif pf == 'Linux':
     hotkey = 'XXX'              # hotkeyはLinuxでは無効
-
-
 def main():
     cap_device, mode, kando, screenRes = tk_arg()
     dis = 0.7                           # くっつける距離の定義
@@ -257,7 +247,6 @@ def main():
         if (cv2.waitKey(1) & 0xFF == 27) or (cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE) == 0):
             break
     cap.release()
-
 
 if __name__ == "__main__":
     main()

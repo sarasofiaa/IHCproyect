@@ -1,8 +1,7 @@
 # personal environment dependent
 __pycache__/
-.env/
+.env3.9/
 .vscode
-.env3.8/
 
 # pyinstaller 
 dist/
