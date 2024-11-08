@@ -3,7 +3,9 @@
 </div>
 
 <div align="center">
-   a webcam-based virtual gesture mouse that is easy to use with hands on the desk  
+   Proyecto de mejora non-mouse
+   Este proyecto es una mejora del trabajo original de 
+   Nuestro objetivo es añadir nuevas funcionalidades dirigidas a una aplicacion de estimulacion temprana en mejora de motricidad fina en niños menores.
 </div>
 
 <p align="center">
