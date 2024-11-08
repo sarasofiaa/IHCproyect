@@ -1,0 +1,23 @@
+# personal environment dependent
+__pycache__/
+.env/
+.vscode
+.env3.8/
+
+# pyinstaller 
+dist/
+build/
+app.spec
+dist-mac/
+dist-win/
+dist-linux/
+app-s.spec
+
+.eggs/
+*.egg-info/
+
+# pip
+site-packages
+
+test/
+README-ja.md
