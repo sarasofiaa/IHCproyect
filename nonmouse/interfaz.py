@@ -2,10 +2,14 @@
 import tkinter as tk
 from tkinter import font
 from tkinter import messagebox
+from .selector import main_selector
 
 # Función que se ejecutará al hacer clic en el botón "Iniciar todo"
-def iniciar_aplicacion():
-    messagebox.showinfo("SkillPointer", "Iniciando la aplicación...")
+def iniciar_aplicacion(window):
+    #messagebox.showinfo("SkillPointer", "Iniciando la aplicación...")
+    window.destroy()
+    main_selector()
+    
 
 def main_interfaz():
     ventana = tk.Tk()
@@ -46,9 +50,10 @@ def main_interfaz():
         activeforeground="#ecf0f1",
         relief="flat",  # Quita los bordes para un estilo más moderno
         cursor="hand2",  # Cambia el cursor al pasar el mouse
-        command=iniciar_aplicacion
+        command=lambda:iniciar_aplicacion(ventana)
     )
     boton_iniciar.pack(pady=30)
 
 # Inicia el bucle principal de la ventana
     ventana.mainloop()
+main_interfaz()

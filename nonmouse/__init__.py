@@ -4,14 +4,14 @@
 from nonmouse import *
 import os, glob
 from .interfaz import main_interfaz
-from .inicio import main_inicio
+from .selector import main_selector
 
 def main():
     main_interfaz()  # Muestra la pantalla de bienvenida
-    main_inicio()    # Luego ejecuta la ventana principal
+    #main_selector()    # Luego ejecuta la ventana principal
 
 if __name__ == "__main__":
-     main_inicio()
+     main_selector()
 
 
 __copyright__    = 'Copyright (C) 2023 Yuki TAKEYAMA'
