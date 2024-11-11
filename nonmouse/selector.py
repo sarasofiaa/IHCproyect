@@ -1,7 +1,8 @@
-# Contiene la ventana principal de la aplicación
+# Contiene la ventana principal de la aplicación  juegos
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import os
 
 # Crear la ventana principal
 def main_selector():
@@ -37,12 +38,12 @@ def main_selector():
             print(f"Error al cargar la imagen: {e}")
             return None
 
-    # Rutas locales de las imágenes
-    ruta_letras = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\IHCproyect\images\juego1.png"
-    ruta_numeros = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\IHCproyect\images\juego2.png"
-    ruta_colores = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\IHCproyect\images\juego3.png"
-    ruta_animales = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\IHCproyect\images\juego4.png"
-
+    # Construir las rutas relativas con os.path.join()
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene el directorio del script
+    ruta_letras = os.path.join(base_dir, "..", "images", "letras_option.png")
+    ruta_numeros = os.path.join(base_dir, "..", "images", "numeros_option.png")
+    ruta_colores = os.path.join(base_dir, "..", "images", "colores_option.png")
+    ruta_animales = os.path.join(base_dir, "..", "images", "animales_option.png")
     # Cargar imágenes
     imagen_letras = cargar_imagen_desde_ruta(ruta_letras)
     imagen_numeros = cargar_imagen_desde_ruta(ruta_numeros)
