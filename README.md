@@ -3,9 +3,10 @@
 </div>
 
 <div align="center">
-   Proyecto de mejora non-mouse
-   Este proyecto es una mejora del trabajo original de 
-   Nuestro objetivo es añadir nuevas funcionalidades dirigidas a una aplicacion de estimulacion temprana en mejora de motricidad fina en niños menores.
+   SKILLPOINTER
+   PROYECTO FINAL DEL CURSO DE INTERACCION HUMANO COMPUTADOR UNSA 
+   Este proyecto es una mejora del trabajo original de Takeyamayuki "https://github.com/takeyamayuki/NonMouse"
+   
 </div>
 
 <p align="center">
@@ -34,25 +35,19 @@
 </tr>
 </table>
 
-
-# Features
-
-- No need for anything other than a webcam and host PC.
-- Gesture-based HCI has been around for some time, but shooting from above makes the mouse easier to use.
-- NonMouse can be invoked by the global hotkey even when this application is inactive.
-- Works well with typing.    
-- Just download from the latest release(windows, mac only).  
-
+# Description 
+SkillPointer tiene como objetivo añadir nuevas funcionalidades dirigidas a la creación de una interfaz de estimulacion de motricidad fina habilidades de escritura de niños
 # Installation
-## 📁 Executable file 
-Download the zip file that matches your environment from the [latest release](https://github.com/takeyamayuki/NonMouse/releases). 
 
-OR
 ## 🐍 PyPI
-Run the following script.
+Run the following script. Use python 3.9
 
 ```sh
+$ git clone 'https://github.com/sarasofiaa/IHCproyect.git'
+$ pip install virtualenv
+$ virtualenv -p python 
 $ pip install nonmouse
+$ pip install -r requirements.txt
 ```
 (If you have trouble installing mediapipe, please visit the [official website](https://google.github.io/mediapipe/getting_started/install.html).)
 
@@ -88,14 +83,11 @@ The following three ways of placing the device are assumed.
    </table>
 
 ## 2. Run
-- Run the executable as described in the [GitHub wiki](https://github.com/takeyamayuki/NonMouse/wiki/How-to-run-a--NonMouse-executable-file-in-each-OS#%E6%97%A5%E6%9C%AC%E8%AA%9E).
-
-   OR
 -  Run the following script from the continuation of the installation.
 
    For windows and linux(global hotkey function does not work in linux.)
    ```sh
-   $ nonmouse
+   $ python -m nonmouse
    ```
 
    For MacOS, you need execute permission.
