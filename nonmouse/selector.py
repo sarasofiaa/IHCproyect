@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
+from.juego4 import mostrar_instrucciones
 
 # Crear la ventana principal
 def main_selector():
@@ -26,7 +27,7 @@ def main_selector():
         messagebox.showinfo("Juego", "¡Presionar Colores seleccionado!")
 
     def presionar_animales():
-        messagebox.showinfo("Juego", "¡Presionar Animales seleccionado!")
+        mostrar_instrucciones()
 
     # Función para cargar imágenes desde una ruta local
     def cargar_imagen_desde_ruta(ruta):
