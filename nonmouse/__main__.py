@@ -7,6 +7,7 @@ import mediapipe as mp
 from pynput.mouse import Button, Controller
 from nonmouse.args import *
 from nonmouse.utils import *
+from .datosGlobales import *
 
 mouse = Controller()
 mp_drawing = mp.solutions.drawing_utils
@@ -204,23 +205,22 @@ def main():
                     # print("right click")
 
                 
-                """
-                # Detectar gesto de pellizco (distancia entre pulgar e índice)
-                distancia_pellizco = calculate_distance(landmark4, landmark8)
+                if GAME_ACTIVE == 4:  # Verifica si el juego activo es "game4"
+                    # Detectar gesto de pellizco (distancia entre el pulgar e índice)
+                    distancia_pellizco = calculate_distance(landmark4, landmark8)
 
-                # Definir un umbral para detectar el pellizco 
-                umbral_pellizco = 0.05 
+                    # Definir un umbral para detectar el pellizco
+                    umbral_pellizco = 0.05
 
-                # Verificar si ocurre el gesto de pellizco
-                if distancia_pellizco < umbral_pellizco:
-                    # Realizar el clic derecho
-                    mouse.press(Button.right)
-                    mouse.release(Button.right)
-                    h = 1  
-                    draw_circle(image, hand_landmarks.landmark[8].x * image_width,
+                    # Verificar si ocurre el gesto de pellizco
+                    if distancia_pellizco < umbral_pellizco:
+                        # Realizar el clic derecho
+                        mouse.press(Button.right)
+                        mouse.release(Button.right)
+                        draw_circle(image, hand_landmarks.landmark[8].x * image_width,
                                     hand_landmarks.landmark[8].y * image_height, 20, (255, 105, 180))  # Rosa
-                    print("Clic derecho activado por el pellizco")
-                """
+                        print("Clic derecho activado por el pellizco")
+                
                 # scroll
                 if hand_landmarks.landmark[8].y-hand_landmarks.landmark[5].y > -0.06:
                     mouse.scroll(0, -dy/50)                     # スクロール感度下げる
