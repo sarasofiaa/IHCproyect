@@ -29,6 +29,7 @@ def main_selector():
 
     def presionar_animales():
         GAME_ACTIVE = 4  # Juego 4 activo
+        root.destroy()
         mostrar_instrucciones()
 
     # Función para cargar imágenes desde una ruta local
@@ -73,5 +74,5 @@ def main_selector():
 
     root.mainloop()
 
-# Ejecutar la ventana principal
+# Ejecutar la ventana 
 #main_selector()
