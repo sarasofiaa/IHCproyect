@@ -1,5 +1,6 @@
-#baseJuego.py
+#baseJuego.py Se reutilizo la funcionalidad de main.py 
 #Descripción: Aqui se modifica todo lo que tiene que ver con funcionalidad del mouse y ventana
+#Solo tiene por el momento ninguna flag
 import tkinter as tk
 from PIL import Image, ImageTk
 import cv2
@@ -11,7 +12,7 @@ from .datosGlobales import get_game_active
 class GameWindow:
     def __init__(self,gameName):
         self.root = tk.Tk()
-        self.root.title(gameName)
+        self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
         self.root.geometry('1200x800')  # Ventana más grande para acomodar todo
 
         # Frame principal
@@ -19,16 +20,16 @@ class GameWindow:
         self.main_frame.pack(expand=True, fill='both')
 
         # Frame para el juego (lado izquierdo)
-        self.game_frame = tk.Frame(self.main_frame, width=600, height=700)
+        self.game_frame = tk.Frame(self.main_frame, width=200, height=700)
         self.game_frame.pack(side='left', expand=True, fill='both')
 
         # Frame para la cámara (lado derecho)
-        self.camera_frame = tk.Frame(self.main_frame, width=100, height=80) #no funciona tamaño
-        self.camera_frame.pack(side='right', expand=True, fill='both')
+        self.camera_frame = tk.Frame(self.main_frame, width=20, height=15) #no funciona tamaño
+        self.camera_frame.pack(side='right', anchor='ne', padx=20, pady=20)
 
         # Label para mostrar el feed de la cámara
         self.camera_label = tk.Label(self.camera_frame)
-        self.camera_label.pack(expand=True)
+        self.camera_label.pack(expand=True, fill='both')
 
         # Configuración inicial
         self.setup_camera()
@@ -39,20 +40,22 @@ class GameWindow:
         self.update_camera()
 
     def setup_camera(self):
+        self.cap_width = 210
+        self.cap_height = 170
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FPS, 60)
-        self.cap_width = 640
-        self.cap_height = 480
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.cap_width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.cap_height)
+        cfps = int(self.cap.get(cv2.CAP_PROP_FPS))
+        if cfps < 30:
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.cap_width)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.cap_height)
         
     def setup_mediapipe(self):
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_hands = mp.solutions.hands
         self.hands = self.mp_hands.Hands(
-            min_detection_confidence=0.8,
-            min_tracking_confidence=0.8,
-            max_num_hands=1
+            min_detection_confidence=0.8,# Confianza en la detección
+            min_tracking_confidence=0.8,# Confianza en el seguimiento
+            max_num_hands=1  # Número máximo de manos detectadas
         )
 
     def setup_mouse_control(self): #Valores predeterminados
