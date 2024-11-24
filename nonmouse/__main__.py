@@ -7,7 +7,7 @@ import mediapipe as mp
 from pynput.mouse import Button, Controller
 from nonmouse.args import *
 from nonmouse.utils import *
-from .datosGlobales import *
+from .datosGlobales import get_game_active 
 
 mouse = Controller()
 mp_drawing = mp.solutions.drawing_utils
@@ -21,6 +21,9 @@ elif pf == 'Darwin':
 elif pf == 'Linux':
     hotkey = 'XXX'              # La tecla de acceso rápido está deshabilitada en Linux
 def main():
+    print("main : El valor de juego actvo es  : ")
+    print(get_game_active())
+    
     cap_device, mode, kando, screenRes = tk_arg()
     dis = 0.7                           # Definición de la distancia para pegar
     preX, preY = 0, 0
@@ -205,7 +208,7 @@ def main():
                     # print("right click")
 
                 
-                if GAME_ACTIVE == 4:  # Verifica si el juego activo es "game4"
+                if get_game_active() == 4:  # Verifica si el juego activo es "game4"
                     # Detectar gesto de pellizco (distancia entre el pulgar e índice)
                     distancia_pellizco = calculate_distance(landmark4, landmark8)
 
