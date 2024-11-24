@@ -21,7 +21,7 @@ elif pf == 'Darwin':
 elif pf == 'Linux':
     hotkey = 'XXX'              # La tecla de acceso rápido está deshabilitada en Linux
 def main():
-    print("main : El valor de juego actvo es  : ")
+    print("main : El valor de juego activo es  : ")
     print(get_game_active())
     
     cap_device, mode, kando, screenRes = tk_arg()
@@ -40,7 +40,7 @@ def main():
     start, c_start = float('inf'), float('inf')
     c_text = 0
     # Entrada de la cámara web, configuración
-    window_name = 'NonMouse'
+    window_name = 'Configuración de Camara'
     cv2.namedWindow(window_name)
     cap = cv2.VideoCapture(cap_device)
     cap.set(cv2.CAP_PROP_FPS, 60)

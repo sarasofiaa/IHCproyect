@@ -17,14 +17,20 @@ def main_selector():
     titulo = tk.Label(root, text="Juegos de Aprendizaje", font=("Arial", 18, "bold"), bg="#2e857d", fg="white")
     titulo.grid(row=0, column=0, columnspan=2, pady=20)
 
-    # Funciones para cada juego
+    # Funciones para cada juego AQUI CADA UNO LLAME A SUS JUEGOS EN NUEVO ARCHIVO JUEGO4 EJEMPLO
     def escribir_letras():
+        set_game_active(1) 
+        root.destroy()
         messagebox.showinfo("Juego", "¡Escribir Letras seleccionado!")
 
     def escribir_numeros():
+        set_game_active(2) 
+        root.destroy()
         messagebox.showinfo("Juego", "¡Escribir Números seleccionado!")
 
     def presionar_colores():
+        set_game_active(3) 
+        root.destroy()
         messagebox.showinfo("Juego", "¡Presionar Colores seleccionado!")
 
     def presionar_animales():
