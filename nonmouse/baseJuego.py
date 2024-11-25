@@ -77,7 +77,7 @@ class GameWindow:
         self.start = float('inf')
         self.c_start = float('inf')
         self.dis = 0.7
-        self.kando = 4.0  # Sensibilidad del mouse
+        self.kando = 9.0  # Sensibilidad del mouse
         self.ran = 6  # Suavizado
 
     def process_hand_tracking(self, image, results):
