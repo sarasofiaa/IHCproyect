@@ -5,11 +5,11 @@ block_cipher = None
 
 
 a = Analysis(['..\\nonmouse\\__main__.py'],
-             pathex=['C:\\Users\\user\\Documents\\GitHub\\IHC\\NonMouse\\nonmouse'],    #それぞれの環境に応じて、変更してください
+             pathex=[r'C:\Users\fabia.PORSHA\UNSA\Github\IHC\IHCproyect\nonmouse],    #それぞれの環境に応じて、変更してください
              binaries=[],
              datas=[
-                (r'c:\users\user\documents\github\ihc\nonmouse\env3.9\lib\site-packages\mediapipe\modules', r'mediapipe\modules'),
-                (r'c:\users\user\documents\github\ihc\nonmouse\env3.9\lib\site-packages\cv2\*', 'cv2'),  
+                (r'c:\users\fabia.porsha\unsa\github\ihc\ihcproyect\env3.9\lib\site-packages\mediapipe\modules', r'mediapipe\modules'),
+                (r'c:\users\fabia.porsha\unsa\github\ihc\ihcproyect\env3.9\lib\site-packages\cv2\*', 'cv2'),  
              ],
              hiddenimports=['cv2', 'cv2.cv2', 'cv2.data', 'numpy'],
              hookspath=[],

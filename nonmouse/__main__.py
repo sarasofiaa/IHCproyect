@@ -253,6 +253,7 @@ def main():
         if (cv2.waitKey(1) & 0xFF == 27) or (cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE) == 0):
             break
     cap.release()
-
+"""
 if __name__ == "__main__":
     main()
+"""
