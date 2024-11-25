@@ -135,9 +135,10 @@ class GameWindow:
                 self.mouse.press(Button.right)
                 self.mouse.release(Button.right)
                 draw_circle(image, 
-                          hand_landmarks.landmark[8].x * self.cap_width,
-                          hand_landmarks.landmark[8].y * self.cap_height, 
+                          hand_landmarks.landmark[8].x * image.shape[1],  # Use image width
+                          hand_landmarks.landmark[8].y * image.shape[0],  # Use image height 
                           20, (255, 105, 180))
+            #Dibujar el juego en el frame donde va el juego
 
     def update_camera(self):
         success, image = self.cap.read()
