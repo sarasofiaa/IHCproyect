@@ -161,23 +161,20 @@ def logicaJuego4(game_frame):
     ruta_insecto = os.path.join(base_dir, "..", "images", "juego4", "insecto.png")
     imagen_insecto = cargar_imagen(ruta_insecto, altura=150)
     #Animal (Perro)
-    ruta_animal1 = os.path.join(base_dir, "..", "images", "juego4", "animal1.jpg")
+    ruta_animal1 = os.path.join(base_dir, "..", "images", "juego4", "animal1.png")
     imagen_animal1 = cargar_imagen(ruta_animal1, altura=150)
 
     #Creacion de label con eventos click 
-    print("Hasta aqui llega") #depuracion
     
     labelInsecto = tk.Label(game_frame, image=imagen_insecto, bg="white", borderwidth=0)
     
-    print("Hasta aqui llega") #depuracion
     labelInsecto.image = imagen_insecto
     labelInsecto.place(x=50, y=50)
     labelInsecto.bind("<Button-1>", lambda event: apretasteInsecto(labelInsecto))
-    print("Hasta aqui llega?") #depuracion
     
     labelAnimal = tk.Label(game_frame, image=imagen_animal1, bg="white", borderwidth=0)
     labelAnimal.image = imagen_animal1
-    labelAnimal.place(x=100, y=100)
+    labelAnimal.place(x=300, y=130)
     labelAnimal.bind("<Button-1>", lambda event: apretasteMal(labelAnimal))
 
 
