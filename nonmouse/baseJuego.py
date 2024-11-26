@@ -13,7 +13,7 @@ class GameWindow:
     def __init__(self,gameName):
         self.root = tk.Tk()
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
-        self.root.geometry('1200x800')  # Ventana más grande para acomodar todo
+        self.root.geometry('1200x600')  # Ventana más grande para acomodar todo
 
         # Frame principal
         self.main_frame = tk.Frame(self.root)

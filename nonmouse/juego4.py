@@ -1,6 +1,10 @@
 import tkinter as tk
 from .baseJuego import GameWindow
 import random
+from PIL import Image, ImageTk
+import os
+from .utils2 import cargar_imagen
+
 
 def mostrar_instrucciones():
     root = tk.Tk()
@@ -21,6 +25,33 @@ def mostrar_instrucciones():
     root.mainloop()
 
 def logicaJuego4(game_frame):
-    game_frame.config(bg = 'green') #Funcional
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    ruta_fondo = os.path.join(base_dir, "..", "images", "fondo_imagen.png")
+    print(f"Cargando imagen desde: {ruta_fondo}")  # Depuración
     
+    fondo = cargar_imagen(ruta_fondo, altura=500)
     
+    if fondo:
+        label_fondo = tk.Label(game_frame, image=fondo)
+        label_fondo.place(relwidth=1, relheight=1)
+        game_frame.image = fondo  # Mantener la referencia
+    
+    game_frame.config(bg='green')  # Funcional
+
+# Utiliza la misma función cargar_imagen para otros elementos como botones
+def agregar_boton_con_imagen(frame, ruta_imagen, comando):
+    imagen_boton = cargar_imagen(ruta_imagen, altura=50)
+    if imagen_boton:
+        boton = tk.Button(frame, image=imagen_boton, command=comando)
+        boton.image = imagen_boton  # Mantener la referencia
+        boton.pack(pady=10)
+        return boton
+    return None
+
+# Lógica de ejemplo para agregar un botón con imagen
+def ejemplo_boton():
+    print("Botón presionado")
+
+
+    
+
