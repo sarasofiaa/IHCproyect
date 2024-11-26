@@ -26,3 +26,4 @@ def cargar_imagen(ruta, altura=None):
     except Exception as e:
         print(f"No se pudo cargar la imagen desde {ruta}: {e}")
         return None
+

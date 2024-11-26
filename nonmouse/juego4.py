@@ -165,23 +165,20 @@ def logicaJuego4(game_frame):
     imagen_animal1 = cargar_imagen(ruta_animal1, altura=150)
 
     #Creacion de label con eventos click 
-    
-    labelInsecto = tk.Label(game_frame, image=imagen_insecto, bg="white", borderwidth=0)
-    
+    labelInsecto = tk.Label(game_frame, image=imagen_insecto, bg=None, borderwidth=0)
     labelInsecto.image = imagen_insecto
     labelInsecto.place(x=50, y=50)
     labelInsecto.bind("<Button-1>", lambda event: apretasteInsecto(labelInsecto))
     
-    labelAnimal = tk.Label(game_frame, image=imagen_animal1, bg="white", borderwidth=0)
+    labelAnimal = tk.Label(game_frame, image=imagen_animal1, bg=None, borderwidth=0)
     labelAnimal.image = imagen_animal1
     labelAnimal.place(x=300, y=130)
     labelAnimal.bind("<Button-1>", lambda event: apretasteMal(labelAnimal))
-
-
+    mover(labelInsecto,labelAnimal)
 
     # Mover animales/insectos cada segundo
-    def mover(): #Hay un error
-        movimientoAleat(boton_insecto)
+    def mover(labelInsecto,labelAnimal): #Hay un error
+        movimientoAleat(labelInsecto)
         movimientoAleat(labelAnimal)
         if errores < 3:  # Mientras no haya terminado el juego
             game_frame.after(1000, mover)
@@ -190,15 +187,7 @@ def logicaJuego4(game_frame):
     
 
 
-# Utiliza la misma función cargar_imagen para otros elementos como botones
-def agregar_boton_con_imagen(frame, ruta_imagen, comando):
-    imagen_boton = cargar_imagen(ruta_imagen, altura=50)
-    if imagen_boton:
-        boton = tk.Button(frame, image=imagen_boton, command=comando)
-        boton.image = imagen_boton  # Mantener la referencia
-        boton.pack(pady=10)
-        return boton
-    return None
+
 
 
 
