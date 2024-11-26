@@ -25,11 +25,9 @@ def mostrar_instrucciones():
     root.mainloop()
 
 def logicaJuego4(game_frame):
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    ruta_fondo = os.path.join(base_dir, "..", "images", "fondo_imagen.png")
-    print(f"Cargando imagen desde: {ruta_fondo}")  # Depuración
-    
-    fondo = cargar_imagen(ruta_fondo, altura=500)
+    base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
+    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondo.jpg")
+    fondo = cargar_imagen(ruta_fondo, altura=800)
     
     if fondo:
         label_fondo = tk.Label(game_frame, image=fondo)
