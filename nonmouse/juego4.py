@@ -177,7 +177,6 @@ def logicaJuego4(game_frame):
     labelAnimal.image = imagen_animal1
     labelAnimal.place(x=300, y=130)
     labelAnimal.bind("<Button-1>", lambda event: apretasteMal(labelAnimal))
-    mover(labelInsecto,labelAnimal)
 
     # Mover animales/insectos cada segundo
     def mover(labelInsecto,labelAnimal): #Hay un error
