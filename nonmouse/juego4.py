@@ -58,7 +58,7 @@ def mostrar_instrucciones():
         fg="black",  # Color de la letra
         width=70,
         padx=20,  # Relleno horizontal
-        pady=20   # Relleno vertical
+        pady=2   # Relleno vertical
     ).place(relx=0.5, y=150, anchor="n")  # Posicionando el label
     
     # Instrucción visual del pellizco correcto
@@ -69,13 +69,13 @@ def mostrar_instrucciones():
         ruta_imagen = os.path.join(project_dir, "images", "juego4", "pellizco.png")  # Ruta de la imagen
 
         imagen = Image.open(ruta_imagen)  # Cargar la imagen
-        imagen = imagen.resize((250, 250), Image.ANTIALIAS)  # Redimensionar para que quepa bien
+        imagen = imagen.resize((190, 250), Image.ANTIALIAS)  # Redimensionar para que quepa bien
         imagen_tk = ImageTk.PhotoImage(imagen)
 
         # Mostrar la imagen de instrucción
         imagen_label = tk.Label(root, image=imagen_tk)
         imagen_label.image = imagen_tk  # Referencia a la imagen para evitar que se borre
-        imagen_label.pack(pady=10)
+        imagen_label.place(x=170, y=250) 
         
     except Exception as e:
         print(f"No se pudo cargar la imagen: {e}")
@@ -87,8 +87,21 @@ def mostrar_instrucciones():
         game_window.setGameFrame(logicaJuego4)  # Asegúrate de tener esta función definida
         game_window.run()
 
-    boton_continuar = tk.Button(root, text="Continuar", command=continuar)
-    boton_continuar.pack(pady=20)
+    boton_continuar = tk.Button(
+        root, 
+        text="Continuar",  # Texto del botón
+        command=continuar,  # Función que se ejecuta al hacer clic en el botón
+        fg="white",  # Color del texto del botón
+        bg="#4CAF50",  # Color de fondo del botón (puedes elegir otro color)
+        font=("Arial", 14, "bold"),  # Estilo de la fuente del botón
+        relief="flat",  # Sin relieve para un estilo más limpio
+        padx=20,  # Relleno horizontal
+        pady=10  # Relleno vertical
+    )
+
+    # Coloca el botón en una ubicación exacta usando .place()
+    boton_continuar.place(x=500, y=350) 
+
     
     root.mainloop()
 
