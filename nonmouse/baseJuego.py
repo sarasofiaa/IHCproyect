@@ -19,12 +19,14 @@ class GameWindow:
         self.main_frame = tk.Frame(self.root)
         self.main_frame.pack(expand=True, fill='both')
 
-        # Frame para el juego (lado izquierdo)
+        # Frame para el juego (lado izquierdo) Se tiene que reemplazar con cada juego en especifico
         self.game_frame = tk.Frame(self.main_frame, width=200, height=700)
         self.game_frame.pack(side='left', expand=True, fill='both')
 
+    
+        
         # Frame para la cámara (lado derecho)
-        self.camera_frame = tk.Frame(self.main_frame, width=20, height=15) #no funciona tamaño
+        self.camera_frame = tk.Frame(self.main_frame, width=20, height=15)  #En la parte de arriba se posicionara la camara aunque la parte de abajo queda libre
         self.camera_frame.pack(side='right', anchor='ne', padx=20, pady=20)
 
         # Label para mostrar el feed de la cámara
@@ -38,6 +40,16 @@ class GameWindow:
         
         # Iniciar la actualización de la cámara
         self.update_camera()
+    # Set frame de juego 
+    def setGameFrame(self,game_logic):
+        # Limpia el frame actual
+        for widget in self.game_frame.winfo_children():
+            widget.destroy()
+        game_logic(self.game_frame)
+    # Set frame de descripcion puntaje titulo etc (debajo de la camara) informacion del juego quizas?  
+    def setCameraFrame(self,game_description):
+        print("Falta ajustar")
+
 
     def setup_camera(self):
         self.cap_width = 210
@@ -126,7 +138,7 @@ class GameWindow:
         new_y = max(0, min(screen_height, current_y + dy))
         
         self.mouse.position = (new_x, new_y)
-#AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO    
+#AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
         #JUEGO 4 PELIZCA EL ANIMAL
         # Detectar gesto de pellizco
         if get_game_active() == 4:
