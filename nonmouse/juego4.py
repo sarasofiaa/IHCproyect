@@ -21,5 +21,6 @@ def mostrar_instrucciones():
     root.mainloop()
 
 def logicaJuego4(game_frame):
-    game_frame.config(bg = 'green') #Probando juego 4 inicializar de manera simple
+    game_frame.config(bg = 'green') #Funcional
+    
     
