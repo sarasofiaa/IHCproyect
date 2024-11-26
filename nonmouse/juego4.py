@@ -9,7 +9,23 @@ def mostrar_instrucciones():
     root = tk.Tk()
     root.title("Instrucciones - Presionar Animales")
     root.geometry("900x600")  # Ajustamos el tamaño para que haya espacio para todo
-    
+    # Cargar la imagen de fondo
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio actual
+        project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
+        ruta_imagen_fondo = os.path.join(project_dir, "images","juego4", "fondoInstru.png")  # Ruta de la imagen de fondo
+
+        imagen_fondo = Image.open(ruta_imagen_fondo)  # Cargar la imagen de fondo
+        imagen_fondo = imagen_fondo.resize((900, 600), Image.ANTIALIAS)  # Redimensionar para que quepa bien
+        fondo_tk = ImageTk.PhotoImage(imagen_fondo)
+
+        # Crear un Label para mostrar la imagen de fondo
+        fondo_label = tk.Label(root, image=fondo_tk)
+        fondo_label.place(relwidth=1, relheight=1)  # Ocupa toda la ventana
+        fondo_label.image = fondo_tk  # Referencia a la imagen para evitar que se borre
+    except Exception as e:
+        print(f"No se pudo cargar la imagen de fondo: {e}")
+
     # Título principal
     tk.Label(root, text='Juego: Presionar Animales', font=("Arial", 16, "bold")).pack(pady=10)
     
