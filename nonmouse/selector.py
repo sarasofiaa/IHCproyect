@@ -10,8 +10,8 @@ from .datosGlobales import set_game_active
 def main_selector():
     root = tk.Tk()
     root.title("SkillPointer")
-    root.geometry("600x600")
-    root.configure(bg="#2e857d")
+    root.geometry("900x500")
+    root.configure(bg="#141240")
 
     # Crear título centrado
     titulo = tk.Label(root, text="Juegos de Aprendizaje", font=("Arial", 18, "bold"), bg="#2e857d", fg="white")

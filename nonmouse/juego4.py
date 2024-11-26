@@ -12,21 +12,67 @@ tiempo = 0 #Tiempo en segundos de acuerdo vaya avanzando aumenta la dificultad
 
 def mostrar_instrucciones():
     root = tk.Tk()
-    root.title("Instrucciones")
-    root.geometry("370x450")
+    root.title("Instrucciones - Presionar Animales")
+    root.geometry("900x600")  # Ajustamos el tamaño para que haya espacio para todo
+    # Cargar la imagen de fondo
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio actual
+        project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
+        ruta_imagen_fondo = os.path.join(project_dir, "images","juego4", "fondoInstru.png")  # Ruta de la imagen de fondo
+
+        imagen_fondo = Image.open(ruta_imagen_fondo)  # Cargar la imagen de fondo
+        imagen_fondo = imagen_fondo.resize((900, 600), Image.ANTIALIAS)  # Redimensionar para que quepa bien
+        fondo_tk = ImageTk.PhotoImage(imagen_fondo)
+
+        # Crear un Label para mostrar la imagen de fondo
+        fondo_label = tk.Label(root, image=fondo_tk)
+        fondo_label.place(relwidth=1, relheight=1)  # Ocupa toda la ventana
+        fondo_label.image = fondo_tk  # Referencia a la imagen para evitar que se borre
+    except Exception as e:
+        print(f"No se pudo cargar la imagen de fondo: {e}")
+
+    # Título principal
+    tk.Label(root, text='Juego: Presionar Animales', font=("Arial", 16, "bold")).pack(pady=10)
     
-    tk.Label(root, text='Instrucciones', font=("Arial", 14, "bold")).pack(pady=10)
-    tk.Label(root, text='Pellizca los insectos usando tus dedos índice y pulgar').pack(pady=20)
+    # Explicación 
+    descripcion = """
+    En este juego, debes pellizcar a los animales que aparecen en la pantalla.
+    Usa tus dedos índice y pulgar para pellizcar a los animales.
+    ¡Ganas cuando seleccionas todos los animales correctamente!
+    """
+    tk.Label(root, text=descripcion, font=("Arial", 12), justify="center").pack(pady=20)
     
+    # Instrucción visual del pellizco correcto
+    try:
+        # Cargar la imagen de la instrucción
+        base_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio actual
+        project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
+        ruta_imagen = os.path.join(project_dir, "images", "juego4", "pellizco.jpg")  # Ruta de la imagen
+
+        imagen = Image.open(ruta_imagen)  # Cargar la imagen
+        imagen = imagen.resize((250, 250), Image.ANTIALIAS)  # Redimensionar para que quepa bien
+        imagen_tk = ImageTk.PhotoImage(imagen)
+
+        # Mostrar la imagen de instrucción
+        imagen_label = tk.Label(root, image=imagen_tk)
+        imagen_label.image = imagen_tk  # Referencia a la imagen para evitar que se borre
+        imagen_label.pack(pady=10)
+        
+    except Exception as e:
+        print(f"No se pudo cargar la imagen: {e}")
+    
+    # Botón de continuar
     def continuar():
-        root.destroy()
+        root.destroy()  # Cerrar ventana de instrucciones
         game_window = GameWindow("Juego4: Pellizca el insecto")
-        game_window.setGameFrame(logicaJuego4)
+        game_window.setGameFrame(logicaJuego4)  # Asegúrate de tener esta función definida
         game_window.run()
 
     boton_continuar = tk.Button(root, text="Continuar", command=continuar)
     boton_continuar.pack(pady=20)
+    
     root.mainloop()
+
 
 def logicaJuego4(game_frame):
     #Fondo
