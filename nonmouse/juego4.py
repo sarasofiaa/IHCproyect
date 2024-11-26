@@ -135,7 +135,7 @@ def logicaJuego4(game_frame):
     #Creacion de label con eventos click 
     print("Hasta aqui llega") #depuracion
     
-    labelInsecto = tk.Label(game_frame, image=imagen_insecto, bg="transparent", borderwidth=0)
+    labelInsecto = tk.Label(game_frame, image=imagen_insecto, bg="white", borderwidth=0)
     
     print("Hasta aqui llega") #depuraciona
     labelInsecto.image = imagen_insecto
@@ -143,7 +143,7 @@ def logicaJuego4(game_frame):
     labelInsecto.bind("<Button-1>", lambda event: apretasteInsecto(labelInsecto))
     print("Hasta aqui llega?") #depuracion
     
-    labelAnimal = tk.Label(game_frame, image=imagen_animal1, bg="transparent", borderwidth=0)
+    labelAnimal = tk.Label(game_frame, image=imagen_animal1, bg="white", borderwidth=0)
     labelAnimal.image = imagen_animal1
     labelAnimal.place(x=100, y=100)
     labelAnimal.bind("<Button-1>", lambda event: apretasteMal(labelAnimal))
