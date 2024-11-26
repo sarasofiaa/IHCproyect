@@ -2,7 +2,10 @@
 import tkinter as tk
 from tkinter import font
 from tkinter import messagebox
+from tkinter import PhotoImage
 from .selector import main_selector
+from PIL import Image, ImageTk
+import os
 
 # Función que se ejecutará al hacer clic en el botón "Iniciar todo"
 def iniciar_aplicacion(window):
@@ -14,8 +17,37 @@ def iniciar_aplicacion(window):
 def main_interfaz():
     ventana = tk.Tk()
     ventana.title("SkillPointer - Featuring multi-movement activities")
-    ventana.geometry("500x300")  # Tamaño de la ventana
+    ventana.geometry("900x500")  # Tamaño de la ventana
     ventana.config(bg="#2c3e50")  # Color de fondo oscuro para un aspecto moderno
+    
+    # Cargar la imagen de fondo
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene el directorio actual (nonmouse)
+        project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
+        #print(f"Directorio raíz del proyecto: {project_dir}") 
+
+        ruta_imagen = os.path.join(project_dir, "images", "fondo_imagen.png")
+
+        # Cargar la imagen con Pillow
+        imagen = Image.open(ruta_imagen)
+        
+        # Redimensionar la imagen: Ajusta la altura a 500px, y el ancho se ajusta automáticamente
+        altura = 500
+        ancho = int(imagen.width * (altura / imagen.height))
+        imagen_redimensionada = imagen.resize((ancho, altura), Image.ANTIALIAS)
+        
+        # Convertir la imagen redimensionada a un formato compatible con Tkinter
+        fondo = ImageTk.PhotoImage(imagen_redimensionada)
+        
+        # Crear el label con la imagen redimensionada
+        label_fondo = tk.Label(ventana, image=fondo)
+        label_fondo.place(relwidth=1, relheight=1)  # Coloca la imagen de fondo para que ocupe toda la ventana
+        
+        # Mantener la referencia a la imagen para evitar que se recoja por el recolector de basura
+        label_fondo.image = fondo
+    except Exception as e:
+        print(f"No se pudo cargar la imagen de fondo: {e}")
+
 
     # Configuración del título en la ventana
     titulo = tk.Label(
