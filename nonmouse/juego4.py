@@ -105,8 +105,10 @@ def mostrar_instrucciones():
 
 def logicaJuego4(game_frame):
     #Variables globales 
-    score = 0
-    errores = 0
+    global score  # Asegúrate de definir score y errores globalmente
+    global errores
+    score = 0  # Definir la variable global score
+    errores = 0 
     tiempo = 0 #Tiempo en segundos de acuerdo vaya avanzando aumenta la dificultad
 
     #Fondo
@@ -129,8 +131,9 @@ def logicaJuego4(game_frame):
         boton.place(x=x,y=y)
         
     def apretasteInsecto(boton):
-        print("Hasta aqui llega????") #depuracion
         global score
+        print("Hasta aqui llega????") #depuracion
+        
         print("Apretaste un insecto")
         score += 1
         print(f"¡Apretaste un insecto! Puntos: {score}")
