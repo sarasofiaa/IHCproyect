@@ -5,10 +5,7 @@ from PIL import Image, ImageTk
 import os
 from .utils2 import cargar_imagen
 
-#Variables globales 
-score = 0
-errores = 0
-tiempo = 0 #Tiempo en segundos de acuerdo vaya avanzando aumenta la dificultad
+
 
 def mostrar_instrucciones():
     root = tk.Tk()
@@ -75,6 +72,11 @@ def mostrar_instrucciones():
 
 
 def logicaJuego4(game_frame):
+    #Variables globales 
+    score = 0
+    errores = 0
+    tiempo = 0 #Tiempo en segundos de acuerdo vaya avanzando aumenta la dificultad
+
     #Fondo
     base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
     ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondo.jpg")
@@ -89,39 +91,73 @@ def logicaJuego4(game_frame):
     #mas de tres veces el juego acabara, intenta tener el mayor score posible
     
     
-    def movimientoAleatBoton(boton):
-        x = random.randint(0,game_frame.winfo_width()-10 - boton.winfo_width())
-        y = random.randint(0,game_frame.winfo_width()-10 - boton.winfo_width())
+    def movimientoAleat(boton):
+        x = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
+        y = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
         boton.place(x=x,y=y)
+        
     def apretasteInsecto(boton):
+        print("Hasta aqui llega????") #depuracion
         global score
         print("Apretaste un insecto")
         score += 1
-        movimientoAleatBoton(boton)
+        print(f"¡Apretaste un insecto! Puntos: {score}")
+        movimientoAleat(boton)
+
     def apretasteMal(boton):
         global errores
-        print("Apretaste mal, al tercer error se acaba el juego")
-        errores +=1
+        errores += 1
+        print(f"Apretaste mal. Errores: {errores}/3")
+        if errores >= 3:
+            gameOver()
 
     def gameOver():
-        print("Juego terminado")
+        print("¡Juego terminado!")
+        mensaje_gameOver = tk.Label(
+            game_frame, 
+            text=f"¡Juego terminado! Puntuación: {score}", 
+            font=("Arial", 14, "bold"), 
+            bg="red", 
+            fg="white"
+        )
+        mensaje_gameOver.place(relx=0.5, rely=0.5, anchor="center")
+
     # Crear botones dinámicos
     print("Creando botones") #depuracion
-    boton_insecto = tk.Button(game_frame, text="Insecto", bg="yellow", command=lambda: apretasteInsecto(boton_insecto))
-    boton_insecto.place(x=50, y=50)
-    boton_animal = tk.Button(game_frame, text = "Animal", bg="red",command=lambda: apretasteMal(boton_animal))
-    boton_animal.place(x=100, y=100)
-    """
-    while(errores <= 3):
-    """
+    #Imagenes para los botones 
+    #Insecto
+    ruta_insecto = os.path.join(base_dir, "..", "images", "juego4", "insecto.png")
+    imagen_insecto = cargar_imagen(ruta_insecto, altura=150)
+    #Animal (Perro)
+    ruta_animal1 = os.path.join(base_dir, "..", "images", "juego4", "animal1.jpg")
+    imagen_animal1 = cargar_imagen(ruta_animal1, altura=150)
+
+    #Creacion de label con eventos click 
+    print("Hasta aqui llega") #depuracion
+    
+    labelInsecto = tk.Label(game_frame, image=imagen_insecto, bg="white", borderwidth=0)
+    
+    print("Hasta aqui llega") #depuracion
+    labelInsecto.image = imagen_insecto
+    labelInsecto.place(x=50, y=50)
+    labelInsecto.bind("<Button-1>", lambda event: apretasteInsecto(labelInsecto))
+    print("Hasta aqui llega?") #depuracion
+    
+    labelAnimal = tk.Label(game_frame, image=imagen_animal1, bg="white", borderwidth=0)
+    labelAnimal.image = imagen_animal1
+    labelAnimal.place(x=100, y=100)
+    labelAnimal.bind("<Button-1>", lambda event: apretasteMal(labelAnimal))
 
 
 
-    # Mover botones cada segundo
-    def mover_botones(boton_insecto, boton_animal): #Hay un error
-        movimientoAleatBoton(boton_insecto)
-        movimientoAleatBoton(boton_animal)
-        game_frame.after(1000, mover_botones)
+    # Mover animales/insectos cada segundo
+    def mover(): #Hay un error
+        movimientoAleat(boton_insecto)
+        movimientoAleat(labelAnimal)
+        if errores < 3:  # Mientras no haya terminado el juego
+            game_frame.after(1000, mover)
+        else:
+            gameOver()
     
 
 
