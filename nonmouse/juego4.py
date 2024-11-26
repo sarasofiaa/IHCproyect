@@ -161,7 +161,7 @@ def logicaJuego4(game_frame):
     print("Creando botones") #depuracion
     #Imagenes para los botones 
     #Insecto
-    ruta_insecto = os.path.join(base_dir, "..", "images", "juego4", "insecto.png")
+    ruta_insecto = os.path.join(base_dir, "..", "images", "juego4", "insecto1.png")
     imagen_insecto = cargar_imagen(ruta_insecto, altura=150)
     #Animal (Perro)
     ruta_animal1 = os.path.join(base_dir, "..", "images", "juego4", "animal1.png")
