@@ -5,6 +5,10 @@ from PIL import Image, ImageTk
 import os
 from .utils2 import cargar_imagen
 
+#Variables globales 
+score = 0
+errores = 0
+tiempo = 0 #Tiempo en segundos de acuerdo vaya avanzando aumenta la dificultad
 
 def mostrar_instrucciones():
     root = tk.Tk()
@@ -37,32 +41,38 @@ def logicaJuego4(game_frame):
     #Interfaz y logica del juego
     #Descripcion: Apreta los insectos, por cada insecto que aprietes subira tu score, pero si apretas un lugar incorrecto o un animal 
     #mas de tres veces el juego acabara, intenta tener el mayor score posible
-    score = 0
-    error = 0
+    
+    
     def movimientoAleatBoton(boton):
-        x = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
-        y = random.randint(0,game_frame.winfo_with() - boton.winfo_width())
+        x = random.randint(0,game_frame.winfo_width()-10 - boton.winfo_width())
+        y = random.randint(0,game_frame.winfo_width()-10 - boton.winfo_width())
         boton.place(x=x,y=y)
     def apretasteInsecto(boton):
+        global score
         print("Apretaste un insecto")
         score += 1
         movimientoAleatBoton(boton)
     def apretasteMal(boton):
+        global errores
         print("Apretaste mal, al tercer error se acaba el juego")
-        error +=1
+        errores +=1
 
     def gameOver():
         print("Juego terminado")
     # Crear botones dinámicos
     print("Creando botones") #depuracion
-
-    boton_insecto = tk.Button(game_frame, text="Insecto", bg="yellow", command=apretasteInsecto)
+    boton_insecto = tk.Button(game_frame, text="Insecto", bg="yellow", command=lambda: apretasteInsecto(boton_insecto))
     boton_insecto.place(x=50, y=50)
-    boton_animal = tk.Button(game_frame, text = "Animal", bg="red", command=apretasteMal)
+    boton_animal = tk.Button(game_frame, text = "Animal", bg="red",command=lambda: apretasteMal(boton_animal))
     boton_animal.place(x=100, y=100)
+    """
+    while(errores <= 3):
+    """
+
+
 
     # Mover botones cada segundo
-    def mover_botones():
+    def mover_botones(boton_insecto, boton_animal): #Hay un error
         movimientoAleatBoton(boton_insecto)
         movimientoAleatBoton(boton_animal)
         game_frame.after(1000, mover_botones)

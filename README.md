@@ -40,7 +40,7 @@ SkillPointer tiene como objetivo añadir nuevas funcionalidades dirigidas a la c
 # Installation
 
 ## 🐍 PyPI
-Run the following script. Use python 3.9
+Run the following script. Use python 3.9 v. 64bits IMPORTANT
 
 ```sh
 $ git clone 'https://github.com/sarasofiaa/IHCproyect.git'
@@ -54,10 +54,7 @@ $ pip install -r requirements.txt
 
 # LEVANTAR
 > **Note**  
-> The built binary files can be downloaded from latest realease.
-
-
-In app-mac.spec and app-win.spec, change `pathex` to fit your environment.   
+app-win.spec, change `pathex` to fit your environment.   
 Run the following scripts for each OS.  
 
 - windows
@@ -75,7 +72,7 @@ Run the following scripts for each OS.
    ...
    
    #Copy and paste into the datas in win.spec
-   $ pyinstaller config/win.spec
+   
    $ python -m nonmouse #Levantara la interfaz 
    ... ````
 
