@@ -28,32 +28,51 @@ def mostrar_instrucciones():
     except Exception as e:
         print(f"No se pudo cargar la imagen de fondo: {e}")
 
-    # Título principal
-    tk.Label(root, text='Juego: Presionar Animales', font=("Arial", 16, "bold")).pack(pady=10)
     
+     # Título principal con place para control de posición
+    tk.Label(
+        root,
+        text='Juego: Presionar Animales',
+        font=("Arial", 17, "bold"),  # Establecer la fuente, tamaño y estilo (negrita)
+        bg="#6da8db",  # Color de fondo (verde en este caso)
+        fg="white",  # Color de la letra (blanco)
+        padx=10,  # Relleno horizontal (opcional)
+        pady=10,  # Relleno vertical (opcional)
+    ).place(relx=0.5, y=45, anchor="n")
+
     # Explicación 
     descripcion = """
-    En este juego, debes pellizcar a los animales que aparecen en la pantalla.
-    Usa tus dedos índice y pulgar para pellizcar a los animales.
-    ¡Ganas cuando seleccionas todos los animales correctamente!
+    Descripcion: Apreta los insectos, por cada insecto que aprietes subira tu score, 
+    pero si apretas un lugar incorrecto o un animal 
+    mas de tres veces el juego acabara, intenta tener el mayor score posible
     """
-    tk.Label(root, text=descripcion, font=("Arial", 12), justify="center").pack(pady=20)
+    tk.Label(
+        root,
+        text=descripcion,
+        font=("Arial", 12),  # Fuente de letra, tamaño 12
+        justify="center",  # Justificación del texto al centro
+        bg="#d4e7ff",  # Color de fondo (puedes elegir otro color)
+        fg="black",  # Color de la letra
+        width=70,
+        padx=20,  # Relleno horizontal
+        pady=2   # Relleno vertical
+    ).place(relx=0.5, y=150, anchor="n")  # Posicionando el label
     
     # Instrucción visual del pellizco correcto
     try:
         # Cargar la imagen de la instrucción
         base_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio actual
         project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
-        ruta_imagen = os.path.join(project_dir, "images", "juego4", "pellizco.jpg")  # Ruta de la imagen
+        ruta_imagen = os.path.join(project_dir, "images", "juego4", "pellizco.png")  # Ruta de la imagen
 
         imagen = Image.open(ruta_imagen)  # Cargar la imagen
-        imagen = imagen.resize((250, 250), Image.ANTIALIAS)  # Redimensionar para que quepa bien
+        imagen = imagen.resize((190, 250), Image.ANTIALIAS)  # Redimensionar para que quepa bien
         imagen_tk = ImageTk.PhotoImage(imagen)
 
         # Mostrar la imagen de instrucción
         imagen_label = tk.Label(root, image=imagen_tk)
         imagen_label.image = imagen_tk  # Referencia a la imagen para evitar que se borre
-        imagen_label.pack(pady=10)
+        imagen_label.place(x=170, y=250) 
         
     except Exception as e:
         print(f"No se pudo cargar la imagen: {e}")
@@ -65,8 +84,21 @@ def mostrar_instrucciones():
         game_window.setGameFrame(logicaJuego4)  # Asegúrate de tener esta función definida
         game_window.run()
 
-    boton_continuar = tk.Button(root, text="Continuar", command=continuar)
-    boton_continuar.pack(pady=20)
+    boton_continuar = tk.Button(
+        root, 
+        text="Continuar",  # Texto del botón
+        command=continuar,  # Función que se ejecuta al hacer clic en el botón
+        fg="white",  # Color del texto del botón
+        bg="#4CAF50",  # Color de fondo del botón (puedes elegir otro color)
+        font=("Arial", 14, "bold"),  # Estilo de la fuente del botón
+        relief="flat",  # Sin relieve para un estilo más limpio
+        padx=20,  # Relleno horizontal
+        pady=10  # Relleno vertical
+    )
+
+    # Coloca el botón en una ubicación exacta usando .place()
+    boton_continuar.place(x=500, y=350) 
+
     
     root.mainloop()
 
