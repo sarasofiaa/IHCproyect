@@ -53,15 +53,13 @@ def logicaJuego4(game_frame):
 
     def gameOver():
         print("Juego terminado")
-
     # Crear botones dinámicos
-    """
+    print("Creando botones") #depuracion
+
     boton_insecto = tk.Button(game_frame, text="Insecto", bg="yellow", command=apretasteInsecto)
     boton_insecto.place(x=50, y=50)
-    boton_animal = tk.Buttom(game_frame, text = "Animal", bg="red", command=apretasteMal)
-    """
-    #boton_incorrecto = tk.Button(game_frame, text="No Insecto", bg="red", command=on_click_boton_incorrecto)
-    #boton_incorrecto.place(x=100, y=100)
+    boton_animal = tk.Button(game_frame, text = "Animal", bg="red", command=apretasteMal)
+    boton_animal.place(x=100, y=100)
 
     # Mover botones cada segundo
     def mover_botones():

@@ -144,8 +144,8 @@ class GameWindow:
         if get_game_active() == 4:
             distancia_pellizco = calculate_distance(landmark4, landmark8)
             if distancia_pellizco < 0.05:
-                self.mouse.press(Button.right)
-                self.mouse.release(Button.right)
+                self.mouse.press(Button.left)
+                self.mouse.release(Button.left)
                 draw_circle(image, 
                           hand_landmarks.landmark[8].x * image.shape[1],  # Use image width
                           hand_landmarks.landmark[8].y * image.shape[0],  # Use image height 
