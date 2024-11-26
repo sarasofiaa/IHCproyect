@@ -4,6 +4,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
 from.juego4 import mostrar_instrucciones
+from .juego3 import instrucciones
 from .datosGlobales import set_game_active
 
 # Crear la ventana principal
@@ -31,7 +32,8 @@ def main_selector():
     def presionar_colores():
         set_game_active(3) 
         root.destroy()
-        messagebox.showinfo("Juego", "¡Presionar Colores seleccionado!")
+        instrucciones()
+        #messagebox.showinfo("Juego", "¡Presionar Colores seleccionado!")
 
     def presionar_animales():
         set_game_active(4) 
