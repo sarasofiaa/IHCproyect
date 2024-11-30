@@ -4,8 +4,8 @@
 
 <div align="center">
    SKILLPOINTER
-   PROYECTO FINAL DEL CURSO DE INTERACCION HUMANO COMPUTADOR UNSA 
-   Este proyecto es una mejora del trabajo original de Takeyamayuki "https://github.com/takeyamayuki/NonMouse"
+   PROYECTO FINAL DEL CURSO DE INTERACCION HUMANO COMPUTADOR - UNSA 
+   Este proyecto es tiene como incial el trabajo original de Takeyamayuki "https://github.com/takeyamayuki/NonMouse"
    
 </div>
 
@@ -45,35 +45,20 @@ Run the following script. Use python 3.9 v. 64bits IMPORTANT
 ```sh
 $ git clone 'https://github.com/sarasofiaa/IHCproyect.git'
 $ pip install virtualenv
-$ virtualenv -p python 
-$ pip install nonmouse
+$ virtualenv -p python env #Se requiere crear el entorno virtual usando python 3.9 v 64 bits
 $ pip install -r requirements.txt
 ```
 (If you have trouble installing mediapipe, please visit the [official website](https://google.github.io/mediapipe/getting_started/install.html).)
 
 
-# LEVANTAR
+# Up project
 > **Note**  
 app-win.spec, change `pathex` to fit your environment.   
 Run the following scripts for each OS.  
 
 - windows
-
-   Copy and paste the location obtained by `pip show mediapipe` into `datas`, referring to what is written originally.  
-   Run the following script.
-   ```sh
-   $ pip show mediapipe
-   ...
-   Location: c:\users\namik\appdata\local\programs\python\python37\lib\site_packages
-   ...
-   $ pip show opencv-python
-   ...
-   Location: c:\users\namik\appdata\local\programs\python\python37\lib\site_packages
-   ...
    
-   #Copy and paste into the datas in win.spec
-   
-   $ python -m nonmouse #Levantara la interfaz 
+   $ python -m nonmouse #Levantara la interfaz del juego
    ... ````
 
 

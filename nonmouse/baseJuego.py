@@ -26,8 +26,12 @@ class GameWindow:
     
         
         # Frame para la cámara (lado derecho)
-        self.camera_frame = tk.Frame(self.main_frame, width=20, height=15)  #En la parte de arriba se posicionara la camara aunque la parte de abajo queda libre
+        self.camera_frame = tk.Frame(self.main_frame, bg="lightblue", width=20, height=700)  #En la parte de arriba se posicionara la camara aunque la parte de abajo queda libre
         self.camera_frame.pack(side='right', anchor='ne', padx=20, pady=20)
+
+        # Frame para la descripcion del juego (lado derecho debajo de la camara) Eror aun no se ajusta debajo de camera frame
+        self.description_frame = tk.Frame(self.main_frame, bg="lightblue", width=20, height=15)
+        self.description_frame.pack(side='right', anchor='ne', padx=20, pady=20)
 
         # Label para mostrar el feed de la cámara
         self.camera_label = tk.Label(self.camera_frame)
