@@ -1,5 +1,5 @@
 #baseJuego.py Se reutilizo la funcionalidad de main.py 
-#Descripción: Aqui se modifica todo lo que tiene que ver con funcionalidad del mouse y ventana
+#Descripción: Aqui se modifica todo lo que tiene que ver con funcionalidad del mouse para cada juego en especifico y ventana del juego
 #Solo tiene por el momento ninguna flag
 import tkinter as tk
 from PIL import Image, ImageTk
@@ -13,25 +13,27 @@ class GameWindow:
     def __init__(self,gameName):
         self.root = tk.Tk()
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
-        self.root.geometry('1900x1200')  # Ventana más grande para acomodar todo
+        self.root.attributes('-fullscreen', True)  # Activa el modo de pantalla completa
 
         # Frame principal
         self.main_frame = tk.Frame(self.root)
         self.main_frame.pack(expand=True, fill='both')
 
         # Frame para el juego (lado izquierdo) Se tiene que reemplazar con cada juego en especifico
-        self.game_frame = tk.Frame(self.main_frame, width=200, height=700)
+        self.game_frame = tk.Frame(self.main_frame, width=200, height=850)
         self.game_frame.pack(side='left', expand=True, fill='both')
 
-    
-        
-        # Frame para la cámara (lado derecho)
-        self.camera_frame = tk.Frame(self.main_frame, bg="lightblue", width=20, height=700)  #En la parte de arriba se posicionara la camara aunque la parte de abajo queda libre
-        self.camera_frame.pack(side='right', anchor='ne', padx=20, pady=20)
+        # Contenedor vertical para cámara y descripción
+        self.camera_and_description_frame = tk.Frame(self.main_frame, bg="lightblue", width=270, height=850)
+        self.camera_and_description_frame.pack(side='right', fill='both', padx=0, pady=0)
 
-        # Frame para la descripcion del juego (lado derecho debajo de la camara) Eror aun no se ajusta debajo de camera frame
-        self.description_frame = tk.Frame(self.main_frame, bg="lightblue", width=20, height=15)
-        self.description_frame.pack(side='right', anchor='ne', padx=20, pady=20)
+        # Frame para la cámara (dentro del contenedor)
+        self.camera_frame = tk.Frame(self.camera_and_description_frame, width=240, height=180)
+        self.camera_frame.pack(side='top', fill='both',  padx=10, pady=10)
+
+        # Frame para la descripción (debajo de la cámara, dentro del contenedor)
+        self.description_frame = tk.Frame(self.camera_and_description_frame, bg="green", width=270, height=780)
+        self.description_frame.pack(side='bottom', fill='both', expand=True)
 
         # Label para mostrar el feed de la cámara
         self.camera_label = tk.Label(self.camera_frame)
@@ -56,8 +58,8 @@ class GameWindow:
 
 
     def setup_camera(self):
-        self.cap_width = 210
-        self.cap_height = 170
+        self.cap_width = 250
+        self.cap_height = 180
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FPS, 60)
         cfps = int(self.cap.get(cv2.CAP_PROP_FPS))
@@ -93,7 +95,7 @@ class GameWindow:
         self.start = float('inf')
         self.c_start = float('inf')
         self.dis = 0.7
-        self.kando = 9.0  # Sensibilidad del mouse
+        self.kando =11.0  # Sensibilidad del mouse
         self.ran = 6  # Suavizado
 
     def process_hand_tracking(self, image, results):
