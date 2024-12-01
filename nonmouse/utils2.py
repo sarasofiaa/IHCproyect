@@ -15,6 +15,8 @@ def calculate_moving_average(value, window_size, value_list):
     if len(value_list) > window_size:
         value_list.pop(0)
     return sum(value_list) / len(value_list)
+
+#Reutilizar para la carga de imagenes
 def cargar_imagen(ruta, altura=None):
     try:
         imagen = Image.open(ruta)

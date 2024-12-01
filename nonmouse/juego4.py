@@ -1,3 +1,6 @@
+#Solo tiene por el momento pellizco flag
+#Idea del juego: Casas al final tipo Plantas Vs Zombies no dejar que lleguen los insectos a las casitas pero cuidado con pellizcar un perrito
+#Nuevo gesto? puede ser desplazar para tener mas tiempo gesto desplazar 
 import tkinter as tk
 from .baseJuego import GameWindow
 import random

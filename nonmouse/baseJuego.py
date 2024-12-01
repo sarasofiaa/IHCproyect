@@ -1,13 +1,15 @@
 #baseJuego.py Se reutilizo la funcionalidad de main.py 
 #Descripción: Aqui se modifica todo lo que tiene que ver con funcionalidad del mouse para cada juego en especifico y ventana del juego
-#Solo tiene por el momento ninguna flag
+#lleno de comentarios y reutilizado para todos los juegos
 import tkinter as tk
 from PIL import Image, ImageTk
 import cv2
 import mediapipe as mp
+import os
 from pynput.mouse import Button, Controller
 from nonmouse.utils2 import calculate_distance, draw_circle, calculate_moving_average
 from .datosGlobales import get_game_active
+from .utils2 import cargar_imagen
 
 class GameWindow:
     def __init__(self,gameName):
@@ -16,7 +18,16 @@ class GameWindow:
         
         self.root.attributes('-fullscreen', True)  # Activa el modo de pantalla completa
         self.root.bind('<Escape>',self.exit_fullscreen) #Pantalla completa para el videojuego, esc para pantalla extendida
+        #COLORES
+        color_principal = "#141240" #Azul
+        color_botones = "#4f722a" #Verde
 
+        #IMAGENES
+        base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
+        ruta_logo = os.path.join(base_dir, "..", "images", "titulo.png")
+        imagen_logo = cargar_imagen(ruta_logo,altura=50)
+
+        # FRAMES 
         # Frame principal
         self.main_frame = tk.Frame(self.root)
         self.main_frame.pack(expand=True, fill='both')
@@ -34,17 +45,27 @@ class GameWindow:
         self.camera_frame.pack(side='top', fill='both',  padx=10, pady=10)
 
         # Frame para la descripción (debajo de la cámara, dentro del contenedor)
-        self.description_frame = tk.Frame(self.camera_and_description_frame, bg="green", width=270, height=780)
+        self.description_frame = tk.Frame(self.camera_and_description_frame, bg=color_principal, width=270, height=780)
         self.description_frame.pack(side='bottom', fill='both', expand=True)
 
+        # Frame con el logo Y boton de regresar dentro de la descripción
+        self.logo_frame = tk.Frame(self.description_frame, bg="red", height = 50)
+        self.logo_frame.pack(side="top", fill='x', expand=True)
+
+        #LABELS
         # Label para mostrar el feed de la cámara
         self.camera_label = tk.Label(self.camera_frame)
         self.camera_label.pack(expand=True, fill='both')
 
-        
         #Label con el logo en la descripcion al inicio
-        self.logo_label = tk.Label(self.description_frame)
-        self.logo_label.pack(side='top')
+        self.logo_label = tk.Label(self.logo_frame, image=imagen_logo)
+        self.logo_label.pack(expand=True, fill ="both", padx=5, pady=5)
+        self.logo_label.place(relwidth=1, relheight=1)
+        self.logo_frame.image = imagen_logo #Mantiene la imagen
+
+        #boton de regresar
+        self.back_button = tk.Button(self.description_frame, text="Regresar", bg=color_botones, fg="white")
+        self.back_button.pack(side="top", pady=10)
 
         # Configuración inicial
         self.setup_camera()
@@ -67,11 +88,11 @@ class GameWindow:
             widget.destroy()
         game_logic(self.game_frame)
     # Set frame de descripcion puntaje titulo etc (debajo de la camara) informacion del juego quizas?  
-    def setDescriptionFrame(self,game_description):
+    def setDescriptionFrame(self,game_description): #Falta ajustar 
         
         print("Falta ajustar")
 
-
+#CONFIGURACION DE LA CAMARA ___________________________________________________________________________________________________________
     def setup_camera(self):
         self.cap_width = 250
         self.cap_height = 180
