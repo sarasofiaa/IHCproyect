@@ -13,7 +13,9 @@ class GameWindow:
     def __init__(self,gameName):
         self.root = tk.Tk()
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
+        
         self.root.attributes('-fullscreen', True)  # Activa el modo de pantalla completa
+        self.root.bind('<Escape>',self.exit_fullscreen) #Pantalla completa para el videojuego, esc para pantalla extendida
 
         # Frame principal
         self.main_frame = tk.Frame(self.root)
@@ -39,6 +41,11 @@ class GameWindow:
         self.camera_label = tk.Label(self.camera_frame)
         self.camera_label.pack(expand=True, fill='both')
 
+        
+        #Label con el logo en la descripcion al inicio
+        self.logo_label = tk.Label(self.description_frame)
+        self.logo_label.pack(side='top')
+
         # Configuración inicial
         self.setup_camera()
         self.setup_mediapipe()
@@ -46,6 +53,13 @@ class GameWindow:
         
         # Iniciar la actualización de la cámara
         self.update_camera()
+
+    # Expansion de la pantalla cuando se sale de la pantalla completa
+    def exit_fullscreen(self,event):
+        self.root.state('zoomed')
+        self.root.attributes('-fullscreen', False)
+        
+
     # Set frame de juego 
     def setGameFrame(self,game_logic):
         # Limpia el frame actual
@@ -53,7 +67,8 @@ class GameWindow:
             widget.destroy()
         game_logic(self.game_frame)
     # Set frame de descripcion puntaje titulo etc (debajo de la camara) informacion del juego quizas?  
-    def setCameraFrame(self,game_description):
+    def setDescriptionFrame(self,game_description):
+        
         print("Falta ajustar")
 
 
