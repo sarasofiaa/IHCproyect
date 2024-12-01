@@ -41,16 +41,16 @@ class GameWindow:
         self.camera_and_description_frame.pack(side='right', fill='both', padx=0, pady=0)
 
         # Frame para la cámara (dentro del contenedor)
-        self.camera_frame = tk.Frame(self.camera_and_description_frame, width=240, height=180)
+        self.camera_frame = tk.Frame(self.camera_and_description_frame, width=250, height=180)
         self.camera_frame.pack(side='top', fill='both',  padx=10, pady=10)
 
         # Frame para la descripción (debajo de la cámara, dentro del contenedor)
         self.description_frame = tk.Frame(self.camera_and_description_frame, bg=color_principal, width=270, height=780)
         self.description_frame.pack(side='bottom', fill='both', expand=True)
 
-        # Frame con el logo Y boton de regresar dentro de la descripción
-        self.logo_frame = tk.Frame(self.description_frame, bg="red", height = 50)
-        self.logo_frame.pack(side="top", fill='x', expand=True)
+        # Frame contenedor con el logo Y boton de regresar dentro de la descripción
+        self.logob_frame = tk.Frame(self.description_frame, height = 60,bg= color_principal)
+        self.logob_frame.pack(side="top", fill='x', expand=False)
 
         #LABELS
         # Label para mostrar el feed de la cámara
@@ -58,14 +58,18 @@ class GameWindow:
         self.camera_label.pack(expand=True, fill='both')
 
         #Label con el logo en la descripcion al inicio
-        self.logo_label = tk.Label(self.logo_frame, image=imagen_logo)
-        self.logo_label.pack(expand=True, fill ="both", padx=5, pady=5)
-        self.logo_label.place(relwidth=1, relheight=1)
-        self.logo_frame.image = imagen_logo #Mantiene la imagen
+        self.logo_label = tk.Label(self.logob_frame, image=imagen_logo)
+        self.logo_label.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)  # Posiciona el logo en la fila 0
+        self.logob_frame.image = imagen_logo #Mantiene la imagen
 
         #boton de regresar
-        self.back_button = tk.Button(self.description_frame, text="Regresar", bg=color_botones, fg="white")
-        self.back_button.pack(side="top", pady=10)
+        self.back_button = tk.Button(self.logob_frame, text="Regresar", bg=color_botones, fg="white")
+        self.back_button.grid(row=1, column=0, sticky="nsew", padx=5, pady=10)  # Posiciona el botón en la fila 1
+
+        # Ajustar el layout del frame para expandirse correctamente
+        self.logob_frame.grid_rowconfigure(0, weight=1)  # La fila del logo puede expandirse
+        self.logob_frame.grid_rowconfigure(1, weight=1)  # La fila del botón puede expandirse
+        self.logob_frame.grid_columnconfigure(0, weight=1)  # La columna única ocupa todo el ancho
 
         # Configuración inicial
         self.setup_camera()
@@ -76,10 +80,12 @@ class GameWindow:
         self.update_camera()
 
     # Expansion de la pantalla cuando se sale de la pantalla completa
-    def exit_fullscreen(self,event):
-        self.root.state('zoomed')
-        self.root.attributes('-fullscreen', False)
-        
+    def exit_fullscreen(self, event=None):  # Asegúrate de recibir el evento para la tecla Escape
+        self.root.attributes('-fullscreen', False)  # Sal del modo pantalla completa
+        self.root.state('zoomed')  # Ajusta la ventana al modo extendido
+        self.main_frame.pack(expand=True, fill='both')  # Reajusta el frame principal
+        print("Saliste del modo pantalla completa y ahora estás en modo extendido")
+
 
     # Set frame de juego 
     def setGameFrame(self,game_logic):
