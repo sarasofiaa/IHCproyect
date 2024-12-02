@@ -44,8 +44,6 @@ def mostrar_instrucciones():
     ).place(relx=0.5, y=45, anchor="n")
 
     """
-     
-
     # Explicación 
     descripcion = """
     Apreta los insectos, por cada insecto que 
@@ -112,8 +110,8 @@ def mostrar_instrucciones():
     # Botón de continuar
     def continuar():
         root.destroy()  # Cerrar ventana de instrucciones
-        game_window = GameWindow("Juego4: Pellizca el insecto")
-        game_window.setGameFrame(logicaJuego4)  # Asegúrate de tener esta función definida
+        game_window = GameWindow("Juego4: Pellizca el insecto") # Inicio del juego
+        game_window.setGameFrame(logicaJuego4)  # tener esta función definida
         game_window.run()
 
     boton_continuar = tk.Button(
@@ -134,14 +132,22 @@ def mostrar_instrucciones():
     
     root.mainloop()
 
-
-def logicaJuego4(game_frame):
+#JUEGO_____________________________________________________________________________________________________________________________
+def logicaJuego4(game_frame): 
     #Variables globales 
-    global score  # Asegúrate de definir score y errores globalmente
-    global errores
-    score = 0  # Definir la variable global score
-    errores = 0 
-    tiempo = 0 #Tiempo en segundos de acuerdo vaya avanzando aumenta la dificultad
+    global insects_past, insects_score, pets_press # Asegúrate de definir score y errores globalmente
+    
+    insects_past = 0  # Definir la variable global score
+    insects_score = 0 
+    pets_press = 0
+
+    # Asegurarse de que el tamaño del frame sea actualizado
+    game_frame.update_idletasks()
+
+    #Canvas
+    canvas_game = tk.Canvas(game_frame)
+    canvas_game.pack(fill="both", expand=True)
+
 
     #Fondo
     base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
@@ -149,12 +155,10 @@ def logicaJuego4(game_frame):
     fondo = cargar_imagen(ruta_fondo, altura=955)
     
     if fondo:
-        label_fondo = tk.Label(game_frame, image=fondo)
-        label_fondo.place(relwidth=1, relheight=1)
-        game_frame.image = fondo  # Mantener la referencia
+        canvas_game.create_image(0, 0, image=fondo, anchor="nw")
+        game_frame.image = fondo
     #Interfaz y logica del juego
-    #Descripcion: Apreta los insectos, por cada insecto que aprietes subira tu score, pero si apretas un lugar incorrecto o un animal 
-    #mas de tres veces el juego acabara, intenta tener el mayor score posible
+    #Descripcion: Pellizca los insectos antes que lleguen a la casa del perrito ubicado a la izquierda, pero cuidado con apretar a las mascotas
     
     
     def movimientoAleat(boton):
@@ -163,12 +167,11 @@ def logicaJuego4(game_frame):
         boton.place(x=x,y=y)
         
     def apretasteInsecto(boton):
-        global score
-        print("Hasta aqui llega????") #depuracion
+        global insects_score
         
         print("Apretaste un insecto")
-        score += 1
-        print(f"¡Apretaste un insecto! Puntos: {score}")
+        insects_score += 1
+        print(f"¡Apretaste un insecto! Puntos: {insects_score}")
         movimientoAleat(boton)
 
     def apretasteMal(boton):
@@ -182,7 +185,7 @@ def logicaJuego4(game_frame):
         print("¡Juego terminado!")
         mensaje_gameOver = tk.Label(
             game_frame, 
-            text=f"¡Juego terminado! Puntuación: {score}", 
+            text=f"¡Juego terminado! Puntuación: {insects_score}", 
             font=("Arial", 14, "bold"), 
             bg="red", 
             fg="white"
@@ -190,7 +193,6 @@ def logicaJuego4(game_frame):
         mensaje_gameOver.place(relx=0.5, rely=0.5, anchor="center")
 
     # Crear botones dinámicos
-    print("Creando botones") #depuracion
     #Imagenes para los botones 
     #Insecto
     ruta_insecto = os.path.join(base_dir, "..", "images", "juego4", "insecto1.png")

@@ -18,6 +18,7 @@ class GameWindow:
         
         self.root.attributes('-fullscreen', True)  # Activa el modo de pantalla completa
         self.root.bind('<Escape>',self.exit_fullscreen) #Pantalla completa para el videojuego, esc para pantalla extendida
+       
         #COLORES
         color_principal = "#141240" #Azul
         color_botones = "#4f722a" #Verde
@@ -33,7 +34,7 @@ class GameWindow:
         self.main_frame.pack(expand=True, fill='both')
 
         # Frame para el juego (lado izquierdo) Se tiene que reemplazar con cada juego en especifico
-        self.game_frame = tk.Frame(self.main_frame, width=200, height=850)
+        self.game_frame = tk.Frame(self.main_frame, width=1250, height=950)
         self.game_frame.pack(side='left', expand=True, fill='both')
 
         # Contenedor vertical para cámara y descripción
