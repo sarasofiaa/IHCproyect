@@ -145,8 +145,8 @@ def logicaJuego4(game_frame):
 
     #Fondo
     base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
-    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondo.jpg")
-    fondo = cargar_imagen(ruta_fondo, altura=1200)
+    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondo.png")
+    fondo = cargar_imagen(ruta_fondo, altura=955)
     
     if fondo:
         label_fondo = tk.Label(game_frame, image=fondo)
