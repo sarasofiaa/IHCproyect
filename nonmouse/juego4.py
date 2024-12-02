@@ -6,7 +6,7 @@ from .baseJuego import GameWindow
 import random
 from PIL import Image, ImageTk
 import os
-from .utils2 import cargar_imagen
+from .utils2 import cargar_imagen, cargar_gift
 
 
 
@@ -135,11 +135,11 @@ def mostrar_instrucciones():
 #JUEGO_____________________________________________________________________________________________________________________________
 def logicaJuego4(game_frame): 
     #Variables globales 
-    global insects_past, insects_score, pets_press # Asegúrate de definir score y errores globalmente
+    global insects_past, insects_score, error # Asegúrate de definir score y errores globalmente
     
     insects_past = 0  # Definir la variable global score
     insects_score = 0 
-    pets_press = 0
+    error = 0
 
     # Asegurarse de que el tamaño del frame sea actualizado
     game_frame.update_idletasks()
@@ -148,19 +148,26 @@ def logicaJuego4(game_frame):
     canvas_game = tk.Canvas(game_frame)
     canvas_game.pack(fill="both", expand=True)
 
-
-    #Fondo
+    #Fondo en canvas
     base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
     ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondo.png")
     fondo = cargar_imagen(ruta_fondo, altura=955)
     
-    if fondo:
+    if fondo: #Fondo carga en el canvas correctamente
         canvas_game.create_image(0, 0, image=fondo, anchor="nw")
         game_frame.image = fondo
+
     #Interfaz y logica del juego
     #Descripcion: Pellizca los insectos antes que lleguen a la casa del perrito ubicado a la izquierda, pero cuidado con apretar a las mascotas
-    
-    
+    def insect_passed():
+        insects_past +=1 
+
+    def animal_pressed():
+        error +=1
+
+    def insect_pressed():
+        insects_score +=1 
+    """
     def movimientoAleat(boton):
         x = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
         y = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
@@ -191,13 +198,30 @@ def logicaJuego4(game_frame):
             fg="white"
         )
         mensaje_gameOver.place(relx=0.5, rely=0.5, anchor="center")
+    """
+    # Crear gifts dinámicos
+    # Carga de gifts
+    #Rutas
+    ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
+    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro1.gif")
 
-    # Crear botones dinámicos
-    #Imagenes para los botones 
-    #Insecto
+    #Insectos
+    gift_insecto1 = cargar_gift(ruta_insecto1, altura = 25)
+    if gift_insecto1:
+        frames_insecto1 = gift_insecto1
+
+    #Animales
+    gift_mascota1 = cargar_gift(ruta_mascota1, altura = 25)
+    if gift_mascota1:
+        frames_mascota1 = gift_mascota1
+    
+    #Canvas_game insercion de gifts
+    """
     ruta_insecto = os.path.join(base_dir, "..", "images", "juego4", "insecto1.png")
     imagen_insecto = cargar_imagen(ruta_insecto, altura=150)
-    #Animal (Perro)
+    
+    #Mascotas
+    gift_mascota1 =
     ruta_animal1 = os.path.join(base_dir, "..", "images", "juego4", "animal1.png")
     imagen_animal1 = cargar_imagen(ruta_animal1, altura=150)
 
@@ -220,6 +244,7 @@ def logicaJuego4(game_frame):
             game_frame.after(1000, mover)
         else:
             gameOver()
+    """
     
 
 

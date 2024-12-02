@@ -29,3 +29,29 @@ def cargar_imagen(ruta, altura=None):
         print(f"No se pudo cargar la imagen desde {ruta}: {e}")
         return None
 
+# Reutilizar para cargar gifts
+def cargar_gift(ruta, altura=None):
+    try:
+        # Abrir la imagen GIF
+        imagen = Image.open(ruta)
+        
+        # Si se proporciona altura, redimensionar la imagen manteniendo la relación de aspecto
+        if altura:
+            ancho = int(imagen.width * (altura / imagen.height))
+            imagen = imagen.resize((ancho, altura), Image.ANTIALIAS)  # Redimensionar con el filtro ANTIALIAS
+        
+        # Convertir la imagen PIL a ImageTk.PhotoImage para su uso en Tkinter
+        # Si la imagen tiene múltiples frames (GIF animado), también necesitamos manejar eso
+        if imagen.is_animated:
+            frames = []
+            for i in range(imagen.n_frames):
+                imagen.seek(i)  # Navegar a cada frame
+                frame = imagen.copy()
+                frames.append(ImageTk.PhotoImage(frame))
+            return frames  # Devolver todos los frames si es un GIF animado
+        else:
+            return ImageTk.PhotoImage(imagen)  # Si no es un GIF animado, devolver una sola imagen
+
+    except Exception as e:
+        print(f"No se pudo cargar la imagen desde {ruta}: {e}")
+        return None
