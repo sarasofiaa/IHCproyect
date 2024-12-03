@@ -134,17 +134,27 @@ def mostrar_instrucciones():
     
     root.mainloop()
 
+
+
 #JUEGO_____________________________________________________________________________________________________________________________
 def logicaJuego4(game_frame): 
     #Variables globales 
     global insects_past, insects_score, error, time # Asegúrate de definir score y errores globalmente
     
-    insects_past = 0  # Definir la variable global score
-    insects_score = 0 
+    insects_pass = 0  # Definir la variable global score
+    pet_pass = 0
     error = 0
     time = 0
-    # Asegurarse de que el tamaño del frame sea actualizado
-    game_frame.update_idletasks()
+    
+    def ajustar_fondo(event=None):
+        frame_height = game_frame.winfo_height()
+        print(f"Dimensiones del frame:x{frame_height}")  # Para depuración
+
+        fondo = cargar_imagen(ruta_fondo, altura=frame_height)
+        if fondo:
+            canvas_game.create_image(0, 0, image=fondo, anchor="nw")
+            canvas_game.image = fondo  # Prevenir que el fondo sea recolectado por el Garbage Collector
+
 
     #Canvas
     canvas_game = tk.Canvas(game_frame)
@@ -153,17 +163,15 @@ def logicaJuego4(game_frame):
     #Fondo en canvas
     base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
     ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
-    fondo = cargar_imagen(ruta_fondo, altura=950)
-    
-    if fondo: #Fondo carga en el canvas correctamente
-        canvas_game.create_image(0, 0, image=fondo, anchor="nw")
-        game_frame.image = fondo
+    # Asegurarse de que el tamaño del frame sea actualizado
+    # Vincular el evento de redimensionamiento
+    game_frame.bind("<Configure>", ajustar_fondo)
 
     #Interfaz y logica del juego
     #Descripcion: Pellizca los insectos antes que lleguen a la casa del perrito ubicado a la izquierda, pero cuidado con apretar a las mascotas
     def insect_passed():
-        global insects_past
-        insects_past +=1 
+        global insects_pass
+        insects_pass +=1 
         #FALTA: animacion de picadura a animal en la pantalla o sonido de grito de perrito
 
     def animal_pressed():
@@ -171,10 +179,12 @@ def logicaJuego4(game_frame):
         error +=1 
         #FALTA:  animal desaparecer y label en instrucciones con 1/3 errores 
 
-    def insect_pressed():
-        global insects_score
-        insects_score +=1 
+    def pet_passed():
+        global pet_pass
+        pet_pass +=1
+        
         # FALRA : insecto desaparece y label de score aumenta
+    
     """
     def movimientoAleat(boton):
         x = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
