@@ -3,7 +3,7 @@ from tkinter import Canvas
 from PIL import Image, ImageTk
 import random
 
-def mostrar_gif(root, canvas, archivo, fondo_imagen, velocidad=20):
+def mostrar_gif(root, canvas, archivo, fondo_imagen, velocidad=20, width_canvas =800, height_canvas= 800):
     try:
         # Abrir el GIF con Pillow
         img = Image.open(archivo)
@@ -19,7 +19,7 @@ def mostrar_gif(root, canvas, archivo, fondo_imagen, velocidad=20):
 
         # Abrir la imagen de fondo (ahora puede ser un PNG)
         fondo = Image.open(fondo_imagen)
-        fondo_width, fondo_height = fondo.size
+        fondo_width, fondo_height = width_canvas, height_canvas
         fondo = fondo.resize((fondo_width, fondo_height))  # Ajustar tamaño de fondo al tamaño del canvas
         fondo_tk = ImageTk.PhotoImage(fondo)  # Convertir la imagen de fondo para Tkinter
 
@@ -52,8 +52,8 @@ root = tk.Tk()
 root.title("GIFs en Canvas con Fondo")
 
 # Crear el canvas donde se va a mostrar el fondo y los GIFs
-canvas_width = 800
-canvas_height = 800
+canvas_width = 1200
+canvas_height = 680
 canvas = Canvas(root, width=canvas_width, height=canvas_height)
 canvas.pack()
 
@@ -64,8 +64,8 @@ ruta_gif2 = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\prueba2\IHCproyect\imag
 
 # Cargar múltiples GIFs en el canvas (puedes agregar más archivos GIF aquí)
 # Asegúrate de tener los archivos GIF en las rutas correctas
-mostrar_gif(root, canvas, ruta_gif1 , fondo_imagen, velocidad=50)
-mostrar_gif(root, canvas, ruta_gif2 , fondo_imagen, velocidad=50)
-mostrar_gif(root, canvas, ruta_gif1 , fondo_imagen, velocidad=50)
+mostrar_gif(root, canvas, ruta_gif1 , fondo_imagen, velocidad=500, width_canvas=canvas_width, height_canvas=canvas_height)
+#mostrar_gif(root, canvas, ruta_gif2 , fondo_imagen, velocidad=50)
+#mostrar_gif(root, canvas, ruta_gif1 , fondo_imagen, velocidad=50)
 
 root.mainloop()
