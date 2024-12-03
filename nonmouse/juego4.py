@@ -153,7 +153,7 @@ def logicaJuego4(game_frame):
     #Fondo en canvas
     base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
     ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
-    fondo = cargar_imagen(ruta_fondo, altura=800)
+    fondo = cargar_imagen(ruta_fondo, altura=950)
     
     if fondo: #Fondo carga en el canvas correctamente
         canvas_game.create_image(0, 0, image=fondo, anchor="nw")
