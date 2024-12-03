@@ -156,9 +156,9 @@ class GameWindow:
                 self.process_landmarks(hand_landmarks, image)
 
                 # Detectar color por gesto
-                color_detectado = self.detectar_color_con_gesto(results)
-                if color_detectado:
-                    self.procesar_gesto(color_detectado)  # Llama al método del juego
+                #color_detectado = self.detectar_color_con_gesto(results)
+                #if color_detectado:
+                #    self.procesar_gesto(color_detectado)  # Llama al método del juego
 
         return image
 
