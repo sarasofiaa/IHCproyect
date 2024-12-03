@@ -73,10 +73,9 @@ def main_selector():
         messagebox.showinfo("Juego", "¡Escribir Números seleccionado!")
 
     def presionar_colores():
-        set_game_active(3) 
-        root.destroy()
-        instrucciones()
-        #messagebox.showinfo("Juego", "¡Presionar Colores seleccionado!")
+        set_game_active(3)  # Registrar el juego activo
+        root.destroy()  # Cierra la ventana principal del selector
+        instrucciones() #instrucciones del juego
 
     def presionar_animales():
         set_game_active(4) 
