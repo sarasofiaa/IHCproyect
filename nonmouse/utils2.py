@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 from PIL import Image, ImageTk 
 import os
+import tkinter as tk
 
 def calculate_distance(point1, point2):
     return np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
@@ -55,3 +56,43 @@ def cargar_gift(ruta, altura=None):
     except Exception as e:
         print(f"No se pudo cargar la imagen desde {ruta}: {e}")
         return None
+
+def mostrar_gif(root, archivo, x=0, y=0, velocidad=20):
+   
+    try:
+        # Abrir el GIF con Pillow
+        img = Image.open(archivo)
+        
+        framesNum = img.n_frames
+        
+        # Crear una lista de frames extraídos del GIF
+        frames = []
+        for i in range(framesNum):
+            img.seek(i)  # Moverse al frame i
+            frame = ImageTk.PhotoImage(img.copy())  # Convertir la imagen a un objeto compatible con Tkinter
+            frames.append(frame)
+
+        # Obtener el tamaño de la imagen (ancho y alto)
+        gif_width, gif_height = img.size
+
+        # Crear el canvas donde se va a mostrar el gif
+        canvas = tk.Canvas(root, width=gif_width, height=gif_height)
+        canvas.pack()
+        canvas.place(x=x, y=y)  # Posicionar el canvas en la ubicación deseada
+
+        # Función para actualizar el GIF
+        def update(ind):
+            """ Actualiza la imagen del GIF """
+            canvas.create_image(0, 0, image=frames[ind], anchor=tk.NW)
+            ind += 1
+            if ind == len(frames):
+                ind = 0  # Volver al primer frame si se alcanza el final
+            root.after(velocidad, update, ind)  # Llama nuevamente a la función después de 'velocidad' ms
+
+        # Iniciar la animación desde el primer frame
+        root.after(0, update, 0)
+
+    except Exception as e:
+        print(f"Error al mostrar el GIF: {e}")
+
+    
