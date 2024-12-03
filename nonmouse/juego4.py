@@ -2,11 +2,13 @@
 #Idea del juego: Casas al final tipo Plantas Vs Zombies no dejar que lleguen los insectos a las casitas pero cuidado con pellizcar un perrito
 #Nuevo gesto? puede ser desplazar para tener mas tiempo gesto desplazar 
 import tkinter as tk
+from PIL import Image, ImageTk
 from .baseJuego import GameWindow
 import random
 from PIL import Image, ImageTk
 import os
-from .utils2 import cargar_imagen, cargar_gift
+from .utils2 import cargar_imagen, mostrar_gif
+
 
 
 
@@ -150,8 +152,8 @@ def logicaJuego4(game_frame):
 
     #Fondo en canvas
     base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
-    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondo.png")
-    fondo = cargar_imagen(ruta_fondo, altura=955)
+    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
+    fondo = cargar_imagen(ruta_fondo, altura=800)
     
     if fondo: #Fondo carga en el canvas correctamente
         canvas_game.create_image(0, 0, image=fondo, anchor="nw")
@@ -205,21 +207,32 @@ def logicaJuego4(game_frame):
         )
         mensaje_gameOver.place(relx=0.5, rely=0.5, anchor="center")
     """
-    # Crear gifts dinámicos
     # Carga de gifts
     #Rutas
     ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
     ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro1.gif")
 
     #Insectos
-    gift_insecto1 = cargar_gift(ruta_insecto1, altura = 25)
+    #gift_insecto1 = cargar_gift(ruta_insecto1, altura = 25)
+    mostrar_gif(game_frame, ruta_insecto1 , x=50, y=50, velocidad=20)
+
+
+    # Llamar al método para mostrar el GIF
+    """
     if gift_insecto1:
-        frames_insecto1 = gift_insecto1
+        insecto1_label = tk.Label(game_frame, image=gift_insecto1[0], bg=None)  # Primer frame de insecto
+        insecto1_label.place(x=100, y=100)  # Posicionar en el canvas
+        insecto1_label.image = gift_insecto1[0]  # Mantener la referencia
 
     #Animales
     gift_mascota1 = cargar_gift(ruta_mascota1, altura = 25)
     if gift_mascota1:
-        frames_mascota1 = gift_mascota1
+        mascota1_label = tk.Label(game_frame, image=gift_mascota1[0], bg=None)  # Primer frame de mascota
+        mascota1_label.place(x=300, y=200)  # Posicionar en el canvas
+        mascota1_label.image = gift_mascota1[0]  # Mantener la referencia
+    """
+    
+    
     
     #Canvas_game insercion de gifts
     
@@ -254,11 +267,4 @@ def logicaJuego4(game_frame):
     """
     
 
-
-
-
-
-
-
-    
 
