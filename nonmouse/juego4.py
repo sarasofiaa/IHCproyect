@@ -135,12 +135,12 @@ def mostrar_instrucciones():
 #JUEGO_____________________________________________________________________________________________________________________________
 def logicaJuego4(game_frame): 
     #Variables globales 
-    global insects_past, insects_score, error # Asegúrate de definir score y errores globalmente
+    global insects_past, insects_score, error, time # Asegúrate de definir score y errores globalmente
     
     insects_past = 0  # Definir la variable global score
     insects_score = 0 
     error = 0
-
+    time = 0
     # Asegurarse de que el tamaño del frame sea actualizado
     game_frame.update_idletasks()
 
@@ -160,13 +160,19 @@ def logicaJuego4(game_frame):
     #Interfaz y logica del juego
     #Descripcion: Pellizca los insectos antes que lleguen a la casa del perrito ubicado a la izquierda, pero cuidado con apretar a las mascotas
     def insect_passed():
+        global insects_past
         insects_past +=1 
+        #FALTA: animacion de picadura a animal en la pantalla o sonido de grito de perrito
 
     def animal_pressed():
-        error +=1
+        global error
+        error +=1 
+        #FALTA:  animal desaparecer y label en instrucciones con 1/3 errores 
 
     def insect_pressed():
+        global insects_score
         insects_score +=1 
+        # FALRA : insecto desaparece y label de score aumenta
     """
     def movimientoAleat(boton):
         x = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
@@ -216,6 +222,7 @@ def logicaJuego4(game_frame):
         frames_mascota1 = gift_mascota1
     
     #Canvas_game insercion de gifts
+    
     """
     ruta_insecto = os.path.join(base_dir, "..", "images", "juego4", "insecto1.png")
     imagen_insecto = cargar_imagen(ruta_insecto, altura=150)

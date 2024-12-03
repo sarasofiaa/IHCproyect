@@ -42,7 +42,7 @@ def cargar_gift(ruta, altura=None):
         
         # Convertir la imagen PIL a ImageTk.PhotoImage para su uso en Tkinter
         # Si la imagen tiene múltiples frames (GIF animado), también necesitamos manejar eso
-        if imagen.is_animated:
+        if imagen.is_animated: #Aca hay error 
             frames = []
             for i in range(imagen.n_frames):
                 imagen.seek(i)  # Navegar a cada frame
