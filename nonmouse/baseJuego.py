@@ -1,35 +1,76 @@
 #baseJuego.py Se reutilizo la funcionalidad de main.py 
-#Descripción: Aqui se modifica todo lo que tiene que ver con funcionalidad del mouse y ventana
-#Solo tiene por el momento ninguna flag
+#Descripción: Aqui se modifica todo lo que tiene que ver con funcionalidad del mouse para cada juego en especifico y ventana del juego
+#lleno de comentarios y reutilizado para todos los juegos
 import tkinter as tk
 from PIL import Image, ImageTk
 import cv2
 import mediapipe as mp
+import os
 from pynput.mouse import Button, Controller
 from nonmouse.utils2 import calculate_distance, draw_circle, calculate_moving_average
 from .datosGlobales import get_game_active
+from .utils2 import cargar_imagen
 
 class GameWindow:
     def __init__(self,gameName):
         self.root = tk.Tk()
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
-        self.root.geometry('1200x800')  # Ventana más grande para acomodar todo
+        
+        self.root.attributes('-fullscreen', True)  # Activa el modo de pantalla completa
+        self.root.bind('<Escape>',self.exit_fullscreen) #Pantalla completa para el videojuego, esc para pantalla extendida
+       
+        #COLORES
+        color_principal = "#141240" #Azul
+        color_botones = "#4f722a" #Verde
 
+        #IMAGENES
+        base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
+        ruta_logo = os.path.join(base_dir, "..", "images", "titulo.png")
+        imagen_logo = cargar_imagen(ruta_logo,altura=50)
+
+        # FRAMES 
         # Frame principal
         self.main_frame = tk.Frame(self.root)
         self.main_frame.pack(expand=True, fill='both')
 
-        # Frame para el juego (lado izquierdo)
-        self.game_frame = tk.Frame(self.main_frame, width=200, height=700)
+        # Frame para el juego (lado izquierdo) Se tiene que reemplazar con cada juego en especifico
+        self.game_frame = tk.Frame(self.main_frame, width=1250, height=950)
         self.game_frame.pack(side='left', expand=True, fill='both')
 
-        # Frame para la cámara (lado derecho)
-        self.camera_frame = tk.Frame(self.main_frame, width=20, height=15) #no funciona tamaño
-        self.camera_frame.pack(side='right', anchor='ne', padx=20, pady=20)
+        # Contenedor vertical para cámara y descripción
+        self.camera_and_description_frame = tk.Frame(self.main_frame, bg="lightblue", width=270, height=850)
+        self.camera_and_description_frame.pack(side='right', fill='both', padx=0, pady=0)
 
+        # Frame para la cámara (dentro del contenedor)
+        self.camera_frame = tk.Frame(self.camera_and_description_frame, width=250, height=180)
+        self.camera_frame.pack(side='top', fill='both',  padx=10, pady=10)
+
+        # Frame para la descripción (debajo de la cámara, dentro del contenedor)
+        self.description_frame = tk.Frame(self.camera_and_description_frame, bg=color_principal, width=270, height=780)
+        self.description_frame.pack(side='bottom', fill='both', expand=True)
+
+        # Frame contenedor con el logo Y boton de regresar dentro de la descripción
+        self.logob_frame = tk.Frame(self.description_frame, height = 60,bg= color_principal)
+        self.logob_frame.pack(side="top", fill='x', expand=False)
+
+        #LABELS
         # Label para mostrar el feed de la cámara
         self.camera_label = tk.Label(self.camera_frame)
         self.camera_label.pack(expand=True, fill='both')
+
+        #Label con el logo en la descripcion al inicio
+        self.logo_label = tk.Label(self.logob_frame, image=imagen_logo)
+        self.logo_label.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)  # Posiciona el logo en la fila 0
+        self.logob_frame.image = imagen_logo #Mantiene la imagen
+
+        #boton de regresar
+        self.back_button = tk.Button(self.logob_frame, text="Regresar", bg=color_botones, fg="white")
+        self.back_button.grid(row=1, column=0, sticky="nsew", padx=5, pady=10)  # Posiciona el botón en la fila 1
+
+        # Ajustar el layout del frame para expandirse correctamente
+        self.logob_frame.grid_rowconfigure(0, weight=1)  # La fila del logo puede expandirse
+        self.logob_frame.grid_rowconfigure(1, weight=1)  # La fila del botón puede expandirse
+        self.logob_frame.grid_columnconfigure(0, weight=1)  # La columna única ocupa todo el ancho
 
         # Configuración inicial
         self.setup_camera()
@@ -39,9 +80,29 @@ class GameWindow:
         # Iniciar la actualización de la cámara
         self.update_camera()
 
+    # Expansion de la pantalla cuando se sale de la pantalla completa
+    def exit_fullscreen(self, event=None):  # Asegúrate de recibir el evento para la tecla Escape
+        self.root.attributes('-fullscreen', False)  # Sal del modo pantalla completa
+        self.root.state('zoomed')  # Ajusta la ventana al modo extendido
+        self.main_frame.pack(expand=True, fill='both')  # Reajusta el frame principal
+        print("Saliste del modo pantalla completa y ahora estás en modo extendido")
+
+
+    # Set frame de juego 
+    def setGameFrame(self,game_logic):
+        # Limpia el frame actual
+        for widget in self.game_frame.winfo_children():
+            widget.destroy()
+        game_logic(self.game_frame)
+    # Set frame de descripcion puntaje titulo etc (debajo de la camara) informacion del juego quizas?  
+    def setDescriptionFrame(self,game_description): #Falta ajustar 
+        
+        print("Falta ajustar")
+
+#CONFIGURACION DE LA CAMARA ___________________________________________________________________________________________________________
     def setup_camera(self):
-        self.cap_width = 210
-        self.cap_height = 170
+        self.cap_width = 250
+        self.cap_height = 180
         self.cap = cv2.VideoCapture(0)
         self.cap.set(cv2.CAP_PROP_FPS, 60)
         cfps = int(self.cap.get(cv2.CAP_PROP_FPS))
@@ -77,7 +138,7 @@ class GameWindow:
         self.start = float('inf')
         self.c_start = float('inf')
         self.dis = 0.7
-        self.kando = 9.0  # Sensibilidad del mouse
+        self.kando =11.0  # Sensibilidad del mouse
         self.ran = 6  # Suavizado
 
     def process_hand_tracking(self, image, results):
@@ -131,14 +192,14 @@ class GameWindow:
         new_y = max(0, min(screen_height, current_y + dy))
         
         self.mouse.position = (new_x, new_y)
-#AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO    
+#AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
         #JUEGO 4 PELIZCA EL ANIMAL
         # Detectar gesto de pellizco
         if get_game_active() == 4:
             distancia_pellizco = calculate_distance(landmark4, landmark8)
             if distancia_pellizco < 0.05:
-                self.mouse.press(Button.right)
-                self.mouse.release(Button.right)
+                self.mouse.press(Button.left)
+                self.mouse.release(Button.left)
                 draw_circle(image, 
                           hand_landmarks.landmark[8].x * image.shape[1],  # Use image width
                           hand_landmarks.landmark[8].y * image.shape[0],  # Use image height 
