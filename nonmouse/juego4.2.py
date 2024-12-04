@@ -1,25 +1,30 @@
 from tkinter import *
 import os
+from PIL import Image, ImageTk
 
-def crear_gif_con_fondo(gif_ruta, fondo_ruta):   
-    root = Tk()
+def crear_gif_con_fondo(root, gif_ruta, fondo_ruta, width, height):   
+    #root = Tk()
 
     framesNum = 2  # Número de frames que tiene el gif
 
     # Lista de todas las imágenes del gif
     frames = [PhotoImage(file=gif_ruta, format='gif -index %i' % (i)) for i in range(framesNum)]
 
-    # Obtener las dimensiones de la primera imagen del gif
-    width = frames[0].width()
-    height = frames[0].height()
 
     # Crear el canvas con las dimensiones de la imagen
     canvas = Canvas(root, width=width, height=height)
     canvas.pack()
 
+
+
     # Cargar la imagen de fondo
-    fondo = PhotoImage(file=fondo_ruta)
-    canvas.create_image(0, 0, image=fondo, anchor=NW)  # Coloca la imagen de fondo
+    fondo = Image.open(fondo_ruta)
+    fondo_width, fondo_height = width, height
+    fondo = fondo.resize((fondo_width, fondo_height))  # Ajustar tamaño de fondo al tamaño del canvas
+    fondo_tk = ImageTk.PhotoImage(fondo)  # Convertir la imagen de fondo para Tkinter
+    
+
+    canvas.create_image(0, 0, image=fondo_tk, anchor=NW)  # Coloca la imagen de fondo
 
     def update(ind):
         """Actualiza la imagen gif."""
@@ -36,6 +41,9 @@ def crear_gif_con_fondo(gif_ruta, fondo_ruta):
     root.after(0, update, 0)
     root.mainloop()
 
+
+root = Tk()
+
 # Obtener la ruta normalizada
 base_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio actual
 project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
@@ -48,4 +56,4 @@ ruta_imagen_fondo_normalizada = os.path.normpath(ruta_imagen_fondo)
 
 print(ruta_gif_insecto1_normalizada)
 print(ruta_imagen_fondo_normalizada)
-crear_gif_con_fondo(ruta_gif_insecto1_normalizada, ruta_imagen_fondo_normalizada)
+crear_gif_con_fondo(root,ruta_gif_insecto1_normalizada, ruta_imagen_fondo_normalizada, width=1100, height=600)
