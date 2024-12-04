@@ -4,6 +4,7 @@ root = Tk()
 
 framesNum = 2 # Número de frames que tiene el gif
 archivo = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\prueba2\IHCproyect\images\juego4\insecto1.gif"
+fondoArchivo = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\prueba2\IHCproyect\images\juego4\pvz.png"  # Ruta de la imagen de fondo
 
 # Lista de todas las imágenes del gif
 frames = [PhotoImage(file=archivo, format='gif -index %i' %(i)) for i in range(framesNum)]
@@ -16,8 +17,9 @@ height = frames[0].height()
 canvas = Canvas(root, width=width, height=height)
 canvas.pack()
 
-# Colocar un fondo de color (ejemplo: fondo blanco)
-canvas.create_rectangle(0, 0, width, height, fill="lightblue", outline="")
+# Cargar la imagen de fondo
+fondo = PhotoImage(file=fondoArchivo)
+canvas.create_image(0, 0, image=fondo, anchor=NW)  # Coloca la imagen de fondo
 
 def update(ind):
     """ Actualiza la imagen gif """
@@ -25,9 +27,9 @@ def update(ind):
     ind += 1
     if ind == framesNum:
         ind = 0
-    # Actualizar la imagen en el canvas, con el fondo ya dibujado
+    # Actualizar la imagen en el canvas
     canvas.create_image(0, 0, image=frame, anchor=NW)
-    root.after(20, update, ind) # Número que regula la velocidad del gif
+    root.after(20, update, ind)  # Número que regula la velocidad del gif
 
 root.after(0, update, 0)
 root.mainloop()
