@@ -224,7 +224,12 @@ def logicaJuego4(game_frame):
 
     #Insectos
     #gift_insecto1 = cargar_gift(ruta_insecto1, altura = 25)
-    mostrar_gif(game_frame, ruta_insecto1 , x=50, y=50, velocidad=20)
+    
+    #mostrar_gif(game_frame, ruta_insecto1 , x=50, y=50, velocidad=20)
+    base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
+    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
+
+    mostrar_gif(game_frame, ruta_insecto1, ruta_fondo, x=50, y=50, velocidad=20)
 
 
     # Llamar al método para mostrar el GIF
