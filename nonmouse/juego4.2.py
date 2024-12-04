@@ -19,6 +19,7 @@ def mostrar_gif(root, canvas, archivo, fondo_imagen, velocidad=20):
 
         # Abrir la imagen de fondo (ahora puede ser un PNG)
         fondo = Image.open(fondo_imagen)
+        
         fondo_width, fondo_height = fondo.size
         fondo = fondo.resize((fondo_width, fondo_height))  # Ajustar tamaño de fondo al tamaño del canvas
         fondo_tk = ImageTk.PhotoImage(fondo)  # Convertir la imagen de fondo para Tkinter
@@ -36,8 +37,8 @@ def mostrar_gif(root, canvas, archivo, fondo_imagen, velocidad=20):
             if ind == len(frames):
                 ind = 0  # Volver al primer frame si se alcanza el final
             # Mover el GIF a una nueva posición aleatoria después de un tiempo
-            new_x = random.randint(0, fondo_width - 100)  # Ajustar para que no se salga del canvas
-            new_y = random.randint(0, fondo_height - 100)
+            new_x = random.randint(0, 100)  # Ajustar para que no se salga del canvas
+            new_y = random.randint(0, 100)
             canvas.after(velocidad, update, ind, new_x, new_y)  # Llama nuevamente a la función después de 'velocidad' ms
 
         # Iniciar la animación desde el primer frame en una posición aleatoria
@@ -52,20 +53,20 @@ root = tk.Tk()
 root.title("GIFs en Canvas con Fondo")
 
 # Crear el canvas donde se va a mostrar el fondo y los GIFs
-canvas_width = 800
-canvas_height = 800
+canvas_width = 1300
+canvas_height = 850
 canvas = Canvas(root, width=canvas_width, height=canvas_height)
 canvas.pack()
 
 # Definir la imagen de fondo en formato PNG
-fondo_imagen = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\prueba2\IHCproyect\images\juego4\fondoPatio.png"  # Cambia la ruta al PNG
-ruta_gif1 = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\prueba2\IHCproyect\images\juego4\insecto1.gif"
-ruta_gif2 = r"C:\Users\Toshiba\Documents\git\IHC(grupos)\prueba2\IHCproyect\images\juego4\perro1.gif"
+fondo_imagen = r"C:\Users\fabia.PORSHA\UNSA\Github\IHC\IHCproyect\images\juego4\fondoPatio.png"  # Cambia la ruta al PNG
+ruta_gif1 = r"C:\Users\fabia.PORSHA\UNSA\Github\IHC\IHCproyect\images\juego4\insecto1.gif"
+ruta_gif2 = r"C:\Users\fabia.PORSHA\UNSA\Github\IHC\IHCproyect\images\juego4\perro1.gif"
 
 # Cargar múltiples GIFs en el canvas (puedes agregar más archivos GIF aquí)
 # Asegúrate de tener los archivos GIF en las rutas correctas
-mostrar_gif(root, canvas, ruta_gif1 , fondo_imagen, velocidad=50)
-mostrar_gif(root, canvas, ruta_gif2 , fondo_imagen, velocidad=50)
-mostrar_gif(root, canvas, ruta_gif1 , fondo_imagen, velocidad=50)
+mostrar_gif(root, canvas, ruta_gif1 , fondo_imagen, velocidad=200)
+#mostrar_gif(root, canvas, ruta_gif2 , fondo_imagen, velocidad=200)
+#mostrar_gif(root, canvas, ruta_gif1 , fondo_imagen, velocidad=50)
 
 root.mainloop()

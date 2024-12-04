@@ -94,10 +94,11 @@ class GameWindow:
         for widget in self.game_frame.winfo_children():
             widget.destroy()
         game_logic(self.game_frame)
+
     # Set frame de descripcion puntaje titulo etc (debajo de la camara) informacion del juego quizas?  
     def setDescriptionFrame(self,game_description): #Falta ajustar 
+        game_description(self.description_frame)
         
-        print("Falta ajustar")
 
 #CONFIGURACION DE LA CAMARA ___________________________________________________________________________________________________________
     def setup_camera(self):
