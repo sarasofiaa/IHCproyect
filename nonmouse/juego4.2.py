@@ -1,5 +1,8 @@
 from tkinter import *
 
+
+
+
 root = Tk()
 
 framesNum = 2 # Número de frames que tiene el gif
@@ -23,12 +26,13 @@ canvas.create_image(0, 0, image=fondo, anchor=NW)  # Coloca la imagen de fondo
 
 def update(ind):
     """ Actualiza la imagen gif """
+    canvas.delete("gif")
     frame = frames[ind]
     ind += 1
     if ind == framesNum:
         ind = 0
     # Actualizar la imagen en el canvas
-    canvas.create_image(0, 0, image=frame, anchor=NW)
+    canvas.create_image(0, 0, image=frame, anchor=NW, tags="gif")
     root.after(20, update, ind)  # Número que regula la velocidad del gif
 
 root.after(0, update, 0)
