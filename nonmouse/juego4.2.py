@@ -2,20 +2,25 @@ from tkinter import *
 import os
 from PIL import Image, ImageTk
 
-def crear_gif_con_fondo(root, gif_ruta, fondo_ruta, width, height):   
-    #root = Tk()
+def crear_gif_con_fondo(root, gif_ruta, fondo_ruta, width, height,gif_width, gif_height):  
 
-    framesNum = 2  # Número de frames que tiene el gif
+    gif_image = Image.open(gif_ruta)  # Cargar el GIF
+    framesNum = gif_image.n_frames # Número de frames que tiene el gif
 
     # Lista de todas las imágenes del gif
-    frames = [PhotoImage(file=gif_ruta, format='gif -index %i' % (i)) for i in range(framesNum)]
+    frames = [
+        PhotoImage(file=gif_ruta, format='gif -index %i' % (i)) for i in range(framesNum)
+    ]
+    frames_resized = []
 
+    # Redimensionar los frames del gif según los nuevos tamaños proporcionados
+    for frame in frames:
+        frame_image = frame.subsample(int(frame.width() // gif_width), int(frame.height() // gif_height))
+        frames_resized.append(frame_image)
 
     # Crear el canvas con las dimensiones de la imagen
     canvas = Canvas(root, width=width, height=height)
     canvas.pack()
-
-
 
     # Cargar la imagen de fondo
     fondo = Image.open(fondo_ruta)
@@ -29,7 +34,7 @@ def crear_gif_con_fondo(root, gif_ruta, fondo_ruta, width, height):
     def update(ind):
         """Actualiza la imagen gif."""
         canvas.delete("gif")  # Elimina las imágenes previas del gif
-        frame = frames[ind]
+        frame = frames_resized[ind]
         ind += 1
         if ind == framesNum:
             ind = 0
@@ -42,18 +47,28 @@ def crear_gif_con_fondo(root, gif_ruta, fondo_ruta, width, height):
     root.mainloop()
 
 
-root = Tk()
+def logicaJuego4(): 
+    
+    #Fondo en canvas
+    base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
+    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
 
-# Obtener la ruta normalizada
-base_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio actual
-project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
-ruta_imagen_fondo = os.path.join(project_dir, "images", "juego4", "fondoPatio.png")
-ruta_gif_insecto1 = os.path.join(project_dir, "images", "juego4", "insecto1.gif")
+    # Carga de gifts
+    #Rutas
+    ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
+    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro1.gif")
 
-# Normalizar las rutas para asegurarse de que usan las barras invertidas correctamente
-ruta_gif_insecto1_normalizada = os.path.normpath(ruta_gif_insecto1)
-ruta_imagen_fondo_normalizada = os.path.normpath(ruta_imagen_fondo)
+    root = Tk()
 
-print(ruta_gif_insecto1_normalizada)
-print(ruta_imagen_fondo_normalizada)
-crear_gif_con_fondo(root,ruta_gif_insecto1_normalizada, ruta_imagen_fondo_normalizada, width=1100, height=600)
+    # Normalizar las rutas para asegurarse de que usan las barras invertidas correctamente
+    ruta_gif_insecto1_normalizada = os.path.normpath(ruta_insecto1)
+    ruta_imagen_fondo_normalizada = os.path.normpath(ruta_fondo)
+
+    print(ruta_gif_insecto1_normalizada)
+    print(ruta_imagen_fondo_normalizada)
+    crear_gif_con_fondo(root,ruta_gif_insecto1_normalizada, ruta_imagen_fondo_normalizada, width=1100, height=600, gif_width=100, gif_height=100)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    logicaJuego4()
