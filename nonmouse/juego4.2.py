@@ -2,7 +2,7 @@ from tkinter import *
 import os
 from PIL import Image, ImageTk
 
-def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):  
+def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, posiciones):  
 
     frames_resized_all_gifs = []
 
@@ -46,7 +46,7 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
 
 
     #el tag es para eliminar el de ese tag cuando se quiera
-    def update_gif(ind, frames_resized, tag):
+    def update_gif(ind, frames_resized, tag, pos_x, pos_y):
         """Actualiza la imagen gif."""
         canvas.delete(tag)  # Elimina las imágenes previas del gif
         frame = frames_resized[ind]
@@ -54,12 +54,13 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
         if ind == len(frames_resized):
             ind = 0
         # Actualizar la imagen en el canvas con una etiqueta "gif" para poder eliminarla después
-        canvas.create_image(0, 0, image=frame, anchor=NW, tags=tag)
-        root.after(100, update_gif, ind, frames_resized, tag)  # Número que regula la velocidad del gif
+        canvas.create_image(pos_x, pos_y, image=frame, anchor=NW, tags=tag)
+        root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y)  # Número que regula la velocidad del gif
 
     # Iniciar el ciclo de actualización de cada gif
     for idx, frames_resized in enumerate(frames_resized_all_gifs):
-        root.after(0, update_gif, 0, frames_resized, f"gif{idx}")  # Cada gif tiene un tag único
+        pos_x, pos_y = posiciones[idx]
+        root.after(0, update_gif, 0, frames_resized, f"gif{idx}", pos_x, pos_y)  # Cada gif tiene un tag único
 
     
     root.mainloop()
@@ -86,10 +87,13 @@ def logicaJuego4():
     print(ruta_gif_insecto1_normalizada)
     print(ruta_imagen_fondo_normalizada)
     print(ruta_gif_mascota1_normalizada)
+
+    #prueba para las posiciones 
+    posiciones = [(100, 200), (300, 100)]  
     crear_gif_con_fondo(root, 
                         [ruta_gif_insecto1_normalizada, ruta_gif_mascota1_normalizada], 
                         ruta_imagen_fondo_normalizada, 
-                        width=1100, height=600, gif_height=100)
+                        width=1100, height=600, gif_height=100, posiciones=posiciones)
     
     root.mainloop()
 
