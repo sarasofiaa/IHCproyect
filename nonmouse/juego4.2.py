@@ -2,21 +2,31 @@ from tkinter import *
 import os
 from PIL import Image, ImageTk
 
-def crear_gif_con_fondo(root, gif_ruta, fondo_ruta, width, height,gif_width, gif_height):  
+def crear_gif_con_fondo(root, gif_ruta, fondo_ruta, width, height, gif_height):  
 
     gif_image = Image.open(gif_ruta)  # Cargar el GIF
     framesNum = gif_image.n_frames # Número de frames que tiene el gif
+    print(framesNum)
+
+    # Obtener el ancho y alto originales del GIF
+    gif_original_width, gif_original_height = gif_image.size
+
+    # Calcular el nuevo ancho basado en la altura proporcionada (manteniendo la proporción original)
+    aspect_ratio = gif_original_width / gif_original_height
+    gif_width = int(aspect_ratio * gif_height)
 
     # Lista de todas las imágenes del gif
     frames = [
         PhotoImage(file=gif_ruta, format='gif -index %i' % (i)) for i in range(framesNum)
     ]
     frames_resized = []
-
+    
+    
     # Redimensionar los frames del gif según los nuevos tamaños proporcionados
     for frame in frames:
         frame_image = frame.subsample(int(frame.width() // gif_width), int(frame.height() // gif_height))
         frames_resized.append(frame_image)
+    
 
     # Crear el canvas con las dimensiones de la imagen
     canvas = Canvas(root, width=width, height=height)
@@ -56,19 +66,23 @@ def logicaJuego4():
     # Carga de gifts
     #Rutas
     ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
-    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro1.gif")
+    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro2.gif")
 
     root = Tk()
 
     # Normalizar las rutas para asegurarse de que usan las barras invertidas correctamente
     ruta_gif_insecto1_normalizada = os.path.normpath(ruta_insecto1)
+    ruta_gif_mascota1_normalizada = os.path.normpath(ruta_mascota1)
     ruta_imagen_fondo_normalizada = os.path.normpath(ruta_fondo)
 
     print(ruta_gif_insecto1_normalizada)
     print(ruta_imagen_fondo_normalizada)
-    crear_gif_con_fondo(root,ruta_gif_insecto1_normalizada, ruta_imagen_fondo_normalizada, width=1100, height=600, gif_width=100, gif_height=100)
+    print(ruta_gif_mascota1_normalizada)
+    crear_gif_con_fondo(root,ruta_gif_mascota1_normalizada, ruta_imagen_fondo_normalizada, width=1100, height=600, gif_height=100)
+    
     root.mainloop()
 
 
 if __name__ == "__main__":
     logicaJuego4()
+
