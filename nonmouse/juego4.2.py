@@ -16,7 +16,7 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
     fondo = fondo.resize((fondo_width, fondo_height))  # Ajustar tamaño de fondo al tamaño del canvas
     fondo_tk = ImageTk.PhotoImage(fondo)  # Convertir la imagen de fondo para Tkinter
     
-    gifs_tags = []  # Lista para almacenar los tags de los GIFs
+    gifs_tags = {} 
 
     canvas.create_image(0, 0, image=fondo_tk, anchor=NW)  # Coloca la imagen de fondo
 
@@ -62,21 +62,29 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
     for idx, frames_resized in enumerate(frames_resized_all_gifs):
         pos_x, pos_y = posiciones[idx]
         tag = f"gif{idx}"
-        gifs_tags.append(tag)
+        gifs_tags[tag] = (pos_x, pos_y) 
         root.after(0, update_gif, 0, frames_resized, f"gif{idx}", pos_x, pos_y)  # Cada gif tiene un tag único
 
     # Función para eliminar el GIF al hacer clic
     def eliminar_gif(event):
-        # Obtener las coordenadas del clic
+        # Obtener las coordenadas del clic       
         x, y = event.x, event.y
+        entidad_id = canvas.find_closest(x, y)[0]  # Obtén el ID del objeto más cercano
+        print(f"Entidad ID: {entidad_id}")
+        tags = canvas.gettags(entidad_id)  # Obtén las tags asociadas al objeto
+        print(f"Tags: {tags}")
 
-        # Verificar qué GIF se encuentra en las coordenadas
-        for idx, tag in enumerate(gifs_tags):
-            # Obtener las coordenadas de la imagen
-            item_coords = canvas.bbox(tag)  # Devuelve (x1, y1, x2, y2) de la imagen
-            if item_coords and item_coords[0] <= x <= item_coords[2] and item_coords[1] <= y <= item_coords[3]:
-                canvas.delete(tag)  # Eliminar el GIF
-                gifs_tags.remove(tag)  # Eliminar el tag de la lista
+        if tags:
+            tag = tags[0]  # Tomamos el primer tag
+            print(f"Tag del objeto: {tag}")
+            # Eliminamos el GIF si existe
+            if tag in gifs_tags:
+                canvas.delete(entidad_id)  # Eliminar el objeto por su ID
+                del gifs_tags[tag]  # Eliminar el tag del diccionario
+                print(f"GIF con tag {tag} eliminado.")
+                canvas.update() 
+            else:
+                print(f"Tag {tag} no encontrado en gifs_tags.")
 
     # Vincular el evento de clic en el canvas
     canvas.bind("<Button-1>", eliminar_gif)
