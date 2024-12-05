@@ -16,7 +16,6 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
     fondo = fondo.resize((fondo_width, fondo_height))  # Ajustar tamaño de fondo al tamaño del canvas
     fondo_tk = ImageTk.PhotoImage(fondo)  # Convertir la imagen de fondo para Tkinter
     
-
     canvas.create_image(0, 0, image=fondo_tk, anchor=NW)  # Coloca la imagen de fondo
 
     for gif_ruta in gif_rutas:
@@ -61,6 +60,16 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
     for idx, frames_resized in enumerate(frames_resized_all_gifs):
         pos_x, pos_y = posiciones[idx]
         root.after(0, update_gif, 0, frames_resized, f"gif{idx}", pos_x, pos_y)  # Cada gif tiene un tag único
+
+    # Función para eliminar el GIF al hacer clic
+    def eliminar_gif(event):
+        # Obtener las coordenadas del clic
+        x, y = event.x, event.y
+
+        print(x," ",y)
+
+    # Vincular el evento de clic en el canvas
+    canvas.bind("<Button-1>", eliminar_gif)
 
     
     root.mainloop()
