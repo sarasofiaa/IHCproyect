@@ -16,8 +16,6 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
     fondo = fondo.resize((fondo_width, fondo_height))  # Ajustar tamaño de fondo al tamaño del canvas
     fondo_tk = ImageTk.PhotoImage(fondo)  # Convertir la imagen de fondo para Tkinter
     
-    gifs_tags = {} 
-
     canvas.create_image(0, 0, image=fondo_tk, anchor=NW)  # Coloca la imagen de fondo
 
     for gif_ruta in gif_rutas:
@@ -45,10 +43,15 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
         # Almacenar los frames redimensionados de cada gif
         frames_resized_all_gifs.append(frames_resized)
 
+    # Diccionario para almacenar el ID  de cada GIF
+    gif_ids = {}
 
-    #el tag es para eliminar el de ese tag cuando se quiera
+    #Actualizar la imagen del gif en el canvas
     def update_gif(ind, frames_resized, tag, pos_x, pos_y):
         """Actualiza la imagen gif."""
+        if tag not in gif_ids:
+            return
+        
         canvas.delete(tag)  # Elimina las imágenes previas del gif
         frame = frames_resized[ind]
         ind += 1
@@ -56,14 +59,15 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
             ind = 0
         # Actualizar la imagen en el canvas con una etiqueta "gif" para poder eliminarla después
         canvas.create_image(pos_x, pos_y, image=frame, anchor=NW, tags=tag)
-        root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y)  # Número que regula la velocidad del gif
+        # Reprograma la actualización del GIF
+        gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y) # Número que regula la velocidad del gif
 
     # Iniciar el ciclo de actualización de cada gif
     for idx, frames_resized in enumerate(frames_resized_all_gifs):
         pos_x, pos_y = posiciones[idx]
         tag = f"gif{idx}"
-        gifs_tags[tag] = (pos_x, pos_y) 
-        root.after(0, update_gif, 0, frames_resized, f"gif{idx}", pos_x, pos_y)  # Cada gif tiene un tag único
+        # Guardar el ID del after para cada GIF
+        gif_ids[tag] = root.after(0, update_gif, 0, frames_resized, tag, pos_x, pos_y)
 
     # Función para eliminar el GIF al hacer clic
     def eliminar_gif(event):
@@ -78,11 +82,12 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
             tag = tags[0]  # Tomamos el primer tag
             print(f"Tag del objeto: {tag}")
             # Eliminamos el GIF si existe
-            if tag in gifs_tags:
-                canvas.delete(entidad_id)  # Eliminar el objeto por su ID
-                del gifs_tags[tag]  # Eliminar el tag del diccionario
+            if tag in gif_ids:
+                root.after_cancel(gif_ids[tag])  # Detener la actualización
+                del gif_ids[tag]  # Eliminar el 'after' del diccionario
+                canvas.delete(tag)
                 print(f"GIF con tag {tag} eliminado.")
-                canvas.update() 
+                
             else:
                 print(f"Tag {tag} no encontrado en gifs_tags.")
 
