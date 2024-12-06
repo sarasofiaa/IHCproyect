@@ -1,8 +1,12 @@
 from tkinter import *
 import os
+import random
+
 from PIL import Image, ImageTk
 
-def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, posiciones):  
+# Definir posiciones Y como variable global
+posiciones_y = [90, 110, 110, 210, 210, 310]  
+def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):  
 
     frames_resized_all_gifs = []
 
@@ -58,13 +62,17 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height, 
         if ind == len(frames_resized):
             ind = 0
         # Actualizar la imagen en el canvas con una etiqueta "gif" para poder eliminarla después
-        canvas.create_image(pos_x, pos_y, image=frame, anchor=NW, tags=tag)
+        canvas.create_image(190, 80, image=frame, anchor=NW, tags=tag)
         # Reprograma la actualización del GIF
         gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y) # Número que regula la velocidad del gif
 
     # Iniciar el ciclo de actualización de cada gif
     for idx, frames_resized in enumerate(frames_resized_all_gifs):
-        pos_x, pos_y = posiciones[idx]
+       # Elegir una posición aleatoria en el eje X (dentro del ancho de la ventana)
+        pos_x = random.randint(0, width - 1)
+        # Elegir una posición aleatoria en el eje Y desde las posiciones predefinidas (globales)
+        pos_y = random.choice(posiciones_y)
+
         tag = f"gif{idx}"
         # Guardar el ID del after para cada GIF
         gif_ids[tag] = root.after(0, update_gif, 0, frames_resized, tag, pos_x, pos_y)
@@ -115,6 +123,12 @@ def logicaJuego4():
     ruta_gif_insecto1_normalizada = os.path.normpath(ruta_insecto1)
     ruta_gif_mascota1_normalizada = os.path.normpath(ruta_mascota1)
     ruta_imagen_fondo_normalizada = os.path.normpath(ruta_fondo)
+
+    crear_gif_con_fondo(root, 
+                        [ruta_gif_insecto1_normalizada, ruta_gif_mascota1_normalizada], 
+                        ruta_imagen_fondo_normalizada, 
+                        width=1100, height=600, gif_height=100)
+    
 
     print(ruta_gif_insecto1_normalizada)
     print(ruta_imagen_fondo_normalizada)
