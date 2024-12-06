@@ -5,7 +5,7 @@ import random
 from PIL import Image, ImageTk
 
 # Definir posiciones Y como variable global
-posiciones_y = [90, 110, 110, 210, 210, 310]  
+posiciones_y = [70, 110, 110, 210, 210, 310]  
 def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):  
 
     frames_resized_all_gifs = []
@@ -62,7 +62,7 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
         if ind == len(frames_resized):
             ind = 0
         # Actualizar la imagen en el canvas con una etiqueta "gif" para poder eliminarla después
-        canvas.create_image(190, 80, image=frame, anchor=NW, tags=tag)
+        canvas.create_image(pos_x, pos_y, image=frame, anchor=NW, tags=tag)
         # Reprograma la actualización del GIF
         gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y) # Número que regula la velocidad del gif
 
