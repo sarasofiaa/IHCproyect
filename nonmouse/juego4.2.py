@@ -50,6 +50,18 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
     # Diccionario para almacenar el ID  de cada GIF
     gif_ids = {}
 
+     # Función para generar nuevos GIFs aleatorios
+    def generar_gif_aleatorio():
+        print("Se genero un gif aleatorio")
+        # Elegir un GIF aleatorio
+        gif_ruta = random.choice(gif_rutas)
+        frames_resized = frames_resized_all_gifs[gif_rutas.index(gif_ruta)]
+        pos_x = 200
+        pos_y = random.choice(posiciones_y)
+        # Iniciar el ciclo de actualización de este gif
+        gif_ids[tag] = root.after(0, update_gif, 0, frames_resized, tag, pos_x, pos_y)
+
+
     #Actualizar la imagen del gif en el canvas
     def update_gif(ind, frames_resized, tag, pos_x, pos_y):
         """Actualiza la imagen gif."""
@@ -68,6 +80,7 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
 
         # Si el gif ha llegado al borde izquierdo, lo reiniciamos
         if pos_x < -frames_resized[0].width():
+            pos_x = width
             print("LLego al final")  # Reiniciar en el lado derecho
 
         # Reprograma la actualización del GIF
@@ -83,6 +96,9 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
         tag = f"gif{idx}"
         # Guardar el ID del after para cada GIF
         gif_ids[tag] = root.after(0, update_gif, 0, frames_resized, tag, pos_x, pos_y)
+
+    root.after(0, generar_gif_aleatorio)
+
 
     # Función para eliminar el GIF al hacer clic
     def eliminar_gif(event):
@@ -109,6 +125,7 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
     # Vincular el evento de clic en el canvas
     canvas.bind("<Button-1>", eliminar_gif)
 
+    
     
     root.mainloop()
 
