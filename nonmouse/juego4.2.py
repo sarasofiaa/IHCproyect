@@ -1,13 +1,13 @@
 from tkinter import *
 import os
 import random
-
 from PIL import Image, ImageTk
 
 # Definir posiciones Y como variable global
 posiciones_y = [70, 110, 110, 210, 210, 310]  
-def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):  
+tiempo_juego = 20000  # 20 segundos
 
+def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):  
     frames_resized_all_gifs = []
 
     # Crear el canvas con las dimensiones de la imagen
@@ -50,19 +50,19 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
     # Diccionario para almacenar el ID  de cada GIF
     gif_ids = {}
 
-     # Función para generar nuevos GIFs aleatorios
+    # Función para generar nuevos GIFs aleatorios
     def generar_gif_aleatorio():
         print("Se genero un gif aleatorio")
         # Elegir un GIF aleatorio
         gif_ruta = random.choice(gif_rutas)
         frames_resized = frames_resized_all_gifs[gif_rutas.index(gif_ruta)]
-        pos_x = 200
+        pos_x = width
         pos_y = random.choice(posiciones_y)
+        tag = f"gif_{random.randint(1000, 9999)}"  # Genera un tag único para cada gif
         # Iniciar el ciclo de actualización de este gif
         gif_ids[tag] = root.after(0, update_gif, 0, frames_resized, tag, pos_x, pos_y)
 
-
-    #Actualizar la imagen del gif en el canvas
+    # Actualizar la imagen del gif en el canvas
     def update_gif(ind, frames_resized, tag, pos_x, pos_y):
         """Actualiza la imagen gif."""
         if tag not in gif_ids:
@@ -75,34 +75,28 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
             ind = 0
         # Actualizar la imagen en el canvas con una etiqueta "gif" para poder eliminarla después
         canvas.create_image(pos_x, pos_y, image=frame, anchor=NW, tags=tag)
-         # Mover el GIF hacia la izquierda
+        # Mover el GIF hacia la izquierda
         pos_x -= 5  # Ajustar este valor para controlar la velocidad del movimiento
 
         # Si el gif ha llegado al borde izquierdo, lo reiniciamos
         if pos_x < -frames_resized[0].width():
             pos_x = width
-            print("LLego al final")  # Reiniciar en el lado derecho
+            print("Llegó al final")  # Reiniciar en el lado derecho
 
         # Reprograma la actualización del GIF
-        gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y) # Número que regula la velocidad del gif
+        gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y)  # Número que regula la velocidad del gif
 
-    # Iniciar el ciclo de actualización de cada gif
-    for idx, frames_resized in enumerate(frames_resized_all_gifs):
-       # Elegir una posición aleatoria en el eje X (dentro del ancho de la ventana)
-        pos_x = width
-        # Elegir una posición aleatoria en el eje Y desde las posiciones predefinidas (globales)
-        pos_y = random.choice(posiciones_y)
+    # Generar GIFs repetidamente
+    def generar_gifs_repetidamente():
+        if tiempo_juego > 0:  # Mientras quede tiempo en el juego
+            generar_gif_aleatorio()  # Generar un GIF aleatorio
+            root.after(1000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
 
-        tag = f"gif{idx}"
-        # Guardar el ID del after para cada GIF
-        gif_ids[tag] = root.after(0, update_gif, 0, frames_resized, tag, pos_x, pos_y)
-
-    root.after(0, generar_gif_aleatorio)
-
+    root.after(0, generar_gifs_repetidamente)
 
     # Función para eliminar el GIF al hacer clic
     def eliminar_gif(event):
-        # Obtener las coordenadas del clic       
+        # Obtener las coordenadas del clic
         x, y = event.x, event.y
         entidad_id = canvas.find_closest(x, y)[0]  # Obtén el ID del objeto más cercano
         print(f"Entidad ID: {entidad_id}")
@@ -125,8 +119,6 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
     # Vincular el evento de clic en el canvas
     canvas.bind("<Button-1>", eliminar_gif)
 
-    
-    
     root.mainloop()
 
 
@@ -170,4 +162,3 @@ def logicaJuego4():
 
 if __name__ == "__main__":
     logicaJuego4()
-
