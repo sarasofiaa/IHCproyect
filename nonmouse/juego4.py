@@ -141,19 +141,19 @@ def logicaJuego4(game_frame):
     #Variables globales 
     global insects_past, insects_score, error, time # Asegúrate de definir score y errores globalmente
     
-    insects_pass = 0  # Definir la variable global score
-    pet_pass = 0
-    error = 0
-    time = 0
+    insects_pass = 0  # Apenas pase un mosquito se termina el juego con el score de animales pasados
+    pet_pass = 0 #Score del juego
+    error = 0 # ?? No recuerdo
+    time = 0 # cuando acabe el tiempo y ningun mosquito haya entrado ganas el juego 
     
     def ajustar_fondo(event=None):
         frame_height = game_frame.winfo_height()
-        print(f"Dimensiones del frame:x{frame_height}")  # Para depuración
+        print(f"Dimensiones del frame:x{frame_height}")  # Para depuración y conocer 
 
         fondo = cargar_imagen(ruta_fondo, altura=frame_height)
         if fondo:
-            canvas_game.create_image(0, 0, image=fondo, anchor="nw")
-            canvas_game.image = fondo  # Prevenir que el fondo sea recolectado por el Garbage Collector
+            canvas_game.create_image(0, 0, image=fondo, anchor="nw") # Se crea la imagen segun la dimension
+            canvas_game.image = fondo  # Prevenir que el fondo sea recolectado por el Garbage Collector y se muestre
 
 
     #Canvas
@@ -162,7 +162,7 @@ def logicaJuego4(game_frame):
 
     #Fondo en canvas
     base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
-    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
+    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png") #dirección del fondo
     # Asegurarse de que el tamaño del frame sea actualizado
     # Vincular el evento de redimensionamiento
     game_frame.bind("<Configure>", ajustar_fondo)
@@ -171,7 +171,8 @@ def logicaJuego4(game_frame):
     #Descripcion: Pellizca los insectos antes que lleguen a la casa del perrito ubicado a la izquierda, pero cuidado con apretar a las mascotas
     def insect_passed():
         global insects_pass
-        insects_pass +=1 
+        if (insects_pass == 0):
+            gameOver()
         #FALTA: animacion de picadura a animal en la pantalla o sonido de grito de perrito
 
     def animal_pressed():
@@ -180,43 +181,26 @@ def logicaJuego4(game_frame):
         #FALTA:  animal desaparecer y label en instrucciones con 1/3 errores 
 
     def pet_passed():
-        global pet_pass
+        global pet_pass #Score
         pet_pass +=1
+
+    def endgame():
+        global pet_pass
+        print(pet_pass)
         
         # FALRA : insecto desaparece y label de score aumenta
-    
-    """
-    def movimientoAleat(boton):
-        x = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
-        y = random.randint(0,game_frame.winfo_width() - boton.winfo_width())
-        boton.place(x=x,y=y)
-        
-    def apretasteInsecto(boton):
-        global insects_score
-        
-        print("Apretaste un insecto")
-        insects_score += 1
-        print(f"¡Apretaste un insecto! Puntos: {insects_score}")
-        movimientoAleat(boton)
-
-    def apretasteMal(boton):
-        global errores
-        errores += 1
-        print(f"Apretaste mal. Errores: {errores}/3")
-        if errores >= 3:
-            gameOver()
 
     def gameOver():
         print("¡Juego terminado!")
         mensaje_gameOver = tk.Label(
             game_frame, 
-            text=f"¡Juego terminado! Puntuación: {insects_score}", 
+            text=f"¡Juego terminado! Puntuación: {pet_pass}", 
             font=("Arial", 14, "bold"), 
             bg="red", 
             fg="white"
         )
         mensaje_gameOver.place(relx=0.5, rely=0.5, anchor="center")
-    """
+    # Reemplazar conn juego4.2
     # Carga de gifts
     #Rutas
     ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
