@@ -90,7 +90,8 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
     def generar_gifs_repetidamente():
         if tiempo_juego > 0:  # Mientras quede tiempo en el juego
             generar_gif_aleatorio()  # Generar un GIF aleatorio
-            root.after(1000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
+            root.after(2000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
+            #1000 milisegundos = 1 segundo
 
     root.after(0, generar_gifs_repetidamente)
 
