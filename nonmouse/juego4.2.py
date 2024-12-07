@@ -63,13 +63,20 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
             ind = 0
         # Actualizar la imagen en el canvas con una etiqueta "gif" para poder eliminarla después
         canvas.create_image(pos_x, pos_y, image=frame, anchor=NW, tags=tag)
+         # Mover el GIF hacia la izquierda
+        pos_x -= 5  # Ajustar este valor para controlar la velocidad del movimiento
+
+        # Si el gif ha llegado al borde izquierdo, lo reiniciamos
+        if pos_x < -frames_resized[0].width():
+            print("LLego al final")  # Reiniciar en el lado derecho
+
         # Reprograma la actualización del GIF
         gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y) # Número que regula la velocidad del gif
 
     # Iniciar el ciclo de actualización de cada gif
     for idx, frames_resized in enumerate(frames_resized_all_gifs):
        # Elegir una posición aleatoria en el eje X (dentro del ancho de la ventana)
-        pos_x = random.randint(0, width - 1)
+        pos_x = width
         # Elegir una posición aleatoria en el eje Y desde las posiciones predefinidas (globales)
         pos_y = random.choice(posiciones_y)
 
