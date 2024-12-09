@@ -166,15 +166,26 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
         entidad_id = canvas.find_closest(x, y)[0]  # Obtén el ID del objeto más cercano
         tags = canvas.gettags(entidad_id)  # Obtén las tags asociadas al objeto
 
-        if tags:
+        if tags :
             tag = tags[0]  # Tomamos el primer tag
             print(f"Tag del objeto: {tag}")
             # Eliminar el GIF
-            if tag in gif_ids:
-                root.after_cancel(gif_ids[tag])  # Detener la actualización
-                del gif_ids[tag]  # Eliminar el 'after' del diccionario
-                canvas.delete(tag)
-                print(f"GIF con tag {tag} eliminado.")
+            if "insecto" in tag:  # Si el tag contiene "insecto", es un insecto
+                grupo = "insecto"
+            elif "mascota" in tag:  # Si el tag contiene "mascota", es una mascota
+                grupo = "mascota"
+            else:
+                return  # Si no es ni insecto ni mascota, no hacer nada
+
+            # Eliminar el GIF solo si es un insecto
+            if grupo == "insecto":
+                if tag in gif_ids:
+                    root.after_cancel(gif_ids[tag])  # Detener la actualización
+                    del gif_ids[tag]  # Eliminar el 'after' del diccionario
+                    canvas.delete(tag)
+                    print(f"GIF con tag {tag} eliminado.")
+            else:
+                print("No se puede eliminar mascotas")
 
     # Vincular el evento de clic en el canvas
     canvas.bind("<Button-1>", eliminar_gif)
