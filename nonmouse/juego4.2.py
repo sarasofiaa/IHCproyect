@@ -4,7 +4,7 @@ import random
 from PIL import Image, ImageTk
 
 # Definir posiciones Y como variable global
-posiciones_y = [70, 110, 110, 210, 210, 310]  
+posiciones_y = [80, 180, 280, 380, 480]  
 tiempo_juego = 20000  # 20 segundos
 
 def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):  
@@ -79,7 +79,8 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
         pos_x -= 5  # Ajustar este valor para controlar la velocidad del movimiento
 
         # Si el gif ha llegado al borde izquierdo, lo reiniciamos
-        if pos_x < -frames_resized[0].width():
+        posDesaparece = 120
+        if pos_x < posDesaparece:
             pos_x = width
             print("Llegó al final")  # Reiniciar en el lado derecho
 
@@ -90,7 +91,7 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
     def generar_gifs_repetidamente():
         if tiempo_juego > 0:  # Mientras quede tiempo en el juego
             generar_gif_aleatorio()  # Generar un GIF aleatorio
-            root.after(2000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
+            root.after(4000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
             #1000 milisegundos = 1 segundo
 
     root.after(0, generar_gifs_repetidamente)
