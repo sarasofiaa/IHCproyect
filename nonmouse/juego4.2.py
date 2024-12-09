@@ -3,9 +3,12 @@ import os
 import random
 from PIL import Image, ImageTk
 
-# Definir posiciones Y como variable global
+# Variables Globales
+insects_pass = 0  # Puntaje de insectos pasados
+pet_pass = 0  # Puntaje de mascotas pasadas
+error = 0  # ¿Para qué se usaría este? Puedes aclararlo si lo necesitas
+tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
 posiciones_y = [80, 180, 280, 380, 480]  
-tiempo_juego = 20000  # 20 segundos
 
 def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):  
     frames_resized_all_gifs = []
@@ -24,7 +27,7 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
 
     for gif_ruta in gif_rutas:
         gif_image = Image.open(gif_ruta)  # Cargar el GIF
-        framesNum = gif_image.n_frames # Número de frames que tiene el gif
+        framesNum = gif_image.n_frames  # Número de frames que tiene el gif
         print(framesNum)
 
         gif_original_width, gif_original_height = gif_image.size
@@ -65,6 +68,8 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
     # Actualizar la imagen del gif en el canvas
     def update_gif(ind, frames_resized, tag, pos_x, pos_y):
         """Actualiza la imagen gif."""
+        global insects_pass, pet_pass, tiempo
+
         if tag not in gif_ids:
             return
         
@@ -82,19 +87,28 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
         posDesaparece = 120
         if pos_x < posDesaparece:
             pos_x = width
-            print("Llegó al final")  # Reiniciar en el lado derecho
+            if 'insecto' in tag:
+                insects_pass += 1  # Incrementa si es un insecto
+            else:
+                pet_pass += 1  # Incrementa si es una mascota
+            print(f"Insectos pasados: {insects_pass}, Mascotas pasadas: {pet_pass}")
+            print(tag)
 
         # Reprograma la actualización del GIF
         gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y)  # Número que regula la velocidad del gif
 
     # Generar GIFs repetidamente
     def generar_gifs_repetidamente():
-        if tiempo_juego > 0:  # Mientras quede tiempo en el juego
+        global tiempo
+        if tiempo > 0:  # Mientras quede tiempo en el juego
             generar_gif_aleatorio()  # Generar un GIF aleatorio
+            tiempo -= 1000  # Decrementa 1 segundo
             root.after(4000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
-            #1000 milisegundos = 1 segundo
+        else:
+            fin_del_juego()
 
-    root.after(0, generar_gifs_repetidamente)
+    def fin_del_juego():
+        print("Fin del juego")
 
     # Función para eliminar el GIF al hacer clic
     def eliminar_gif(event):
@@ -121,17 +135,17 @@ def crear_gif_con_fondo(root, gif_rutas, fondo_ruta, width, height, gif_height):
     # Vincular el evento de clic en el canvas
     canvas.bind("<Button-1>", eliminar_gif)
 
+    root.after(4000, generar_gifs_repetidamente)
     root.mainloop()
 
 
 def logicaJuego4(): 
-    
-    #Fondo en canvas
-    base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
+    # Fondo en canvas
+    base_dir = os.path.dirname(os.path.abspath(__file__)) # Obtiene la dirección actual
     ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
 
-    # Carga de gifts
-    #Rutas
+    # Carga de gifs
+    # Rutas
     ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
     ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro2.gif")
 
@@ -146,21 +160,6 @@ def logicaJuego4():
                         [ruta_gif_insecto1_normalizada, ruta_gif_mascota1_normalizada], 
                         ruta_imagen_fondo_normalizada, 
                         width=1100, height=600, gif_height=100)
-    
-
-    print(ruta_gif_insecto1_normalizada)
-    print(ruta_imagen_fondo_normalizada)
-    print(ruta_gif_mascota1_normalizada)
-
-    #prueba para las posiciones 
-    posiciones = [(100, 200), (300, 100)]  
-    crear_gif_con_fondo(root, 
-                        [ruta_gif_insecto1_normalizada, ruta_gif_mascota1_normalizada], 
-                        ruta_imagen_fondo_normalizada, 
-                        width=1100, height=600, gif_height=100, posiciones=posiciones)
-    
-    root.mainloop()
-
 
 if __name__ == "__main__":
     logicaJuego4()
