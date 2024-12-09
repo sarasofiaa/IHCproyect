@@ -1,269 +1,267 @@
-#Solo tiene por el momento pellizco flag
-#Idea del juego: Casas al final tipo Plantas Vs Zombies no dejar que lleguen los insectos a las casitas pero cuidado con pellizcar un perrito
-#Nuevo gesto? puede ser desplazar para tener mas tiempo gesto desplazar 
-import tkinter as tk
-from PIL import Image, ImageTk
-from .baseJuego import GameWindow
+from tkinter import *
+import os
 import random
 from PIL import Image, ImageTk
-import os
-from .utils2 import cargar_imagen, mostrar_gif
+from .baseJuego import GameWindow
 
+# Variables Globales
+insects_pass = 0  # Puntaje de insectos pasados
+pet_pass = 0  # Puntaje de mascotas pasadas
+error = 0  # ¿Para qué se usaría este? Puedes aclararlo si lo necesitas
+tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
+posiciones_y = [80, 180, 280, 380, 480]
+pasaron_gifs = set()  # Conjunto para almacenar los GIFs que ya han pasado
 
+def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width, height, gif_height):  
+    frames_resized_all_insectos = []
+    frames_resized_all_mascotas = []
 
+    # Crear el canvas con las dimensiones de la imagen
+    canvas = Canvas(root, width=width, height=height)
+    canvas.pack()
 
-def mostrar_instrucciones():
-    root = tk.Tk()
-    root.title("Instrucciones - Presionar Animales")
-    root.geometry("1000x600")  # Ajustamos el tamaño para que haya espacio para todo
     # Cargar la imagen de fondo
-    try:
-        base_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio actual
-        project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
-        ruta_imagen_fondo = os.path.join(project_dir, "images","juego4", "fondoInstruccion.png")  # Ruta de la imagen de fondo
-
-        imagen_fondo = Image.open(ruta_imagen_fondo)  # Cargar la imagen de fondo
-        imagen_fondo = imagen_fondo.resize((1000, 600), Image.ANTIALIAS)  # Redimensionar para que quepa bien
-        fondo_tk = ImageTk.PhotoImage(imagen_fondo)
-
-        # Crear un Label para mostrar la imagen de fondo
-        fondo_label = tk.Label(root, image=fondo_tk)
-        fondo_label.place(relwidth=1, relheight=1)  # Ocupa toda la ventana
-        fondo_label.image = fondo_tk  # Referencia a la imagen para evitar que se borre
-    except Exception as e:
-        print(f"No se pudo cargar la imagen de fondo: {e}")
-
-    """
-    # Título principal con place para control de posición
-    tk.Label(
-        root,
-        text='Juego: Presionar Animales',
-        font=("Arial", 17, "bold"),  # Establecer la fuente, tamaño y estilo (negrita)
-        bg="#6da8db",  # Color de fondo (verde en este caso)
-        fg="white",  # Color de la letra (blanco)
-        padx=10,  # Relleno horizontal (opcional)
-        pady=10,  # Relleno vertical (opcional)
-    ).place(relx=0.5, y=45, anchor="n")
-
-    """
-    # Explicación 
-    descripcion = """
-    Apreta los insectos, por cada insecto que 
-    aprietes subira tu score, pero si apretas un 
-    lugar incorrecto o un animal mas de TRES veces
-    el juego acabara, intenta tener el 
-    mayor score posible
-    """
-    # Crear el Label con las instrucciones y posicionarlo
-    tk.Label(
-        root,
-        text=descripcion,
-        font=("Arial", 15),  # Fuente de letra y tamaño
-        justify="center",  # Alinea el texto a la izquierda para que quede más organizado
-        bg="#d4e7ff",  # Color de fondo (puedes elegir otro color)
-        fg="black",  # Color de la letra
-        width=42,  # Ancho del texto (puedes ajustarlo según el contenido)
-        height=5,  # Altura para hacer que el texto ocupe más espacio si es necesario
-        padx=2,  # Relleno horizontal
-        pady=2,  # Relleno vertical
-        anchor="nw"  # Ancla superior para que el texto se posicione desde la parte superior
-    ).place(x=125, y=150)  # Posicionar en la ubicación deseada
-        
-    # Instrucción visual del pellizco correcto
-    try:
-        # Cargar la imagen de la instrucción
-        base_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio actual
-        project_dir = os.path.dirname(base_dir)  # Subir un nivel para llegar a la raíz del proyecto
-        ruta_imagen = os.path.join(project_dir, "images", "juego4", "pellizco.png")  # Ruta de la imagen
-
-        imagen = Image.open(ruta_imagen)  # Cargar la imagen
-        imagen = imagen.resize((150, 220), Image.ANTIALIAS)  # Redimensionar para que quepa bien
-        imagen_tk = ImageTk.PhotoImage(imagen)
-
-        # Mostrar la imagen de instrucción
-        imagen_label = tk.Label(root, image=imagen_tk,bg="#d4e7ff" )
-        imagen_label.image = imagen_tk  # Referencia a la imagen para evitar que se borre
-        imagen_label.place(x=170, y=300) 
-        
-    except Exception as e:
-        print(f"No se pudo cargar la imagen: {e}")
+    fondo = Image.open(fondo_ruta)
+    fondo_width, fondo_height = width, height
+    fondo = fondo.resize((fondo_width, fondo_height))  # Ajustar tamaño de fondo al tamaño del canvas
+    fondo_tk = ImageTk.PhotoImage(fondo)  # Convertir la imagen de fondo para Tkinter
     
-    # Explicación 
-    descripcion2 = """
-    Mira la imagen para ver cómo debes pellizcar. 
-    ¡Usa tus dedos como si estuvieras 
-    atrapando al insecto!
-    """
-    # Crear el Label con las instrucciones y posicionarlo
-    tk.Label(
-        root,
-        text=descripcion2,
-        font=("Arial", 15),  # Fuente de letra y tamaño
-        justify="left",  # Alinea el texto a la izquierda para que quede más organizado
-        bg="#d4e7ff",  # Color de fondo (puedes elegir otro color)
-        fg="black",  # Color de la letra
-        width=42,  # Ancho del texto (puedes ajustarlo según el contenido)
-        height=5,  # Altura para hacer que el texto ocupe más espacio si es necesario
-        padx=2,  # Relleno horizontal
-        pady=2,  # Relleno vertical
-        anchor="nw"  # Ancla superior para que el texto se posicione desde la parte superior
-    ).place(x=370, y=300)  # Posicionar en la ubicación deseada
+    canvas.create_image(0, 0, image=fondo_tk, anchor=NW)  # Coloca la imagen de fondo
 
-    # Botón de continuar
-    def continuar():
-        root.destroy()  # Cerrar ventana de instrucciones
-        game_window = GameWindow("Juego4: Pellizca el insecto") # Inicio del juego
-        game_window.setGameFrame(logicaJuego4)  # tener esta función definida
-        game_window.run()
+    # Cargar los GIFs de insectos
+    for gif_ruta in insectos_rutas:
+        gif_image = Image.open(gif_ruta)  # Cargar el GIF
+        framesNum = gif_image.n_frames  # Número de frames que tiene el gif
+        print(f"Frames de insecto: {framesNum}")
 
-    boton_continuar = tk.Button(
-        root, 
-        text="Continuar",  # Texto del botón
-        command=continuar,  # Función que se ejecuta al hacer clic en el botón
-        fg="white",  # Color del texto del botón
-        bg="#4CAF50",  # Color de fondo del botón (puedes elegir otro color)
-        font=("Arial", 14, "bold"),  # Estilo de la fuente del botón
-        relief="flat",  # Sin relieve para un estilo más limpio
-        padx=20,  # Relleno horizontal
-        pady=10  # Relleno vertical
-    )
+        gif_original_width, gif_original_height = gif_image.size
 
-    # Coloca el botón en una ubicación exacta usando .place()
-    boton_continuar.place(x=500, y=440) 
+        # Calcular el nuevo ancho basado en la altura proporcionada (manteniendo la proporción original)
+        aspect_ratio = gif_original_width / gif_original_height
+        gif_width = int(aspect_ratio * gif_height)
 
+        # Lista de todas las imágenes del gif
+        frames = [
+            PhotoImage(file=gif_ruta, format='gif -index %i' % (i)) for i in range(framesNum)
+        ]
+        frames_resized = []
     
+        # Redimensionar los frames del gif según los nuevos tamaños proporcionados
+        for frame in frames:
+            frame_image = frame.subsample(int(frame.width() // gif_width), int(frame.height() // gif_height))
+            frames_resized.append(frame_image)
+        
+        # Almacenar los frames redimensionados de cada gif de insectos
+        frames_resized_all_insectos.append(frames_resized)
+
+    # Cargar los GIFs de mascotas
+    for gif_ruta in mascotas_rutas:
+        gif_image = Image.open(gif_ruta)  # Cargar el GIF
+        framesNum = gif_image.n_frames  # Número de frames que tiene el gif
+        print(f"Frames de mascota: {framesNum}")
+
+        gif_original_width, gif_original_height = gif_image.size
+
+        # Calcular el nuevo ancho basado en la altura proporcionada (manteniendo la proporción original)
+        aspect_ratio = gif_original_width / gif_original_height
+        gif_width = int(aspect_ratio * gif_height)
+
+        # Lista de todas las imágenes del gif
+        frames = [
+            PhotoImage(file=gif_ruta, format='gif -index %i' % (i)) for i in range(framesNum)
+        ]
+        frames_resized = []
+    
+        # Redimensionar los frames del gif según los nuevos tamaños proporcionados
+        for frame in frames:
+            frame_image = frame.subsample(int(frame.width() // gif_width), int(frame.height() // gif_height))
+            frames_resized.append(frame_image)
+        
+        # Almacenar los frames redimensionados de cada gif de mascotas
+        frames_resized_all_mascotas.append(frames_resized)
+
+    # Diccionario para almacenar el ID  de cada GIF
+    gif_ids = {}
+
+    # Función para generar nuevos GIFs aleatorios
+    def generar_gif_aleatorio():
+        # Elegir un GIF aleatorio de insectos o mascotas
+        grupo = random.choice(['insecto', 'mascota'])
+        if grupo == 'insecto':
+            gif_ruta = random.choice(insectos_rutas)
+            frames_resized = frames_resized_all_insectos[insectos_rutas.index(gif_ruta)]
+            tag = f"insecto_{random.randint(1000, 9999)}"  # Genera un tag único para cada gif de insecto
+        else:
+            gif_ruta = random.choice(mascotas_rutas)
+            frames_resized = frames_resized_all_mascotas[mascotas_rutas.index(gif_ruta)]
+            tag = f"mascota_{random.randint(1000, 9999)}"  # Genera un tag único para cada gif de mascota
+        
+        pos_x = width
+        pos_y = random.choice(posiciones_y)
+        # Iniciar el ciclo de actualización de este gif
+        gif_ids[tag] = root.after(0, update_gif, 0, frames_resized, tag, pos_x, pos_y, grupo)
+
+    # Actualizar la imagen del gif en el canvas
+    def update_gif(ind, frames_resized, tag, pos_x, pos_y, grupo):
+        """Actualiza la imagen gif."""
+        global insects_pass, pet_pass, tiempo
+
+        if tag not in gif_ids:
+            return
+        
+        canvas.delete(tag)  # Elimina las imágenes previas del gif
+        frame = frames_resized[ind]
+        ind += 1
+        if ind == len(frames_resized):
+            ind = 0
+        # Actualizar la imagen en el canvas con una etiqueta "gif" para poder eliminarla después
+        canvas.create_image(pos_x, pos_y, image=frame, anchor=NW, tags=tag)
+        # Mover el GIF hacia la izquierda
+        pos_x -= 5  # Ajustar este valor para controlar la velocidad del movimiento
+
+        # Si el gif ha llegado al borde izquierdo, lo reiniciamos
+        posDesaparece = 120
+        if pos_x < posDesaparece and tag not in pasaron_gifs:
+            #canvas.delete(tag)  # Eliminar el GIF
+
+            canvas.delete(tag)  # Eliminar el GIF del canvas
+            
+            pasaron_gifs.add(tag)  # Asegurarse de que este GIF ya ha pasado una vez
+            if grupo == 'insecto':
+                insects_pass += 1  # Incrementa si es un insecto
+                print("Insecto pasó")
+                
+            else:
+                pet_pass += 1  # Incrementa si es una mascota
+            fin_del_juego()
+            # Cancelar la animación
+            if tag in gif_ids:
+                root.after_cancel(gif_ids[tag])  # Detener la actualización de este GIF
+            return  # Salir de la función para evitar que el GIF siga siendo actualizado
+        
+
+        # Reprograma la actualización del GIF
+        gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y, grupo)  # Número que regula la velocidad del gif
+
+    # Generar GIFs repetidamente
+    def generar_gifs_repetidamente():
+        global tiempo
+        if tiempo > 0:  # Mientras quede tiempo en el juego
+            generar_gif_aleatorio()  # Generar un GIF aleatorio
+            tiempo -= 1000  # Decrementa 1 segundo
+            root.after(4000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
+        else:
+            fin_del_juego()
+
+    def fin_del_juego():
+        global insects_pass
+        if insects_pass == 0:  # Si no se ha dejado pasar ningún insecto
+            print("¡Has ganado! Tiempo terminado y no ha pasado ningún insecto.")
+        else:
+            print(f"Game Over! Insectos pasados: {insects_pass}, Mascotas pasadas: {pet_pass}")
+
+    # Función para eliminar el GIF al hacer clic
+    def eliminar_gif(event):
+        # Obtener las coordenadas del clic
+        x, y = event.x, event.y
+        entidad_id = canvas.find_closest(x, y)[0]  # Obtén el ID del objeto más cercano
+        tags = canvas.gettags(entidad_id)  # Obtén las tags asociadas al objeto
+
+        if tags :
+            tag = tags[0]  # Tomamos el primer tag
+            print(f"Tag del objeto: {tag}")
+            # Eliminar el GIF
+            if "insecto" in tag:  # Si el tag contiene "insecto", es un insecto
+                grupo = "insecto"
+            elif "mascota" in tag:  # Si el tag contiene "mascota", es una mascota
+                grupo = "mascota"
+            else:
+                return  # Si no es ni insecto ni mascota, no hacer nada
+
+            # Eliminar el GIF solo si es un insecto
+            if grupo == "insecto":
+                if tag in gif_ids:
+                    root.after_cancel(gif_ids[tag])  # Detener la actualización
+                    del gif_ids[tag]  # Eliminar el 'after' del diccionario
+                    canvas.delete(tag)
+                    print(f"GIF con tag {tag} eliminado.")
+            else:
+                print("No se puede eliminar mascotas")
+
+    # Vincular el evento de clic en el canvas
+    canvas.bind("<Button-1>", eliminar_gif)
+
+    root.after(4000, generar_gifs_repetidamente)
     root.mainloop()
 
 
-
-#JUEGO_____________________________________________________________________________________________________________________________
-def logicaJuego4(game_frame): 
-    #Variables globales 
-    global insects_past, insects_score, error, time # Asegúrate de definir score y errores globalmente
-    
-    insects_pass = 0  # Apenas pase un mosquito se termina el juego con el score de animales pasados
-    pet_pass = 0 #Score del juego
-    error = 0 # ?? No recuerdo
-    time = 0 # cuando acabe el tiempo y ningun mosquito haya entrado ganas el juego 
-    
-    def ajustar_fondo(event=None):
-        frame_height = game_frame.winfo_height()
-        print(f"Dimensiones del frame:x{frame_height}")  # Para depuración y conocer 
-
-        fondo = cargar_imagen(ruta_fondo, altura=frame_height)
-        if fondo:
-            canvas_game.create_image(0, 0, image=fondo, anchor="nw") # Se crea la imagen segun la dimension
-            canvas_game.image = fondo  # Prevenir que el fondo sea recolectado por el Garbage Collector y se muestre
-
-
-    #Canvas
-    canvas_game = tk.Canvas(game_frame)
-    canvas_game.pack(fill="both", expand=True)
-
-    #Fondo en canvas
-    base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
-    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png") #dirección del fondo
-    # Asegurarse de que el tamaño del frame sea actualizado
-    # Vincular el evento de redimensionamiento
-    game_frame.bind("<Configure>", ajustar_fondo)
-
-    #Interfaz y logica del juego
-    #Descripcion: Pellizca los insectos antes que lleguen a la casa del perrito ubicado a la izquierda, pero cuidado con apretar a las mascotas
-    def insect_passed():
-        global insects_pass
-        if (insects_pass == 0):
-            gameOver()
-        #FALTA: animacion de picadura a animal en la pantalla o sonido de grito de perrito
-
-    def animal_pressed():
-        global error
-        error +=1 
-        #FALTA:  animal desaparecer y label en instrucciones con 1/3 errores 
-
-    def pet_passed():
-        global pet_pass #Score
-        pet_pass +=1
-
-    def endgame():
-        global pet_pass
-        print(pet_pass)
-        
-        # FALRA : insecto desaparece y label de score aumenta
-
-    def gameOver():
-        print("¡Juego terminado!")
-        mensaje_gameOver = tk.Label(
-            game_frame, 
-            text=f"¡Juego terminado! Puntuación: {pet_pass}", 
-            font=("Arial", 14, "bold"), 
-            bg="red", 
-            fg="white"
-        )
-        mensaje_gameOver.place(relx=0.5, rely=0.5, anchor="center")
-    # Reemplazar conn juego4.2
-    # Carga de gifts
-    #Rutas
-    ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
-    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro1.gif")
-
-    #Insectos
-    #gift_insecto1 = cargar_gift(ruta_insecto1, altura = 25)
-    
-    #mostrar_gif(game_frame, ruta_insecto1 , x=50, y=50, velocidad=20)
-    base_dir = os.path.dirname(os.path.abspath(__file__)) #Obtiene la direccion actual
+def logicaJuego4(frame):
+    # Fondo en canvas
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
     ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
 
-    mostrar_gif(game_frame, ruta_insecto1, ruta_fondo, x=50, y=50, velocidad=20)
+    # Carga de gifs
+    ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
+    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro2.gif")
 
+    root = Tk()
 
-    # Llamar al método para mostrar el GIF
-    """
-    if gift_insecto1:
-        insecto1_label = tk.Label(game_frame, image=gift_insecto1[0], bg=None)  # Primer frame de insecto
-        insecto1_label.place(x=100, y=100)  # Posicionar en el canvas
-        insecto1_label.image = gift_insecto1[0]  # Mantener la referencia
+    # Configuramos el canvas dentro del frame proporcionado
+    canvas = Canvas(frame, width=1100, height=600)  # Crear el canvas dentro del frame
+    canvas.pack()  # O usa .grid() o .place() si prefieres otro layout
 
-    #Animales
-    gift_mascota1 = cargar_gift(ruta_mascota1, altura = 25)
-    if gift_mascota1:
-        mascota1_label = tk.Label(game_frame, image=gift_mascota1[0], bg=None)  # Primer frame de mascota
-        mascota1_label.place(x=300, y=200)  # Posicionar en el canvas
-        mascota1_label.image = gift_mascota1[0]  # Mantener la referencia
-    """
-    
-    
-    
-    #Canvas_game insercion de gifts
-    
-    """
-    ruta_insecto = os.path.join(base_dir, "..", "images", "juego4", "insecto1.png")
-    imagen_insecto = cargar_imagen(ruta_insecto, altura=150)
-    
-    #Mascotas
-    gift_mascota1 =
-    ruta_animal1 = os.path.join(base_dir, "..", "images", "juego4", "animal1.png")
-    imagen_animal1 = cargar_imagen(ruta_animal1, altura=150)
+    # Normalizar las rutas para asegurarse de que usan las barras invertidas correctamente
+    ruta_gif_insecto1_normalizada = os.path.normpath(ruta_insecto1)
+    ruta_gif_mascota1_normalizada = os.path.normpath(ruta_mascota1)
+    ruta_imagen_fondo_normalizada = os.path.normpath(ruta_fondo)
 
-    #Creacion de label con eventos click 
-    labelInsecto = tk.Label(game_frame, image=imagen_insecto, bg=None, borderwidth=0)
-    labelInsecto.image = imagen_insecto
-    labelInsecto.place(x=50, y=50)
-    labelInsecto.bind("<Button-1>", lambda event: apretasteInsecto(labelInsecto))
-    
-    labelAnimal = tk.Label(game_frame, image=imagen_animal1, bg=None, borderwidth=0)
-    labelAnimal.image = imagen_animal1
-    labelAnimal.place(x=300, y=130)
-    labelAnimal.bind("<Button-1>", lambda event: apretasteMal(labelAnimal))
+    crear_gif_con_fondo(root, 
+                        [ruta_gif_insecto1_normalizada],  # Lista de insectos
+                        [ruta_gif_mascota1_normalizada],  # Lista de mascotas
+                        ruta_imagen_fondo_normalizada, 
+                        width=1100, height=600, gif_height=100)
+    root.mainloop() 
+def logicaJuego4(frame):
+    # Fondo en canvas
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
+    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
 
-    # Mover animales/insectos cada segundo
-    def mover(labelInsecto,labelAnimal): #Hay un error
-        movimientoAleat(labelInsecto)
-        movimientoAleat(labelAnimal)
-        if errores < 3:  # Mientras no haya terminado el juego
-            game_frame.after(1000, mover)
-        else:
-            gameOver()
-    """
-    
+    # Carga de gifs
+    ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
+    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro2.gif")
 
+    # Llamamos a la función con el frame en lugar de crear un nuevo root
+    crear_gif_con_fondo(frame, 
+                        [ruta_insecto1],  # Lista de insectos
+                        [ruta_mascota1],  # Lista de mascotas
+                        ruta_fondo, 
+                        width=1100, height=600, gif_height=100)
 
+def mostrar_base_juego(frame):
+    """Aquí puedes mostrar la interfaz base de tu juego"""
+    # Ejemplo simple de usar un texto o elementos gráficos para la base del juego
+    label = Label(frame, text="¡Bienvenido al juego!", font=("Arial", 24))
+    label.pack(pady=20)
+
+if __name__ == "__main__":
+    # Crear la ventana principal
+    root = Tk()
+    root.title("Juego con Lógica y Base de Juego")
+
+    # Crear un PanedWindow para dividir la pantalla
+    paned_window = PanedWindow(root, orient=HORIZONTAL)
+    paned_window.pack(fill=BOTH, expand=True)
+
+    # Crear el panel para la lógica del juego
+    panel_juego = Frame(paned_window, width=600, height=600)
+    paned_window.add(panel_juego)
+
+    # Crear el panel para la base del juego
+    panel_base = Frame(paned_window, width=400, height=600)
+    paned_window.add(panel_base)
+
+    # Llamar a las funciones correspondientes para llenar cada sección
+    logicaJuego4(panel_juego)  # Lógica del juego en el primer panel
+    mostrar_base_juego(panel_base)  # Interfaz base en el segundo panel
+
+    root.mainloop()
