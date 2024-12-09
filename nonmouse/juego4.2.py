@@ -8,7 +8,8 @@ insects_pass = 0  # Puntaje de insectos pasados
 pet_pass = 0  # Puntaje de mascotas pasadas
 error = 0  # ¿Para qué se usaría este? Puedes aclararlo si lo necesitas
 tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
-posiciones_y = [80, 180, 280, 380, 480]  
+posiciones_y = [80, 180, 280, 380, 480]
+pasaron_gifs = set()  # Conjunto para almacenar los GIFs que ya han pasado
 
 def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width, height, gif_height):  
     frames_resized_all_insectos = []
@@ -83,7 +84,6 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
     # Función para generar nuevos GIFs aleatorios
     def generar_gif_aleatorio():
-        print("Se generó un gif aleatorio")
         # Elegir un GIF aleatorio de insectos o mascotas
         grupo = random.choice(['insecto', 'mascota'])
         if grupo == 'insecto':
@@ -120,14 +120,24 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
         # Si el gif ha llegado al borde izquierdo, lo reiniciamos
         posDesaparece = 120
-        if pos_x < posDesaparece:
-            pos_x = width
+        if pos_x < posDesaparece and tag not in pasaron_gifs:
+            #canvas.delete(tag)  # Eliminar el GIF
+
+            canvas.delete(tag)  # Eliminar el GIF del canvas
+            
+            pasaron_gifs.add(tag)  # Asegurarse de que este GIF ya ha pasado una vez
             if grupo == 'insecto':
                 insects_pass += 1  # Incrementa si es un insecto
-                fin_del_juego()
+                print("Insecto pasó")
+                
             else:
                 pet_pass += 1  # Incrementa si es una mascota
-            print(f"Insectos pasados: {insects_pass}, Mascotas pasadas: {pet_pass}")
+            fin_del_juego()
+            # Cancelar la animación
+            if tag in gif_ids:
+                root.after_cancel(gif_ids[tag])  # Detener la actualización de este GIF
+            return  # Salir de la función para evitar que el GIF siga siendo actualizado
+        
 
         # Reprograma la actualización del GIF
         gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y, grupo)  # Número que regula la velocidad del gif
