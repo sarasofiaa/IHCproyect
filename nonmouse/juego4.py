@@ -129,11 +129,14 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
             pasaron_gifs.add(tag)  # Asegurarse de que este GIF ya ha pasado una vez
             if grupo == 'insecto':
                 insects_pass += 1  # Incrementa si es un insecto
-                print("Insecto pasó")
+                
+                print("-------------Insecto pasó -------------------------")
+                fin_del_juego()
                 
             else:
                 pet_pass += 1  # Incrementa si es una mascota
-            fin_del_juego()
+
+            
             # Cancelar la animación
             if tag in gif_ids:
                 root.after_cancel(gif_ids[tag])  # Detener la actualización de este GIF
@@ -145,20 +148,29 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
     # Generar GIFs repetidamente
     def generar_gifs_repetidamente():
-        global tiempo
-        if tiempo > 0:  # Mientras quede tiempo en el juego
+        global tiempo, insects_pass
+        if tiempo > 0 and insects_pass == 0:  # Mientras quede tiempo en el juego
             generar_gif_aleatorio()  # Generar un GIF aleatorio
             tiempo -= 1000  # Decrementa 1 segundo
+            print("Tiempo que va ...", tiempo)
             root.after(4000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
         else:
+            print("-------------Termino el tiempo -------------------------")
             fin_del_juego()
 
     def fin_del_juego():
         global insects_pass
         if insects_pass == 0:  # Si no se ha dejado pasar ningún insecto
             print("¡Has ganado! Tiempo terminado y no ha pasado ningún insecto.")
+            #mostrar_resultado("¡Ganaste!")
         else:
             print(f"Game Over! Insectos pasados: {insects_pass}, Mascotas pasadas: {pet_pass}")
+            #mostrar_resultado("¡Perdiste!")
+        # Detener la creación de nuevos GIFs y detener los actuales
+        for tag in gif_ids.keys():
+            root.after_cancel(gif_ids[tag])  # Detener la animación de los GIFs
+        # Detener la función de generación de GIFs
+        root.after_cancel(generar_gifs_repetidamente)  # Cancela la función que crea los GIFs nuevos
 
     # Función para eliminar el GIF al hacer clic
     def eliminar_gif(event):
@@ -242,6 +254,9 @@ def mostrar_base_juego(frame):
     # Ejemplo simple de usar un texto o elementos gráficos para la base del juego
     label = Label(frame, text="¡Bienvenido al juego!", font=("Arial", 24))
     label.pack(pady=20)
+
+
+
 
 if __name__ == "__main__":
     # Crear la ventana principal
