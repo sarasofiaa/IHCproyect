@@ -3,6 +3,7 @@ import os
 import random
 from PIL import Image, ImageTk
 from .baseJuego import GameWindow
+from tkinter import Toplevel, Label, Button
 
 # Variables Globales
 insects_pass = 0  # Puntaje de insectos pasados
@@ -162,10 +163,11 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
         global insects_pass
         if insects_pass == 0:  # Si no se ha dejado pasar ningún insecto
             print("¡Has ganado! Tiempo terminado y no ha pasado ningún insecto.")
-            #mostrar_resultado("¡Ganaste!")
+            mostrar_resultado(root, "¡Ganaste!")
+
         else:
             print(f"Game Over! Insectos pasados: {insects_pass}, Mascotas pasadas: {pet_pass}")
-            #mostrar_resultado("¡Perdiste!")
+            mostrar_resultado(root, "¡Perdiste!")
         # Detener la creación de nuevos GIFs y detener los actuales
         for tag in gif_ids.keys():
             root.after_cancel(gif_ids[tag])  # Detener la animación de los GIFs
@@ -206,6 +208,26 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
     root.after(4000, generar_gifs_repetidamente)
     root.mainloop()
 
+def mostrar_resultado(root, mensaje):
+    """Crea una ventana modal simple para mostrar el mensaje."""
+    # Crear una nueva ventana Toplevel
+    ventana_resultado = Toplevel()
+    ventana_resultado.title("Resultado")
+    ventana_resultado.geometry("300x150")  # Dimensiones de la ventana
+    ventana_resultado.resizable(False, False)  # Evitar que la ventana sea redimensionable
+
+    # Etiqueta para mostrar el mensaje
+    label_mensaje = Label(ventana_resultado, text=mensaje, font=("Arial", 12), wraplength=250)
+    label_mensaje.pack(pady=20)
+
+    # Botón para cerrar la ventana
+    boton_cerrar = Button(ventana_resultado, text="Cerrar", command=ventana_resultado.destroy)
+    boton_cerrar.pack(pady=10)
+
+    # Centrar la ventana modal sobre la ventana principal
+    ventana_resultado.transient(root)  # Relacionar la ventana con la ventana principal
+    ventana_resultado.grab_set()  # Hacer que sea modal (previene la interacción con otras ventanas)
+    root.wait_window(ventana_resultado)  # Esperar hasta que la ventana sea cerrada
 
 def logicaJuego4(frame):
     # Fondo en canvas
@@ -214,7 +236,14 @@ def logicaJuego4(frame):
 
     # Carga de gifs
     ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
-    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro2.gif")
+    ruta_insecto2 = os.path.join(base_dir, "..", "images", "juego4", "insecto2.gif")
+    ruta_insecto3 = os.path.join(base_dir, "..", "images", "juego4", "insecto3.gif")
+    ruta_insecto4 = os.path.join(base_dir, "..", "images", "juego4", "insecto4.gif")
+
+    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro1.gif")
+    ruta_mascota2 = os.path.join(base_dir, "..", "images", "juego4", "perro2.gif")
+    ruta_mascota3 = os.path.join(base_dir, "..", "images", "juego4", "perro3.gif")
+    ruta_mascota4 = os.path.join(base_dir, "..", "images", "juego4", "perro4.gif")
 
     root = Tk()
 
@@ -224,12 +253,23 @@ def logicaJuego4(frame):
 
     # Normalizar las rutas para asegurarse de que usan las barras invertidas correctamente
     ruta_gif_insecto1_normalizada = os.path.normpath(ruta_insecto1)
+    ruta_gif_insecto2_normalizada = os.path.normpath(ruta_insecto2)
+    ruta_gif_insecto3_normalizada = os.path.normpath(ruta_insecto3)
+    ruta_gif_insecto4_normalizada = os.path.normpath(ruta_insecto4)
+
     ruta_gif_mascota1_normalizada = os.path.normpath(ruta_mascota1)
+    ruta_gif_mascota2_normalizada = os.path.normpath(ruta_mascota2)
+    ruta_gif_mascota3_normalizada = os.path.normpath(ruta_mascota3)
+    ruta_gif_mascota4_normalizada = os.path.normpath(ruta_mascota4)
+
     ruta_imagen_fondo_normalizada = os.path.normpath(ruta_fondo)
 
+    grupoInsectos = [ruta_gif_insecto1_normalizada, ruta_gif_insecto2_normalizada,ruta_gif_insecto3_normalizada,ruta_gif_insecto4_normalizada]
+    grupoMascotas = [ruta_gif_mascota1_normalizada, ruta_gif_mascota2_normalizada,ruta_gif_mascota3_normalizada,ruta_gif_mascota4_normalizada]
+
     crear_gif_con_fondo(root, 
-                        [ruta_gif_insecto1_normalizada],  # Lista de insectos
-                        [ruta_gif_mascota1_normalizada],  # Lista de mascotas
+                        grupoInsectos,  # Lista de insectos
+                        grupoMascotas,  # Lista de mascotas
                         ruta_imagen_fondo_normalizada, 
                         width=1100, height=600, gif_height=100)
     root.mainloop() 
