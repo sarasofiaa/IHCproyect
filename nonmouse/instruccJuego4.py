@@ -14,7 +14,6 @@ from .utils2 import cargar_imagen, mostrar_gif, cargar_gif
 
 def mostrar_instrucciones():
     instructions_window = GameWindow("Instrucciones del juego 4")
-    print("bb") #Depuracion completada
     instructions_window.setGameFrame(instructions_game4)
     instructions_window.run()
 
@@ -119,5 +118,3 @@ def instructions_game4(game_frame):
     
     # Mostrar el primer GIF
     mostrar_gif(estado['indice_actual'])
-
-    carrusel_canva.winfo_toplevel().mainloop()
