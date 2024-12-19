@@ -10,6 +10,7 @@ from pynput.mouse import Button, Controller
 from nonmouse.utils2 import calculate_distance, draw_circle, calculate_moving_average
 from .datosGlobales import get_game_active,set_instruction_active,get_instruction_active
 from .utils2 import cargar_imagen
+import math
 
 class GameWindow:
     current_instance = None
@@ -19,7 +20,6 @@ class GameWindow:
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
         
         if is_instruction:
-            # En lugar de establecer dimensiones específicas, usar el estado 'normal'
             self.root.state('normal')
         else:
             self.root.attributes('-fullscreen', True)
@@ -213,13 +213,59 @@ class GameWindow:
         new_y = max(0, min(screen_height, current_y + dy))
         
         self.mouse.position = (new_x, new_y)
-
+    
 
 #AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
         #JUEGO 4 PELIZCA EL insecto        
         if get_game_active() == 4:
             if (get_instruction_active == True):
-                print ("Hola")
+                # Detectar gesto de deslizamiento horizontal
+                thumb_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.THUMB_TIP]
+                index_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                
+                # Detectar deslizamiento horizontal
+                distance = math.sqrt(
+                    (thumb_tip.x - index_tip.x)**2 + 
+                    (thumb_tip.y - index_tip.y)**2
+                )
+                
+                if distance < 0.1 and abs(thumb_tip.y - index_tip.y) < 0.05:
+                    # Si detecta deslizamiento, llamar a siguiente_gif
+                    if hasattr(self, 'root') and isinstance(self.root, tk.Tk):
+                        for widget in self.root.winfo_children():
+                            if isinstance(widget, tk.Frame):
+                                for child in widget.winfo_children():
+                                    if isinstance(child, tk.Canvas):
+                                        # Buscar y ejecutar el botón "Siguiente"
+                                        for button in child.find_withtag('all'):
+                                            if child.itemcget(button, 'text') == 'Siguiente':
+                                                child.event_generate('<<NextGif>>')
+                                                return
+
+                # Detectar gesto de "like" (pulgar arriba)
+                thumb_up = thumb_tip.y < hand_landmarks.landmark[self.mp_hands.HandLandmark.THUMB_IP].y
+                fingers_closed = all(
+                    hand_landmarks.landmark[tip].y > hand_landmarks.landmark[pip].y
+                    for tip, pip in [
+                        (self.mp_hands.HandLandmark.INDEX_FINGER_TIP, self.mp_hands.HandLandmark.INDEX_FINGER_PIP),
+                        (self.mp_hands.HandLandmark.MIDDLE_FINGER_TIP, self.mp_hands.HandLandmark.MIDDLE_FINGER_PIP),
+                        (self.mp_hands.HandLandmark.RING_FINGER_TIP, self.mp_hands.HandLandmark.RING_FINGER_PIP),
+                        (self.mp_hands.HandLandmark.PINKY_TIP, self.mp_hands.HandLandmark.PINKY_PIP)
+                    ]
+                )
+                
+                if thumb_up and fingers_closed:
+                    # Si detecta el gesto "like", llamar a jugar
+                    if hasattr(self, 'root') and isinstance(self.root, tk.Tk):
+                        for widget in self.root.winfo_children():
+                            if isinstance(widget, tk.Frame):
+                                for child in widget.winfo_children():
+                                    if isinstance(child, tk.Canvas):
+                                        # Buscar y ejecutar el botón "JUGAR"
+                                        for button in child.find_withtag('all'):
+                                            if child.itemcget(button, 'text') == 'JUGAR':
+                                                child.event_generate('<<StartGame>>')
+                                                return
             # Funcion de desplazar en las instrucciones
             # Mostrar el mensaje de info del juego
             #self.update_game4_info()

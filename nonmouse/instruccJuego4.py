@@ -9,7 +9,8 @@ from PIL import Image, ImageTk
 import os
 from .utils2 import cargar_imagen, mostrar_gif
 from .juego4 import logicaJuego4
-from .utils2 import cargar_imagen, mostrar_gif, cargar_gif 
+from .utils2 import cargar_imagen, mostrar_gif, cargar_gif
+from .datosGlobales import set_instruction_active
 
 
   
@@ -114,7 +115,7 @@ def instructions_game4(game_frame):
         limpiar_canvas()
         root_window = carrusel_canva.winfo_toplevel()
         root_window.destroy()
-        
+        set_instruction_active(False) #Activar flags normales de mouse
         game_window = GameWindow("Juego4: Pellizca el insecto")
         game_window.setGameFrame(logicaJuego4)
         game_window.run()
@@ -132,5 +133,15 @@ def instructions_game4(game_frame):
     )
     boton_siguiente.place(x=700, y=550)
     
+    #Bindings de gestos 
+    def on_next_gif(event):
+        siguiente_gif()
+    
+    def on_start_game(event):
+        jugar()
+
+    # Agregar bindings para los eventos personalizados
+    carrusel_canva.bind('<<NextGif>>', on_next_gif)
+    carrusel_canva.bind('<<StartGame>>', on_start_game)
     # Esperamos a que el canvas esté listo antes de mostrar el primer GIF
     carrusel_canva.bind('<Configure>', on_canvas_configure)
