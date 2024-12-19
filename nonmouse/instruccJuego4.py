@@ -12,6 +12,8 @@ from .juego4 import logicaJuego4
 from .utils2 import cargar_imagen, mostrar_gif, cargar_gif 
 
 
+  
+
 def mostrar_instrucciones():
     instructions_window = GameWindow("Instrucciones del juego 4")
     instructions_window.setGameFrame(instructions_game4)
@@ -26,12 +28,13 @@ def instructions_game4(game_frame):
         for i in range(1, 6)
     ]
     # Canvas
-    carrusel_canva = tk.Canvas(game_frame)
+    carrusel_canva = tk.Canvas(game_frame, bg = 'red')
     carrusel_canva.pack(fill="both", expand=True)
+    height = 700
 
     #E Estado del carrusel 
     estado = {
-        'gifs': [cargar_gif(ruta) for ruta in rutas_gifs],
+        'gifs': [cargar_gif(ruta, altura = height) for ruta in rutas_gifs],
         'indice_actual': 0,
         'animation_id': None  # Para guardar el ID de la animación actual
     }
@@ -47,17 +50,21 @@ def instructions_game4(game_frame):
         frames = estado['gifs'][indice]
         if not frames:
             return
-        
+        width = game_frame.winfo_width()
+        print(width)
+        height = carrusel_canva.winfo_height()
+        print(height)
         limpiar_canvas()
         
         if len(frames) > 1:
-            velocidad = 100  # Ajustado para mejor rendimiento
+            velocidad = 60 # Ajustado para mejor rendimiento/ cuanto menos mas rapido
             frame_actual = [0]
             
             def animar():
                 limpiar_canvas()
+                
                 carrusel_canva.create_image(
-                    400, 300, 
+                    width, height,
                     image=frames[frame_actual[0]], 
                     anchor=tk.CENTER, 
                     tags="gif"
@@ -68,7 +75,7 @@ def instructions_game4(game_frame):
             animar()
         else:
             carrusel_canva.create_image(
-                400, 300, 
+                width, height, 
                 image=frames[0], 
                 anchor=tk.CENTER, 
                 tags="gif"
@@ -104,7 +111,6 @@ def instructions_game4(game_frame):
         root_window.destroy()
 
         game_window = GameWindow("Juego4: Pellizca el insecto")
-        print("depu")
         game_window.setGameFrame(logicaJuego4)
         game_window.run()
     
