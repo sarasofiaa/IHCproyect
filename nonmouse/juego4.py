@@ -1,14 +1,9 @@
-#Solo tiene por el momento pellizco flag
-#Idea del juego: Casas al final tipo Plantas Vs Zombies no dejar que lleguen los insectos a las casitas pero cuidado con pellizcar un perrito
-#Nuevo gesto? puede ser desplazar para tener mas tiempo gesto desplazar solo los insectos voladores, tiene una herramienta sobrecargada de un ventilador y se active con un gesto
-import tkinter as tk
-from PIL import Image, ImageTk
-from .baseJuego import GameWindow
+from tkinter import *
+import os
 import random
 from PIL import Image, ImageTk
-import os
+from .baseJuego import GameWindow
 from tkinter import Toplevel, Label, Button
-from .utils2 import cargar_imagen, mostrar_gif, cargar_gif 
 
 # Variables Globales
 insects_pass = 0  # Puntaje de insectos pasados
@@ -31,7 +26,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
     fondo_width, fondo_height = width, height
     fondo = fondo.resize((fondo_width, fondo_height))  # Ajustar tamaño de fondo al tamaño del canvas
     fondo_tk = ImageTk.PhotoImage(fondo)  # Convertir la imagen de fondo para Tkinter
-    
+
     canvas.create_image(0, 0, image=fondo_tk, anchor=NW)  # Coloca la imagen de fondo
 
     # Cargar los GIFs de insectos
@@ -51,12 +46,12 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
             PhotoImage(file=gif_ruta, format='gif -index %i' % (i)) for i in range(framesNum)
         ]
         frames_resized = []
-    
+
         # Redimensionar los frames del gif según los nuevos tamaños proporcionados
         for frame in frames:
             frame_image = frame.subsample(int(frame.width() // gif_width), int(frame.height() // gif_height))
             frames_resized.append(frame_image)
-        
+
         # Almacenar los frames redimensionados de cada gif de insectos
         frames_resized_all_insectos.append(frames_resized)
 
@@ -77,12 +72,12 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
             PhotoImage(file=gif_ruta, format='gif -index %i' % (i)) for i in range(framesNum)
         ]
         frames_resized = []
-    
+
         # Redimensionar los frames del gif según los nuevos tamaños proporcionados
         for frame in frames:
             frame_image = frame.subsample(int(frame.width() // gif_width), int(frame.height() // gif_height))
             frames_resized.append(frame_image)
-        
+
         # Almacenar los frames redimensionados de cada gif de mascotas
         frames_resized_all_mascotas.append(frames_resized)
 
@@ -101,7 +96,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
             gif_ruta = random.choice(mascotas_rutas)
             frames_resized = frames_resized_all_mascotas[mascotas_rutas.index(gif_ruta)]
             tag = f"mascota_{random.randint(1000, 9999)}"  # Genera un tag único para cada gif de mascota
-        
+
         pos_x = width
         pos_y = random.choice(posiciones_y)
         # Iniciar el ciclo de actualización de este gif
@@ -114,7 +109,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
         if tag not in gif_ids:
             return
-        
+
         canvas.delete(tag)  # Elimina las imágenes previas del gif
         frame = frames_resized[ind]
         ind += 1
@@ -131,23 +126,23 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
             #canvas.delete(tag)  # Eliminar el GIF
 
             canvas.delete(tag)  # Eliminar el GIF del canvas
-            
+
             pasaron_gifs.add(tag)  # Asegurarse de que este GIF ya ha pasado una vez
             if grupo == 'insecto':
                 insects_pass += 1  # Incrementa si es un insecto
-                
+
                 print("-------------Insecto pasó -------------------------")
                 fin_del_juego()
-                
+
             else:
                 pet_pass += 1  # Incrementa si es una mascota
 
-            
+
             # Cancelar la animación
             if tag in gif_ids:
                 root.after_cancel(gif_ids[tag])  # Detener la actualización de este GIF
             return  # Salir de la función para evitar que el GIF siga siendo actualizado
-        
+
 
         # Reprograma la actualización del GIF
         gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y, grupo)  # Número que regula la velocidad del gif
@@ -169,7 +164,6 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
         if insects_pass == 0:  # Si no se ha dejado pasar ningún insecto
             print("¡Has ganado! Tiempo terminado y no ha pasado ningún insecto.")
             mostrar_resultado(root, "¡Ganaste!")
-
         else:
             print(f"Game Over! Insectos pasados: {insects_pass}, Mascotas pasadas: {pet_pass}")
             mostrar_resultado(root, "¡Perdiste!")
@@ -220,28 +214,12 @@ def mostrar_resultado(root, mensaje):
     ventana_resultado.title("Resultado")
     ventana_resultado.geometry("300x150")  # Dimensiones de la ventana
     ventana_resultado.resizable(False, False)  # Evitar que la ventana sea redimensionable
-
     # Etiqueta para mostrar el mensaje
     label_mensaje = Label(ventana_resultado, text=mensaje, font=("Arial", 12), wraplength=250)
     label_mensaje.pack(pady=20)
-
-#JUEGO_____________________________________________________________________________________________________________________________
-def logicaJuego4(game_frame): 
-    #Variables globales 
-    global insects_past, insects_score, error, time # Asegúrate de definir score y errores globalmente
-    
-    insects_pass = 0  # Apenas pase un mosquito se termina el juego con el score de animales pasados
-    pet_pass = 0 #Score del juego
-    error = 0 # ?? Presionas animal se baja el score
-    time = 0 # cuando acabe el tiempo y ningun mosquito haya entrado ganas el juego 
-    
-    def ajustar_fondo(event=None):
-        frame_height = game_frame.winfo_height()
-        print(f"Dimensiones del frame:x{frame_height}")  # Para depuración y conocer 
     # Botón para cerrar la ventana
     boton_cerrar = Button(ventana_resultado, text="Cerrar", command=ventana_resultado.destroy)
     boton_cerrar.pack(pady=10)
-
     # Centrar la ventana modal sobre la ventana principal
     ventana_resultado.transient(root)  # Relacionar la ventana con la ventana principal
     ventana_resultado.grab_set()  # Hacer que sea modal (previene la interacción con otras ventanas)
@@ -257,7 +235,6 @@ def logicaJuego4(frame):
     ruta_insecto2 = os.path.join(base_dir, "..", "images", "juego4", "insecto2.gif")
     ruta_insecto3 = os.path.join(base_dir, "..", "images", "juego4", "insecto3.gif")
     ruta_insecto4 = os.path.join(base_dir, "..", "images", "juego4", "insecto4.gif")
-
     ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro1.gif")
     ruta_mascota2 = os.path.join(base_dir, "..", "images", "juego4", "perro2.gif")
     ruta_mascota3 = os.path.join(base_dir, "..", "images", "juego4", "perro3.gif")
@@ -274,17 +251,14 @@ def logicaJuego4(frame):
     ruta_gif_insecto2_normalizada = os.path.normpath(ruta_insecto2)
     ruta_gif_insecto3_normalizada = os.path.normpath(ruta_insecto3)
     ruta_gif_insecto4_normalizada = os.path.normpath(ruta_insecto4)
-
     ruta_gif_mascota1_normalizada = os.path.normpath(ruta_mascota1)
     ruta_gif_mascota2_normalizada = os.path.normpath(ruta_mascota2)
     ruta_gif_mascota3_normalizada = os.path.normpath(ruta_mascota3)
     ruta_gif_mascota4_normalizada = os.path.normpath(ruta_mascota4)
-
     ruta_imagen_fondo_normalizada = os.path.normpath(ruta_fondo)
 
     grupoInsectos = [ruta_gif_insecto1_normalizada, ruta_gif_insecto2_normalizada,ruta_gif_insecto3_normalizada,ruta_gif_insecto4_normalizada]
     grupoMascotas = [ruta_gif_mascota1_normalizada, ruta_gif_mascota2_normalizada,ruta_gif_mascota3_normalizada,ruta_gif_mascota4_normalizada]
-
     crear_gif_con_fondo(root, 
                         grupoInsectos,  # Lista de insectos
                         grupoMascotas,  # Lista de mascotas
