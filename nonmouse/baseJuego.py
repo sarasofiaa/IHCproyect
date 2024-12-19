@@ -8,7 +8,7 @@ import mediapipe as mp
 import os
 from pynput.mouse import Button, Controller
 from nonmouse.utils2 import calculate_distance, draw_circle, calculate_moving_average
-from .datosGlobales import get_game_active
+from .datosGlobales import get_game_active,set_instruction_active,get_instruction_active
 from .utils2 import cargar_imagen
 
 class GameWindow:
@@ -209,25 +209,29 @@ class GameWindow:
         new_y = max(0, min(screen_height, current_y + dy))
         
         self.mouse.position = (new_x, new_y)
-#AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
 
+
+#AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
         #JUEGO 4 PELIZCA EL insecto        
         if get_game_active() == 4:
+            if (get_instruction_active == True):
+                print ("Hola")
             # Funcion de desplazar en las instrucciones
             # Mostrar el mensaje de info del juego
             #self.update_game4_info()
 
 
             # Detectar gesto de pellizco
-            distancia_pellizco = calculate_distance(landmark4, landmark8)
-            if distancia_pellizco < 0.05:
-                self.mouse.press(Button.left)
-                self.mouse.release(Button.left)
-                draw_circle(image, 
-                          hand_landmarks.landmark[8].x * image.shape[1],  # Use image width
-                          hand_landmarks.landmark[8].y * image.shape[0],  # Use image height 
-                          20, (255, 105, 180))
-            #Dibujar el juego en el frame donde va el juego
+            else:
+                distancia_pellizco = calculate_distance(landmark4, landmark8)
+                if distancia_pellizco < 0.05:
+                    self.mouse.press(Button.left)
+                    self.mouse.release(Button.left)
+                    draw_circle(image, 
+                            hand_landmarks.landmark[8].x * image.shape[1],  # Use image width
+                            hand_landmarks.landmark[8].y * image.shape[0],  # Use image height 
+                            20, (255, 105, 180))
+                #Dibujar el juego en el frame donde va el juego
 
     def update_camera(self):
         success, image = self.cap.read()

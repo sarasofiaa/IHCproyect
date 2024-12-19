@@ -4,7 +4,8 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
 from.instruccJuego4 import mostrar_instrucciones
-from .datosGlobales import set_game_active
+from .datosGlobales import set_game_active, set_instruction_active
+
 
 # Crear la ventana principal
 def main_selector():
@@ -78,6 +79,7 @@ def main_selector():
 
     def presionar_animales():
         set_game_active(4) 
+        set_instruction_active(True)
         root.destroy()
         mostrar_instrucciones()
 
