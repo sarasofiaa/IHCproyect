@@ -107,6 +107,7 @@ def instructions_game4(game_frame):
         print("depu")
         game_window.setGameFrame(logicaJuego4)
         game_window.run()
+
     
     # Botón siguiente
     boton_siguiente = tk.Button(

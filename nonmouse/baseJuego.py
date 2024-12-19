@@ -12,6 +12,8 @@ from .datosGlobales import get_game_active
 from .utils2 import cargar_imagen
 
 class GameWindow:
+    current_instance = None
+
     def __init__(self,gameName):
         self.root = tk.Tk()
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
@@ -19,6 +21,8 @@ class GameWindow:
         self.root.attributes('-fullscreen', True)  # Activa el modo de pantalla completa
         self.root.bind('<Escape>',self.exit_fullscreen) #Pantalla completa para el videojuego, esc para pantalla extendida
        
+        GameWindow.current_instance = self
+    
         #COLORES
         color_principal = "#141240" #Azul
         color_botones = "#4f722a" #Verde
@@ -72,6 +76,12 @@ class GameWindow:
         self.logob_frame.grid_rowconfigure(1, weight=1)  # La fila del botón puede expandirse
         self.logob_frame.grid_columnconfigure(0, weight=1)  # La columna única ocupa todo el ancho
 
+        # Crear el label para mostrar la información del juego debajo de la cámara
+        print("informacion de el juego----------------------------------------------------------", get_game_active())
+
+        self.game_info_label = tk.Label(self.camera_and_description_frame, text="Información del juego", bg="lightblue", font=("Arial", 12))
+        self.game_info_label.pack(side='bottom', fill='both', padx=10, pady=10)
+
         # Configuración inicial
         self.setup_camera()
         self.setup_mediapipe()
@@ -80,6 +90,17 @@ class GameWindow:
         # Iniciar la actualización de la cámara
         self.update_camera()
 
+    @staticmethod
+    def get_current_instance():
+        """Devuelve la instancia actual de GameWindow"""
+        return GameWindow.current_instance
+    
+    # Método para actualizar la información del juego
+    def update_game4_info(self, score, time_left):
+        # Actualiza la etiqueta con el puntaje y el tiempo restante
+        self.game_info_label.config(text=f"Juego 4: Insecto - ¡Pellizca para atrapar!\nPuntaje: {score}\nTiempo restante: {time_left}s")
+        
+            
     # Expansion de la pantalla cuando se sale de la pantalla completa
     def exit_fullscreen(self, event=None):  # Asegúrate de recibir el evento para la tecla Escape
         self.root.attributes('-fullscreen', False)  # Sal del modo pantalla completa
@@ -193,7 +214,8 @@ class GameWindow:
         #JUEGO 4 PELIZCA EL insecto        
         if get_game_active() == 4:
             # Funcion de desplazar en las instrucciones
-            
+            # Mostrar el mensaje de info del juego
+            #self.update_game4_info()
 
 
             # Detectar gesto de pellizco

@@ -5,6 +5,8 @@ from PIL import Image, ImageTk
 from .baseJuego import GameWindow
 from tkinter import Toplevel, Label, Button
 
+
+
 # Variables Globales
 insects_pass = 0  # Puntaje de insectos pasados
 pet_pass = 0  # Puntaje de mascotas pasadas
@@ -12,7 +14,7 @@ error = 0  # ¿Para qué se usaría este? Puedes aclararlo si lo necesitas
 tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
 posiciones_y = [80, 180, 280, 380, 480]
 pasaron_gifs = set()  # Conjunto para almacenar los GIFs que ya han pasado
-
+  
 def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width, height, gif_height):  
     frames_resized_all_insectos = []
     frames_resized_all_mascotas = []
@@ -154,6 +156,17 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
             generar_gif_aleatorio()  # Generar un GIF aleatorio
             tiempo -= 1000  # Decrementa 1 segundo
             print("Tiempo que va ...", tiempo)
+
+            tiempo_pasado= tiempo//1000
+            game_window = GameWindow.get_current_instance()
+
+            # Verificar que la instancia no sea None
+            if game_window:
+                # Actualizar la información del juego
+                game_window.update_game4_info(score=insects_pass, time_left=tiempo_pasado)
+            else:
+                print("No se encontró una instancia de GameWindow.")
+
             root.after(4000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
         else:
             print("-------------Termino el tiempo -------------------------")
@@ -206,6 +219,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
     root.after(4000, generar_gifs_repetidamente)
     root.mainloop()
+    #actualizar_info(panel_base)
 
 def mostrar_resultado(root, mensaje):
     """Crea una ventana modal simple para mostrar el mensaje."""
@@ -224,7 +238,7 @@ def mostrar_resultado(root, mensaje):
     ventana_resultado.transient(root)  # Relacionar la ventana con la ventana principal
     ventana_resultado.grab_set()  # Hacer que sea modal (previene la interacción con otras ventanas)
     root.wait_window(ventana_resultado)  # Esperar hasta que la ventana sea cerrada
-
+"""
 def logicaJuego4(frame):
     # Fondo en canvas
     base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
@@ -265,6 +279,7 @@ def logicaJuego4(frame):
                         ruta_imagen_fondo_normalizada, 
                         width=1100, height=600, gif_height=100)
     root.mainloop() 
+"""
 def logicaJuego4(frame):
     # Fondo en canvas
     base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
