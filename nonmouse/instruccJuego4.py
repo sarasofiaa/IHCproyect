@@ -113,6 +113,7 @@ def instructions_game4(game_frame):
         game_window = GameWindow("Juego4: Pellizca el insecto")
         game_window.setGameFrame(logicaJuego4)
         game_window.run()
+
     
     # Botón siguiente
     boton_siguiente = tk.Button(
