@@ -65,25 +65,25 @@ class GameWindow:
         self.camera_label = tk.Label(self.camera_frame)
         self.camera_label.pack(expand=True, fill='both')
 
-        #Label con el logo en la descripcion al inicio
+        # Label con el logo en la descripción al inicio
         self.logo_label = tk.Label(self.logob_frame, image=imagen_logo)
         self.logo_label.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)  # Posiciona el logo en la fila 0
-        self.logob_frame.image = imagen_logo #Mantiene la imagen
+        self.logob_frame.image = imagen_logo  # Mantiene la imagen
 
-        #boton de regresar
+        # Crear el label para mostrar la información del juego, que irá debajo del logo y encima del botón
+        self.game_info_label = tk.Label(self.logob_frame, text="Información del juego", bg="lightblue", font=("Arial", 12))
+        self.game_info_label.grid(row=1, column=0, sticky="nsew", padx=10, pady=10)  # Posiciona la información en la fila 1
+
+        # Botón de regresar, que irá debajo de la etiqueta de información
         self.back_button = tk.Button(self.logob_frame, text="Regresar", bg=color_botones, fg="white")
-        self.back_button.grid(row=1, column=0, sticky="nsew", padx=5, pady=10)  # Posiciona el botón en la fila 1
+        self.back_button.grid(row=2, column=0, sticky="nsew", padx=5, pady=10)  # Posiciona el botón en la fila 2
 
         # Ajustar el layout del frame para expandirse correctamente
         self.logob_frame.grid_rowconfigure(0, weight=1)  # La fila del logo puede expandirse
-        self.logob_frame.grid_rowconfigure(1, weight=1)  # La fila del botón puede expandirse
+        self.logob_frame.grid_rowconfigure(1, weight=1)  # La fila de la información del juego puede expandirse
+        self.logob_frame.grid_rowconfigure(2, weight=1)  # La fila del botón puede expandirse
         self.logob_frame.grid_columnconfigure(0, weight=1)  # La columna única ocupa todo el ancho
 
-        # Crear el label para mostrar la información del juego debajo de la cámara
-        print("informacion de el juego----------------------------------------------------------", get_game_active())
-
-        self.game_info_label = tk.Label(self.camera_and_description_frame, text="Información del juego", bg="lightblue", font=("Arial", 12))
-        self.game_info_label.pack(side='bottom', fill='both', padx=10, pady=10)
 
         # Configuración inicial
         self.setup_camera()
@@ -102,7 +102,7 @@ class GameWindow:
     # Método para actualizar la información del juego
     def update_game4_info(self, score, time_left):
         # Actualiza la etiqueta con el puntaje y el tiempo restante
-        self.game_info_label.config(text=f"Juego 4: Insecto - ¡Pellizca para atrapar!\nPuntaje: {score}\nTiempo restante: {time_left}s")
+        self.game_info_label.config(text=f"¡Pellizca para atrapar\n a los insectos!\nPuntaje: {score}\nTiempo restante: {time_left}s")
         
             
     # Expansion de la pantalla cuando se sale de la pantalla completa

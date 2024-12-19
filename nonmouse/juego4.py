@@ -10,6 +10,8 @@ from tkinter import Toplevel, Label, Button
 # Variables Globales
 insects_pass = 0  # Puntaje de insectos pasados
 pet_pass = 0  # Puntaje de mascotas pasadas
+insectos_pellizcados = 0  
+mascotas_pellizcadas = 0
 error = 0  # ¿Para qué se usaría este? Puedes aclararlo si lo necesitas
 tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
 posiciones_y = [80, 180, 280, 380, 480]
@@ -18,6 +20,7 @@ pasaron_gifs = set()  # Conjunto para almacenar los GIFs que ya han pasado
 
 
 def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width, height, gif_height):  
+    global insectos_pellizcados, mascotas_pellizcadas
     frames_resized_all_insectos = []
     frames_resized_all_mascotas = []
 
@@ -153,19 +156,20 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
     # Generar GIFs repetidamente
     def generar_gifs_repetidamente():
-        global tiempo, insects_pass
+        global tiempo, insects_pass, insectos_pellizcados, mascotas_pellizcadas
         if tiempo > 0 and insects_pass == 0:  # Mientras quede tiempo en el juego
             generar_gif_aleatorio()  # Generar un GIF aleatorio
             tiempo -= 1000  # Decrementa 1 segundo
             print("Tiempo que va ...", tiempo)
 
             tiempo_pasado= tiempo//1000
+            score= insectos_pellizcados-mascotas_pellizcadas
             game_window = GameWindow.get_current_instance()
 
             # Verificar que la instancia no sea None
             if game_window:
                 # Actualizar la información del juego
-                game_window.update_game4_info(score=insects_pass, time_left=tiempo_pasado)
+                game_window.update_game4_info(score=score, time_left=tiempo_pasado)
             else:
                 print("No se encontró una instancia de GameWindow.")
 
@@ -190,6 +194,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
     # Función para eliminar el GIF al hacer clic
     def eliminar_gif(event):
+        global insectos_pellizcados, mascotas_pellizcadas
         # Obtener las coordenadas del clic
         x, y = event.x, event.y
         entidad_id = canvas.find_closest(x, y)[0]  # Obtén el ID del objeto más cercano
@@ -201,8 +206,10 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
             # Eliminar el GIF
             if "insecto" in tag:  # Si el tag contiene "insecto", es un insecto
                 grupo = "insecto"
+                insectos_pellizcados += 1
             elif "mascota" in tag:  # Si el tag contiene "mascota", es una mascota
                 grupo = "mascota"
+                mascotas_pellizcadas += 1
             else:
                 return  # Si no es ni insecto ni mascota, no hacer nada
 
@@ -215,6 +222,17 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
                     print(f"GIF con tag {tag} eliminado.")
             else:
                 print("No se puede eliminar mascotas")
+                
+        tiempo_pasado= tiempo//1000
+        score= insectos_pellizcados-mascotas_pellizcadas
+        game_window = GameWindow.get_current_instance()
+
+        # Verificar que la instancia no sea None
+        if game_window:
+            # Actualizar la información del juego
+            game_window.update_game4_info(score=score, time_left=tiempo_pasado)
+        else:
+            print("No se encontró una instancia de GameWindow.")
 
     # Vincular el evento de clic en el canvas
     canvas.bind("<Button-1>", eliminar_gif)
