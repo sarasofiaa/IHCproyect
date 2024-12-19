@@ -31,7 +31,7 @@ def cargar_imagen(ruta, altura=None):
         return None
 
 # Reutilizar para cargar gifts
-def cargar_gift(ruta, altura=None):
+def cargar_gif(ruta, altura=None):
     try:
         # Abrir la imagen GIF
         imagen = Image.open(ruta)

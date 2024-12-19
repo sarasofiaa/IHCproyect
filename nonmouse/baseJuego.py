@@ -189,9 +189,14 @@ class GameWindow:
         
         self.mouse.position = (new_x, new_y)
 #AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
-        #JUEGO 4 PELIZCA EL ANIMAL
-        # Detectar gesto de pellizco
+
+        #JUEGO 4 PELIZCA EL insecto        
         if get_game_active() == 4:
+            # Funcion de desplazar en las instrucciones
+            
+
+
+            # Detectar gesto de pellizco
             distancia_pellizco = calculate_distance(landmark4, landmark8)
             if distancia_pellizco < 0.05:
                 self.mouse.press(Button.left)
