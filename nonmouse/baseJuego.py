@@ -14,13 +14,16 @@ from .utils2 import cargar_imagen
 class GameWindow:
     current_instance = None
 
-    def __init__(self,gameName):
+    def __init__(self,gameName, is_instruction= False):
         self.root = tk.Tk()
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
         
-        self.root.attributes('-fullscreen', True)  # Activa el modo de pantalla completa
-        self.root.bind('<Escape>',self.exit_fullscreen) #Pantalla completa para el videojuego, esc para pantalla extendida
-       
+        if is_instruction:
+            # En lugar de establecer dimensiones específicas, usar el estado 'normal'
+            self.root.state('normal')
+        else:
+            self.root.attributes('-fullscreen', True)
+            self.root.bind('<Escape>', self.exit_fullscreen)
         GameWindow.current_instance = self
     
         #COLORES
@@ -89,6 +92,7 @@ class GameWindow:
         
         # Iniciar la actualización de la cámara
         self.update_camera()
+    
 
     @staticmethod
     def get_current_instance():

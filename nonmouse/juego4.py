@@ -14,7 +14,9 @@ error = 0  # ¿Para qué se usaría este? Puedes aclararlo si lo necesitas
 tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
 posiciones_y = [80, 180, 280, 380, 480]
 pasaron_gifs = set()  # Conjunto para almacenar los GIFs que ya han pasado
-  
+
+
+
 def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width, height, gif_height):  
     frames_resized_all_insectos = []
     frames_resized_all_mascotas = []
