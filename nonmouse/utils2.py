@@ -43,7 +43,7 @@ def cargar_gift(ruta, altura=None):
         
         # Convertir la imagen PIL a ImageTk.PhotoImage para su uso en Tkinter
         # Si la imagen tiene múltiples frames (GIF animado), también necesitamos manejar eso
-        if imagen.is_animated: #Aca hay error 
+        if imagen.is_animated: 
             frames = []
             for i in range(imagen.n_frames):
                 imagen.seek(i)  # Navegar a cada frame
@@ -57,7 +57,7 @@ def cargar_gift(ruta, altura=None):
         print(f"No se pudo cargar la imagen desde {ruta}: {e}")
         return None
 
-def mostrar_gif(root, archivo, x=0, y=0, velocidad=20):
+def mostrar_gif(root, archivo,fondo, x=0, y=0, velocidad=20):
    
     try:
         # Abrir el GIF con Pillow
@@ -75,6 +75,11 @@ def mostrar_gif(root, archivo, x=0, y=0, velocidad=20):
         # Obtener el tamaño de la imagen (ancho y alto)
         gif_width, gif_height = img.size
 
+        # Abrir la imagen de fondo
+        fondo_img = Image.open(fondo)
+        fondo_img = fondo_img.resize((gif_width, gif_height))  # Asegurarse que el fondo tiene el mismo tamaño que el GIF
+        fondo_tk = ImageTk.PhotoImage(fondo_img)
+
         # Crear el canvas donde se va a mostrar el gif
         canvas = tk.Canvas(root, width=gif_width, height=gif_height)
         canvas.pack()
@@ -82,8 +87,12 @@ def mostrar_gif(root, archivo, x=0, y=0, velocidad=20):
 
         # Función para actualizar el GIF
         def update(ind):
-            """ Actualiza la imagen del GIF """
+            """ Actualiza la imagen del GIF sobre el fondo """
+            # Mostrar el fondo
+            canvas.create_image(0, 0, image=fondo_tk, anchor=tk.NW)
+            # Mostrar el frame del GIF sobre el fondo
             canvas.create_image(0, 0, image=frames[ind], anchor=tk.NW)
+
             ind += 1
             if ind == len(frames):
                 ind = 0  # Volver al primer frame si se alcanza el final

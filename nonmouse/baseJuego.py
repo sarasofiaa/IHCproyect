@@ -83,21 +83,22 @@ class GameWindow:
     # Expansion de la pantalla cuando se sale de la pantalla completa
     def exit_fullscreen(self, event=None):  # Asegúrate de recibir el evento para la tecla Escape
         self.root.attributes('-fullscreen', False)  # Sal del modo pantalla completa
-        self.root.state('zoomed')  # Ajusta la ventana al modo extendido
+        self.root.state('zoomed')  # Ajusta la ventana al modo pantalla extendida 100%
         self.main_frame.pack(expand=True, fill='both')  # Reajusta el frame principal
-        print("Saliste del modo pantalla completa y ahora estás en modo extendido")
+        print("Saliste del modo pantalla completa y ahora estás en modo extendido") #Depuracion BORRAR 
 
 
-    # Set frame de juego 
+    # Set frame de juego en especifico
     def setGameFrame(self,game_logic):
         # Limpia el frame actual
         for widget in self.game_frame.winfo_children():
             widget.destroy()
         game_logic(self.game_frame)
+
     # Set frame de descripcion puntaje titulo etc (debajo de la camara) informacion del juego quizas?  
     def setDescriptionFrame(self,game_description): #Falta ajustar 
+        game_description(self.description_frame)
         
-        print("Falta ajustar")
 
 #CONFIGURACION DE LA CAMARA ___________________________________________________________________________________________________________
     def setup_camera(self):
@@ -193,6 +194,12 @@ class GameWindow:
         
         self.mouse.position = (new_x, new_y)
 #AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
+
+        #JUEGO 3
+        #mapear la mano y detectar el gesto segun el color, mediante un diccionario
+        if get_game_active == 3:
+            
+
         #JUEGO 4 PELIZCA EL ANIMAL
         # Detectar gesto de pellizco
         if get_game_active() == 4:

@@ -3,8 +3,8 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
-from.juego4 import mostrar_instrucciones
-from .juego3 import instrucciones
+from.instruccJuego4 import mostrar_instrucciones
+from.instruccJuego3 import instrucciones
 from .datosGlobales import set_game_active
 
 # Crear la ventana principal
@@ -73,8 +73,8 @@ def main_selector():
         messagebox.showinfo("Juego", "¡Escribir Números seleccionado!")
 
     def presionar_colores():
-        set_game_active(3)  # Registrar el juego activo
-        root.destroy()  # Cierra la ventana principal del selector
+        set_game_active(3)
+        root.destroy()
         instrucciones() #instrucciones del juego
 
     def presionar_animales():
