@@ -180,17 +180,20 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
     def fin_del_juego():
         global insects_pass
+
+        # Detener la creación de nuevos GIFs y detener los actuales
+        for tag in gif_ids.keys():
+            root.after_cancel(gif_ids[tag])  # Detener la animación de los GIFs
+        # Detener la función de generación de GIFs
+        root.after_cancel(generar_gifs_repetidamente)  # Cancela la función que crea los GIFs nuevos
+
         if insects_pass == 0:  # Si no se ha dejado pasar ningún insecto
             print("¡Has ganado! Tiempo terminado y no ha pasado ningún insecto.")
             mostrar_resultado(root, "¡Ganaste!")
         else:
             print(f"Game Over! Insectos pasados: {insects_pass}, Mascotas pasadas: {pet_pass}")
             mostrar_resultado(root, "¡Perdiste!")
-        # Detener la creación de nuevos GIFs y detener los actuales
-        for tag in gif_ids.keys():
-            root.after_cancel(gif_ids[tag])  # Detener la animación de los GIFs
-        # Detener la función de generación de GIFs
-        root.after_cancel(generar_gifs_repetidamente)  # Cancela la función que crea los GIFs nuevos
+        
 
     # Función para eliminar el GIF al hacer clic
     def eliminar_gif(event):
@@ -242,22 +245,53 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
     #actualizar_info(panel_base)
 
 def mostrar_resultado(root, mensaje):
-    """Crea una ventana modal simple para mostrar el mensaje."""
+    """Crea una ventana modal simple para mostrar el mensaje con un fondo dependiendo del resultado."""
+    
     # Crear una nueva ventana Toplevel
     ventana_resultado = Toplevel()
     ventana_resultado.title("Resultado")
-    ventana_resultado.geometry("300x150")  # Dimensiones de la ventana
+    ventana_resultado.geometry("600x350")  # Dimensiones de la ventana
     ventana_resultado.resizable(False, False)  # Evitar que la ventana sea redimensionable
-    # Etiqueta para mostrar el mensaje
-    label_mensaje = Label(ventana_resultado, text=mensaje, font=("Arial", 12), wraplength=250)
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
+
+    # Determinar el fondo según el mensaje (ganaste o perdiste)
+    if mensaje == "¡Ganaste!":
+        ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "ganaste.png")
+    else:
+        ruta_fondo = os.path.join(base_dir, "..", "images", "juego4",  "perdiste.png")
+    
+    # Cargar la imagen de fondo
+    fondo = Image.open(ruta_fondo)
+    # Obtener las dimensiones de la ventana
+    ancho_ventana = 700  # Puedes cambiar estos valores si deseas redimensionar la ventana
+    alto_ventana = 450
+
+    # Redimensionar la imagen de fondo para ajustarse a la ventana, manteniendo el aspecto
+    fondo_redimensionado = fondo.resize((ancho_ventana, alto_ventana), Image.ANTIALIAS)
+    fondo_tk = ImageTk.PhotoImage(fondo_redimensionado)
+    
+    # Crear un label con la imagen de fondo
+    label_fondo = Label(ventana_resultado, image=fondo_tk)
+    label_fondo.pack(fill=BOTH, expand=True)
+
+    # Etiqueta para mostrar el mensaje encima del fondo
+    label_mensaje = Label(ventana_resultado, text=mensaje, font=("Arial", 12), wraplength=250, bg="white")
     label_mensaje.pack(pady=20)
+
     # Botón para cerrar la ventana
     boton_cerrar = Button(ventana_resultado, text="Cerrar", command=ventana_resultado.destroy)
     boton_cerrar.pack(pady=10)
+
     # Centrar la ventana modal sobre la ventana principal
     ventana_resultado.transient(root)  # Relacionar la ventana con la ventana principal
     ventana_resultado.grab_set()  # Hacer que sea modal (previene la interacción con otras ventanas)
+    
+    # Mantener la referencia de la imagen
+    label_fondo.image = fondo_tk
+
     root.wait_window(ventana_resultado)  # Esperar hasta que la ventana sea cerrada
+
 """
 def logicaJuego4(frame):
     # Fondo en canvas
