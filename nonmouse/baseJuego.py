@@ -194,12 +194,6 @@ class GameWindow:
         
         self.mouse.position = (new_x, new_y)
 #AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
-
-        #JUEGO 3
-        #mapear la mano y detectar el gesto segun el color, mediante un diccionario
-        if get_game_active == 3:
-            
-
         #JUEGO 4 PELIZCA EL ANIMAL
         # Detectar gesto de pellizco
         if get_game_active() == 4:
