@@ -303,6 +303,12 @@ class GameWindow:
             
         self.root.after(10, self.update_camera)
 
+    def close(self):
+        if hasattr(self, 'root'):
+            self.root.quit()  # Finaliza el loop principal de la ventana
+            self.root.destroy()  # Destruye la ventana
+            print("Juego cerrado.")
+
     def run(self):
         self.root.mainloop()
 
