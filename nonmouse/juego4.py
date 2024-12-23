@@ -243,6 +243,15 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
     root.after(4000, generar_gifs_repetidamente)
     root.mainloop()
     #actualizar_info(panel_base)
+def cerrar_juego():
+    """Función para cerrar el juego."""
+    print("Juego cerrado.")
+    exit()  # Esto cerrará el programa.
+
+def reintentar():
+    """Función para reiniciar el juego o volver a intentarlo."""
+    print("Reiniciando juego...")
+    # Aquí puedes agregar el código necesario para reiniciar el juego.
 
 def mostrar_resultado(root, mensaje):
     """Crea una ventana modal simple para mostrar el mensaje con un fondo dependiendo del resultado."""
@@ -250,8 +259,24 @@ def mostrar_resultado(root, mensaje):
     # Crear una nueva ventana Toplevel
     ventana_resultado = Toplevel()
     ventana_resultado.title("Resultado")
-    ventana_resultado.geometry("600x350")  # Dimensiones de la ventana
-    ventana_resultado.resizable(False, False)  # Evitar que la ventana sea redimensionable
+    
+    # Obtener las dimensiones de la pantalla
+    screen_width = root.winfo_screenwidth()  # Ancho de la pantalla
+    screen_height = root.winfo_screenheight()  # Alto de la pantalla
+    
+    # Definir las dimensiones de la ventana
+    ancho_ventana = 600
+    alto_ventana = 350
+
+    # Calcular la posición de la ventana para centrarla en la pantalla
+    x_position = (screen_width - ancho_ventana) // 2
+    y_position = (screen_height - alto_ventana) // 2
+
+    # Establecer la geometría de la ventana (tamaño y posición)
+    ventana_resultado.geometry(f"{ancho_ventana}x{alto_ventana}+{x_position}+{y_position}")
+    
+    # Evitar que la ventana sea redimensionable
+    ventana_resultado.resizable(False, False)
 
     base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
 
@@ -259,36 +284,56 @@ def mostrar_resultado(root, mensaje):
     if mensaje == "¡Ganaste!":
         ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "ganaste.png")
     else:
-        ruta_fondo = os.path.join(base_dir, "..", "images", "juego4",  "perdiste.png")
+        ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "perdiste.png")
     
+    print("URL1 ,",base_dir)
     # Cargar la imagen de fondo
     fondo = Image.open(ruta_fondo)
-    # Obtener las dimensiones de la ventana
-    ancho_ventana = 700  # Puedes cambiar estos valores si deseas redimensionar la ventana
-    alto_ventana = 450
-
-    # Redimensionar la imagen de fondo para ajustarse a la ventana, manteniendo el aspecto
+    
+    # Redimensionar la imagen de fondo para ajustarse a la ventana
     fondo_redimensionado = fondo.resize((ancho_ventana, alto_ventana), Image.ANTIALIAS)
     fondo_tk = ImageTk.PhotoImage(fondo_redimensionado)
+
+    # Crear un Canvas para dibujar la imagen de fondo
+    canvas = Canvas(ventana_resultado, width=ancho_ventana, height=alto_ventana)
+    canvas.pack(fill=BOTH, expand=True)
+
+    # Dibujar la imagen de fondo en el canvas
+    canvas.create_image(0, 0, image=fondo_tk, anchor=NW)
+
+    # Crear los botones "Cerrar juego" y "Reintentar"
+    frame_botones = Frame(ventana_resultado, bg="#ebdcbc")
+    frame_botones.place(x=(ancho_ventana - 150) // 2, y=180)  # Colocar los botones en el centro de la ventana
+
+    # Cargar imágenes de fondo distintas para cada botón
     
-    # Crear un label con la imagen de fondo
-    label_fondo = Label(ventana_resultado, image=fondo_tk)
-    label_fondo.pack(fill=BOTH, expand=True)
+    print("URL2,",base_dir)
+    fondo_boton_cerrar = Image.open(os.path.join(base_dir, "..", "images", "juego4", "buttonExit.png"))  # Imagen para el botón "Cerrar"
+    fondo_boton_cerrar_tk = ImageTk.PhotoImage(fondo_boton_cerrar.resize((130, 30), Image.ANTIALIAS))  # Redimensionar
 
-    # Etiqueta para mostrar el mensaje encima del fondo
-    label_mensaje = Label(ventana_resultado, text=mensaje, font=("Arial", 12), wraplength=250, bg="white")
-    label_mensaje.pack(pady=20)
+    fondo_boton_reintentar = Image.open(os.path.join(base_dir, "..", "images", "juego4", "buttonrestart.png"))  # Imagen para el botón "Reintentar"
+    fondo_boton_reintentar_tk = ImageTk.PhotoImage(fondo_boton_reintentar.resize((130, 30), Image.ANTIALIAS))  # Redimensionar
 
-    # Botón para cerrar la ventana
-    boton_cerrar = Button(ventana_resultado, text="Cerrar", command=ventana_resultado.destroy)
-    boton_cerrar.pack(pady=10)
+    # Botón "Cerrar juego" con su imagen de fondo
+    boton_cerrar = Button(frame_botones, command=cerrar_juego,
+                          image=fondo_boton_cerrar_tk, compound="center", relief="flat")  # Imagen de fondo
+    boton_cerrar.grid(row=1, column=0, padx=10)
+
+    # Botón "Reintentar" con su imagen de fondo
+    boton_reintentar = Button(frame_botones, command=reintentar,
+                              image=fondo_boton_reintentar_tk, compound="center", relief="flat")  # Imagen de fondo
+    boton_reintentar.grid(row=0, column=0, padx=10)
 
     # Centrar la ventana modal sobre la ventana principal
     ventana_resultado.transient(root)  # Relacionar la ventana con la ventana principal
     ventana_resultado.grab_set()  # Hacer que sea modal (previene la interacción con otras ventanas)
     
-    # Mantener la referencia de la imagen
-    label_fondo.image = fondo_tk
+    # Mantener la referencia de las imágenes de los botones
+    boton_cerrar.image = fondo_boton_cerrar_tk
+    boton_reintentar.image = fondo_boton_reintentar_tk
+
+    # Mantener la referencia de la imagen de fondo de la ventana
+    canvas.image = fondo_tk
 
     root.wait_window(ventana_resultado)  # Esperar hasta que la ventana sea cerrada
 
