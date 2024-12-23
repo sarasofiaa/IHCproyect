@@ -156,11 +156,6 @@ class GameWindow:
                 # Procesar landmarks y movimiento del mouse
                 self.process_landmarks(hand_landmarks, image)
 
-                # Detectar color por gesto
-                #color_detectado = self.detectar_color_con_gesto(results)
-                #if color_detectado:
-                #    self.procesar_gesto(color_detectado)  # Llama al método del juego
-
         return image
 
     def process_landmarks(self, hand_landmarks, image):
@@ -194,6 +189,18 @@ class GameWindow:
         
         self.mouse.position = (new_x, new_y)
 #AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
+
+        #JUEGO 3 PELLIZCAR PARA HACER CLICK
+        if get_game_active() == 3:
+            distancia_pellizco = calculate_distance(landmark4, landmark8)
+            if distancia_pellizco < 0.05:
+                self.mouse.press(Button.left)
+                self.mouse.release(Button.left)
+                draw_circle(image, 
+                          hand_landmarks.landmark[8].x * image.shape[1],  # Use image width
+                          hand_landmarks.landmark[8].y * image.shape[0],  # Use image height 
+                          20, (255, 105, 180))
+                
         #JUEGO 4 PELIZCA EL ANIMAL
         # Detectar gesto de pellizco
         if get_game_active() == 4:
