@@ -17,6 +17,16 @@ tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
 posiciones_y = [80, 180, 280, 380, 480]
 pasaron_gifs = set()  # Conjunto para almacenar los GIFs que ya han pasado
 
+def reiniciar_valores_globales():
+    """Reinicia todas las variables globales a sus valores iniciales."""
+    global insects_pass, pet_pass, insectos_pellizcados, mascotas_pellizcadas, error, tiempo, pasaron_gifs
+    insects_pass = 0
+    pet_pass = 0
+    insectos_pellizcados = 0
+    mascotas_pellizcadas = 0
+    error = 0
+    tiempo = 20000
+    pasaron_gifs = set()
 
 
 def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width, height, gif_height):  
@@ -139,6 +149,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
                 insects_pass += 1  # Incrementa si es un insecto
 
                 print("-------------Insecto pasó -------------------------")
+                print("fin del juego -insectopaso")
                 fin_del_juego()
 
             else:
@@ -174,8 +185,12 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
                 print("No se encontró una instancia de GameWindow.")
 
             root.after(4000, generar_gifs_repetidamente)  # Llamar a la función cada segundo
+        elif(insects_pass > 0):
+            print("ya mprmio")
+
         else:
             print("-------------Termino el tiempo -------------------------")
+            print("fin del juego -generargif")
             fin_del_juego()
 
     def fin_del_juego():
@@ -244,14 +259,63 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
     root.mainloop()
     #actualizar_info(panel_base)
 
+def cerrar_juego(root, ventana_resultado=None):
+    """Función para cerrar el juego y todas las ventanas abiertas."""
+    print("Juego cerrado.")
+    if ventana_resultado:
+        ventana_resultado.destroy()  # Cierra la ventana modal de resultado si está abierta
+    root.quit()  # Termina el loop principal de la ventana
+    root.destroy()  # Destruye la ventana principal (root)
+    exit()  # Esto cerrará el programa.
+
+def reintentar(root, ventana_resultado=None):
+    # Si la ventana de resultado está abierta, ciérrala
+    try:
+        if ventana_resultado:  # Solo intentar destruir si la ventana de resultado existe
+            ventana_resultado.destroy()
+    except TclError:
+        pass  # Si la ventana ya está cerrada, no hacer nada
+    
+    # Cerrar la instancia actual del juego (si existe)
+    if GameWindow.get_current_instance():
+        GameWindow.get_current_instance().close()  # Cierra la instancia existente de GameWindow
+    
+    # Intentar cerrar la ventana principal (root)
+    try:
+        root.quit()  # Termina el mainloop si aún está en ejecución
+        root.destroy()  # Destruye la ventana
+    except TclError:
+        pass  # Si la ventana ya ha sido destruida, no hacer nada
+    reiniciar_valores_globales()
+    # Crear una nueva instancia del juego
+    game_window2 = GameWindow("Juego4: Pellizca el insecto")  # Nueva instancia de la ventana del juego
+    game_window2.setGameFrame(logicaJuego4)  # Establecer el marco del juego (lógica)
+    game_window2.run()  # Ejecutar el ciclo principal del juego
+
 def mostrar_resultado(root, mensaje):
     """Crea una ventana modal simple para mostrar el mensaje con un fondo dependiendo del resultado."""
     
     # Crear una nueva ventana Toplevel
     ventana_resultado = Toplevel()
     ventana_resultado.title("Resultado")
-    ventana_resultado.geometry("600x350")  # Dimensiones de la ventana
-    ventana_resultado.resizable(False, False)  # Evitar que la ventana sea redimensionable
+    
+    # Obtener las dimensiones de la pantalla
+    screen_width = root.winfo_screenwidth()  # Ancho de la pantalla
+    screen_height = root.winfo_screenheight()  # Alto de la pantalla
+    
+    # Definir las dimensiones de la ventana
+    ancho_ventana = 600
+    alto_ventana = 350
+
+    # Calcular la posición de la ventana para centrarla en la pantalla
+    x_position = (screen_width - ancho_ventana) // 2
+    y_position = (screen_height - alto_ventana) // 2
+
+    # Establecer la geometría de la ventana (tamaño y posición)
+    ventana_resultado.geometry(f"{ancho_ventana}x{alto_ventana}+{x_position}+{y_position}")
+    
+    # Evitar que la ventana sea redimensionable
+    ventana_resultado.resizable(False, False)
 
     base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
 
@@ -259,38 +323,56 @@ def mostrar_resultado(root, mensaje):
     if mensaje == "¡Ganaste!":
         ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "ganaste.png")
     else:
-        ruta_fondo = os.path.join(base_dir, "..", "images", "juego4",  "perdiste.png")
+        ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "perdiste.png")
     
     # Cargar la imagen de fondo
     fondo = Image.open(ruta_fondo)
-    # Obtener las dimensiones de la ventana
-    ancho_ventana = 700  # Puedes cambiar estos valores si deseas redimensionar la ventana
-    alto_ventana = 450
-
-    # Redimensionar la imagen de fondo para ajustarse a la ventana, manteniendo el aspecto
+    
+    # Redimensionar la imagen de fondo para ajustarse a la ventana
     fondo_redimensionado = fondo.resize((ancho_ventana, alto_ventana), Image.ANTIALIAS)
     fondo_tk = ImageTk.PhotoImage(fondo_redimensionado)
-    
-    # Crear un label con la imagen de fondo
-    label_fondo = Label(ventana_resultado, image=fondo_tk)
-    label_fondo.pack(fill=BOTH, expand=True)
 
-    # Etiqueta para mostrar el mensaje encima del fondo
-    label_mensaje = Label(ventana_resultado, text=mensaje, font=("Arial", 12), wraplength=250, bg="white")
-    label_mensaje.pack(pady=20)
+    # Crear un Canvas para dibujar la imagen de fondo
+    canvas = Canvas(ventana_resultado, width=ancho_ventana, height=alto_ventana)
+    canvas.pack(fill=BOTH, expand=True)
 
-    # Botón para cerrar la ventana
-    boton_cerrar = Button(ventana_resultado, text="Cerrar", command=ventana_resultado.destroy)
-    boton_cerrar.pack(pady=10)
+    # Dibujar la imagen de fondo en el canvas
+    canvas.create_image(0, 0, image=fondo_tk, anchor=NW)
+
+    # Crear los botones "Cerrar juego" y "Reintentar"
+    frame_botones = Frame(ventana_resultado, bg="#ebdcbc")
+    frame_botones.place(x=(ancho_ventana - 150) // 2, y=180)  # Colocar los botones en el centro de la ventana
+
+    # Cargar imágenes de fondo distintas para cada botón
+    fondo_boton_cerrar = Image.open(os.path.join(base_dir, "..", "images", "juego4", "buttonExit.png"))  # Imagen para el botón "Cerrar"
+    fondo_boton_cerrar_tk = ImageTk.PhotoImage(fondo_boton_cerrar.resize((130, 30), Image.ANTIALIAS))  # Redimensionar
+
+    fondo_boton_reintentar = Image.open(os.path.join(base_dir, "..", "images", "juego4", "buttonrestart.png"))  # Imagen para el botón "Reintentar"
+    fondo_boton_reintentar_tk = ImageTk.PhotoImage(fondo_boton_reintentar.resize((130, 30), Image.ANTIALIAS))  # Redimensionar
+
+    # Botón "Cerrar juego" con su imagen de fondo
+    boton_cerrar = Button(frame_botones, command=lambda: cerrar_juego(root, ventana_resultado),
+                          image=fondo_boton_cerrar_tk, compound="center", relief="flat")  # Imagen de fondo
+    boton_cerrar.grid(row=1, column=0, padx=10)
+
+    # Botón "Reintentar" con su imagen de fondo
+    boton_reintentar = Button(frame_botones,  command=lambda: reintentar(root, ventana_resultado),
+                              image=fondo_boton_reintentar_tk, compound="center", relief="flat")  # Imagen de fondo
+    boton_reintentar.grid(row=0, column=0, padx=10)
 
     # Centrar la ventana modal sobre la ventana principal
     ventana_resultado.transient(root)  # Relacionar la ventana con la ventana principal
     ventana_resultado.grab_set()  # Hacer que sea modal (previene la interacción con otras ventanas)
     
-    # Mantener la referencia de la imagen
-    label_fondo.image = fondo_tk
+    # Mantener la referencia de las imágenes de los botones
+    boton_cerrar.image = fondo_boton_cerrar_tk
+    boton_reintentar.image = fondo_boton_reintentar_tk
+
+    # Mantener la referencia de la imagen de fondo de la ventana
+    canvas.image = fondo_tk
 
     root.wait_window(ventana_resultado)  # Esperar hasta que la ventana sea cerrada
+
 
 """
 def logicaJuego4(frame):
