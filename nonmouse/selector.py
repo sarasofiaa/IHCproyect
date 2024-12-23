@@ -4,7 +4,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
 from.instruccJuego4 import mostrar_instrucciones
-from .datosGlobales import set_game_active, set_instruction_active
+from .datosGlobales import set_game_active, set_instruction_active,get_game_active
 
 
 # Crear la ventana principal

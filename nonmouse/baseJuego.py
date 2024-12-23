@@ -8,7 +8,7 @@ import mediapipe as mp
 import os
 from pynput.mouse import Button, Controller
 from nonmouse.utils2 import calculate_distance, draw_circle, calculate_moving_average
-from .datosGlobales import get_game_active,set_instruction_active,get_instruction_active
+from .datosGlobales import get_game_active, get_instruction_active, set_instruction_active
 from .utils2 import cargar_imagen
 import math
 
@@ -18,8 +18,9 @@ class GameWindow:
     def __init__(self,gameName, is_instruction= False):
         self.root = tk.Tk()
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
-        
+        set_instruction_active(value=is_instruction)
         if is_instruction:
+
             self.root.state('normal')
         else:
             self.root.attributes('-fullscreen', True)
@@ -218,30 +219,40 @@ class GameWindow:
 #AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
         #JUEGO 4 PELIZCA EL insecto        
         if get_game_active() == 4:
-            if (get_instruction_active == True):
-                # Detectar gesto de deslizamiento horizontal
+            if get_instruction_active()  == True:
+                # Puntos clave para detectar el deslizamiento
+                wrist = hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST]
                 thumb_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.THUMB_TIP]
                 index_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                pinky_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.PINKY_TIP]
+                
+                # Lista para almacenar posiciones anteriores de la mano
+                if not hasattr(self, 'hand_positions'):
+                    self.hand_positions = []
+                
+                # Calcular el centro de la mano
+                hand_center_x = (wrist.x + thumb_tip.x + index_tip.x + pinky_tip.x) / 4
+                
+                # Guardar la posición actual
+                self.hand_positions.append(hand_center_x)
+                
+                # Mantener solo las últimas 10 posiciones
+                if len(self.hand_positions) > 10:
+                    self.hand_positions.pop(0)
                 
                 # Detectar deslizamiento horizontal
-                distance = math.sqrt(
-                    (thumb_tip.x - index_tip.x)**2 + 
-                    (thumb_tip.y - index_tip.y)**2
-                )
+                if len(self.hand_positions) >= 5:
+                    # Calcular el movimiento total
+                    total_movement = self.hand_positions[-1] - self.hand_positions[0]
+                    
+                    # Verificar si es un deslizamiento válido
+                    # Verificar si es un deslizamiento válido
+                    if abs(total_movement) > 0.15:  # Ajusta este valor según necesites
+                        # Limpiar el historial de posiciones
+                        self.hand_positions = []
+                        self.root.event_generate('<<NextGif>>')
+                        return True
                 
-                if distance < 0.1 and abs(thumb_tip.y - index_tip.y) < 0.05:
-                    # Si detecta deslizamiento, llamar a siguiente_gif
-                    if hasattr(self, 'root') and isinstance(self.root, tk.Tk):
-                        for widget in self.root.winfo_children():
-                            if isinstance(widget, tk.Frame):
-                                for child in widget.winfo_children():
-                                    if isinstance(child, tk.Canvas):
-                                        # Buscar y ejecutar el botón "Siguiente"
-                                        for button in child.find_withtag('all'):
-                                            if child.itemcget(button, 'text') == 'Siguiente':
-                                                child.event_generate('<<NextGif>>')
-                                                return
-
                 # Detectar gesto de "like" (pulgar arriba)
                 thumb_up = thumb_tip.y < hand_landmarks.landmark[self.mp_hands.HandLandmark.THUMB_IP].y
                 fingers_closed = all(
@@ -255,24 +266,19 @@ class GameWindow:
                 )
                 
                 if thumb_up and fingers_closed:
-                    # Si detecta el gesto "like", llamar a jugar
-                    if hasattr(self, 'root') and isinstance(self.root, tk.Tk):
-                        for widget in self.root.winfo_children():
-                            if isinstance(widget, tk.Frame):
-                                for child in widget.winfo_children():
-                                    if isinstance(child, tk.Canvas):
-                                        # Buscar y ejecutar el botón "JUGAR"
-                                        for button in child.find_withtag('all'):
-                                            if child.itemcget(button, 'text') == 'JUGAR':
-                                                child.event_generate('<<StartGame>>')
-                                                return
+                    try:
+                        print("Intentando generar evento StartGame")
+                        self.root.event_generate('<<StartGame>>')
+                        print("Evento StartGame generado exitosamente")
+                    except Exception as e:
+                        print(f"Error al generar evento: {e}")
+                    return True
             # Funcion de desplazar en las instrucciones
             # Mostrar el mensaje de info del juego
             #self.update_game4_info()
-
-
             # Detectar gesto de pellizco
             else:
+                print(get_instruction_active())
                 distancia_pellizco = calculate_distance(landmark4, landmark8)
                 if distancia_pellizco < 0.05:
                     self.mouse.press(Button.left)

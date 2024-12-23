@@ -88,6 +88,7 @@ def instructions_game4(game_frame):
             )
     
     def siguiente_gif():
+        print("Desplazando a siguiente")
         limpiar_canvas()
         estado['indice_actual'] = (estado['indice_actual'] + 1) % len(rutas_gifs)
         
@@ -133,15 +134,12 @@ def instructions_game4(game_frame):
     )
     boton_siguiente.place(x=700, y=550)
     
-    #Bindings de gestos 
-    def on_next_gif(event):
-        siguiente_gif()
-    
-    def on_start_game(event):
-        jugar()
-
-    # Agregar bindings para los eventos personalizados
-    carrusel_canva.bind('<<NextGif>>', on_next_gif)
-    carrusel_canva.bind('<<StartGame>>', on_start_game)
+    window = GameWindow.get_current_instance()
+    if window and window.root:
+        window.root.bind('<<NextGif>>', lambda e: siguiente_gif())
+        window.root.bind('<<StartGame>>', lambda e: jugar())
+        
+    # Bind to both root and game_frame for redundancy
+    game_frame.bind('<<NextGif>>', lambda e: siguiente_gif())
     # Esperamos a que el canvas esté listo antes de mostrar el primer GIF
     carrusel_canva.bind('<Configure>', on_canvas_configure)

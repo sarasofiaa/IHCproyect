@@ -17,4 +17,4 @@ def get_instruction_active():
 
 def set_instruction_active(value):
     global INSTRUCTION_ACTIVE
-    GINSTRUCTION_ACTIVE = value
+    INSTRUCTION_ACTIVE = value
