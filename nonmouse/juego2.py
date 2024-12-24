@@ -1,14 +1,27 @@
 import pygame
 import sys
 import math
+import cv2
 
 # Inicializar Pygame
 pygame.init()
 
 # Configuración de la ventana
-WIDTH, HEIGHT = 800, 600
+#WIDTH, HEIGHT = 800, 600
+#screen = pygame.display.set_mode((WIDTH, HEIGHT))
+#pygame.display.set_caption("Traza el número")
+
+# Configuración de la ventana
+WIDTH, HEIGHT = 1400, 600  # Ancho ampliado para la cámara y las instrucciones
+GAME_WIDTH = 1000          # Ancho de la sección del juego
+CAM_WIDTH, CAM_HEIGHT = 400, 300  # Tamaño de la cámara
+INST_HEIGHT = 300         # Altura para las instrucciones
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Traza el número")
+
+# Inicializar la cámara
+camera = cv2.VideoCapture(0)  # Usar la cámara predeterminada
 
 # Colores
 BLACK = (0, 0, 0)
@@ -49,6 +62,7 @@ background_colors = [
 # Fuente para textos
 font = pygame.font.SysFont(None, 500)  # Fuente para el número
 button_font = pygame.font.SysFont(None, 40)  # Fuente para los botones
+instruction_font = pygame.font.SysFont(None, 30)  # Fuente para las instrucciones
 
 # Variables del juego
 current_number = 0
@@ -84,116 +98,116 @@ evaluate_button_text = button_font.render("Evaluar", True, BLACK)
 # Número predefinido como ruta de puntos
 number_paths = {
     0: [
-        (WIDTH // 2 + int(60 * math.cos(2 * math.pi * t / 100)), HEIGHT // 2 - 70 + int(110 * math.sin(2 * math.pi * t / 100)))
+        (WIDTH // 2 + int(60 * math.cos(2 * math.pi * t / 100)) - 200, HEIGHT // 2 - 70 + int(110 * math.sin(2 * math.pi * t / 100)))
         for t in range(600)
     ],
 
     1: [
         # Generar la curva de la cabeza del 1 (parte superior)
-        (WIDTH // 2 - 35 + int(50 * math.cos(math.radians(angle))), HEIGHT // 2 - 170 - int(40 * math.sin(math.radians(angle))))
+        (WIDTH // 2 - 35 + int(50 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 170 - int(40 * math.sin(math.radians(angle))))
         for angle in range(250, 360)  # Curva semicircular
     ] + [
-        (WIDTH // 2 + 15, HEIGHT // 2 - 175 + y) for y in range(220)
+        (WIDTH // 2 + 15 - 200, HEIGHT // 2 - 175 + y) for y in range(220)
     ],
 
     2: [
         # Curva superior (parte superior del 2)
-        (WIDTH // 2 + int(65 * math.cos(math.radians(angle))), HEIGHT // 2 - 120 + int(60 * math.sin(math.radians(angle))))
+        (WIDTH // 2 + int(65 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 120 + int(60 * math.sin(math.radians(angle))))
         for angle in range(180, 420)  # Curva semicircular
     ] + [
-        (WIDTH // 2 + 34 - 1.08 * x, HEIGHT // 2 - 70 + x) for x in range(40)  # Línea vertical izquierda
+        (WIDTH // 2 + 34 - 1.08 * x - 200, HEIGHT // 2 - 70 + x) for x in range(40)  # Línea vertical izquierda
     ] + [
         # Línea diagonal descendente (parte central del 2)
-        (WIDTH // 2 - int(60 * math.sin(math.radians(x))), HEIGHT // 2 + 30 + int(60 * math.cos(math.radians(x))))
+        (WIDTH // 2 - int(60 * math.sin(math.radians(x))) - 200, HEIGHT // 2 + 30 + int(60 * math.cos(math.radians(x))))
         for x in range(90, 170) 
     ] + [
         # Línea horizontal inferior (base del 2)
-        (WIDTH // 2 - 60 + x, HEIGHT // 2 + 35) for x in range(120)  # Línea base
+        (WIDTH // 2 - 60 + x - 200, HEIGHT // 2 + 35) for x in range(120)  # Línea base
     ],
 
     3: [
         # Curva superior (parte superior del 3)
-        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))), HEIGHT // 2 - 120 + int(55 * math.sin(math.radians(angle))))
+        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 120 + int(55 * math.sin(math.radians(angle))))
         for angle in range(180, 360)  # Curva semicircular
     ] + [
         # Curva superior (parte superior del 3)
-        (WIDTH // 2 - 15 + int(70 * math.cos(math.radians(angle))), HEIGHT // 2 - 120 + int(50 * math.sin(math.radians(angle))))
+        (WIDTH // 2 - 15 + int(70 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 120 + int(50 * math.sin(math.radians(angle))))
         for angle in range(360, 450)  # Curva semicircular
     ] + [
         # Curva inferior (parte inferior del 3)
-        (WIDTH // 2 - 15 + int(70 * math.cos(math.radians(angle))), HEIGHT // 2 - 17 - int(50 * math.sin(math.radians(angle))))
+        (WIDTH // 2 - 15 + int(70 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 17 - int(50 * math.sin(math.radians(angle))))
         for angle in range(360, 450)  # Curva semicircular
     ] + [
         # Curva inferior (parte inferior del 3)
-        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))), HEIGHT // 2  - 10 + int(55 * math.sin(math.radians(angle))))
+        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))) - 200, HEIGHT // 2  - 10 + int(55 * math.sin(math.radians(angle))))
         for angle in range(0, 180)  # Curva semicircular
     ],
 
     4: [
         # Línea vertical (parte izquierda del 4)
-        (WIDTH // 2 + 35, HEIGHT // 2 - 180 + y) for y in range(220)
+        (WIDTH // 2 + 35 - 200, HEIGHT // 2 - 180 + y) for y in range(220)
     ] + [
         # Línea horizontal (parte superior del 4)
-        (WIDTH // 2 - 75 + x, HEIGHT // 2 - 20) for x in range(150)
+        (WIDTH // 2 - 75 + x - 200, HEIGHT // 2 - 20) for x in range(150)
     ] + [
         # Línea diagonal (parte inferior del 4)
-        (WIDTH // 2 - 70 + x, HEIGHT // 2 - 40 - 1.5 * x) for x in range(90)
+        (WIDTH // 2 - 70 + x - 200, HEIGHT // 2 - 40 - 1.5 * x) for x in range(90)
     ],
 
     5: [
         # Línea horizontal superior (parte superior del 5)
-        (WIDTH // 2 - 40 + x, HEIGHT // 2 - 170) for x in range(100)
+        (WIDTH // 2 - 40 + x - 200, HEIGHT // 2 - 170) for x in range(100)
     ] + [
         # Línea diagonal descendente (parte central del 5)
-        (WIDTH // 2 - 5 + int(60 * math.cos(math.radians(x))), HEIGHT // 2 - 25 + int(70 * math.sin(math.radians(x)))
+        (WIDTH // 2 - 5 + int(60 * math.cos(math.radians(x))) - 200, HEIGHT // 2 - 25 + int(70 * math.sin(math.radians(x)))
         ) for x in range(220, 520)
     ] + [
         # Línea horizontal inferior (parte inferior del 5)
-        (WIDTH // 2 - 55 + x, HEIGHT // 2 - 70 - 6 * x) for x in range(18)
+        (WIDTH // 2 - 55 + x - 200, HEIGHT // 2 - 70 - 6 * x) for x in range(18)
     ],
 
     6: [
         # Curva superior (parte superior del 6)
-        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))), HEIGHT // 2 - 120 + int(60 * math.sin(math.radians(angle)))
+        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 120 + int(60 * math.sin(math.radians(angle)))
         ) for angle in range(180, 340)
     ] + [
         # Línea vertical (parte central del 6)
-        (WIDTH // 2 - 52, HEIGHT // 2 - 120 + y) for y in range(120)
+        (WIDTH // 2 - 52 - 200, HEIGHT // 2 - 120 + y) for y in range(120)
     ] + [
         # Curva inferior (parte inferior del 6)
-        (WIDTH // 2 + 2 + int(55 * math.cos(math.radians(angle))), HEIGHT // 2 - 20 + int(70 * math.sin(math.radians(angle)))
+        (WIDTH // 2 + 2 + int(55 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 20 + int(70 * math.sin(math.radians(angle)))
         ) for angle in range(0, 360)
     ],
 
     7: [
         # Línea horizontal superior (parte superior del 7)
-        (WIDTH // 2 - 70 + x, HEIGHT // 2 - 170) for x in range(140)
+        (WIDTH // 2 - 70 + x - 200, HEIGHT // 2 - 170) for x in range(140)
     ] + [
         # Línea diagonal descendente (parte central del 7)
-        (WIDTH // 2 + 130 + int(150 * math.cos(math.radians(x))), HEIGHT // 2 + 50 + int(225 * math.sin(math.radians(x)))
+        (WIDTH // 2 + 130 + int(150 * math.cos(math.radians(x))) - 200, HEIGHT // 2 + 50 + int(225 * math.sin(math.radians(x)))
         ) for x in range(185, 245)
     ],
 
     8: [
         # Curva superior (parte superior del 8)
-        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))), HEIGHT // 2 - 125 + int(50 * math.sin(math.radians(angle)))
+        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 125 + int(50 * math.sin(math.radians(angle)))
         ) for angle in range(0, 360)
     ] + [
         # Curva inferior (parte inferior del 8)
-        (WIDTH // 2 + int(60 * math.cos(math.radians(angle))), HEIGHT // 2 - 20 + int(60 * math.sin(math.radians(angle)))
+        (WIDTH // 2 + int(60 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 20 + int(60 * math.sin(math.radians(angle)))
         ) for angle in range(0, 360)
     ],
 
     9: [
         # Curva superior (parte superior del 9)
-        (WIDTH // 2 - 5 + int(55 * math.cos(math.radians(angle))), HEIGHT // 2 - 110 + int(70 * math.sin(math.radians(angle)))
+        (WIDTH // 2 - 5 + int(55 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 110 + int(70 * math.sin(math.radians(angle)))
         ) for angle in range(0, 360)
     ] + [
         # Línea vertical (parte central del 9)
-        (WIDTH // 2 + 52, HEIGHT // 2 - 100 + y) for y in range(80)
+        (WIDTH // 2 + 52 - 200, HEIGHT // 2 - 100 + y) for y in range(80)
     ] + [
         # Curva inferior (parte inferior del 9)
-        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))), HEIGHT // 2 - 15 + int(60 * math.sin(math.radians(angle)))
+        (WIDTH // 2 + int(55 * math.cos(math.radians(angle))) - 200, HEIGHT // 2 - 15 + int(60 * math.sin(math.radians(angle)))
         ) for angle in range(340, 520)
     ]
     # Agrega rutas para los demás números según sea necesario
@@ -228,7 +242,7 @@ def evaluate_path():
     )
     
     accuracy = correct_points / len(user_path) if user_path else 0
-    message = "Correcto" if correct_points >= (len(target_path) * 0.85) and accuracy > 0.8 else "Incorrecto"
+    message = "Correcto" if correct_points >= (len(target_path) * 0.25) and accuracy > 0.8 else "Incorrecto"
     
     # Mostrar las estadísticas en la consola
     print(f"Evaluación del trazo para el número {current_number}:")
@@ -244,9 +258,17 @@ while running:
     # Llenar la pantalla con el color de fondo actual
     screen.fill(background_colors[current_color_index])
 
+    # Dividir en secciones
+    game_section = pygame.Rect(0, 0, GAME_WIDTH, HEIGHT)
+    cam_section = pygame.Rect(GAME_WIDTH, 0, CAM_WIDTH, CAM_HEIGHT)
+    instruction_section = pygame.Rect(GAME_WIDTH, CAM_HEIGHT, CAM_WIDTH, INST_HEIGHT)
+
+    # ======= SECCIÓN DEL JUEGO =======
+    pygame.draw.rect(screen, background_colors[current_color_index], game_section)
+
     # Mostrar el número actual
     number_text = font.render(str(current_number), True, BLACK)
-    number_rect = number_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
+    number_rect = number_text.get_rect(center=(GAME_WIDTH // 2, HEIGHT // 2 - 50))
     screen.blit(number_text, number_rect)
 
     # Dibujar el botón "Anterior"
@@ -275,6 +297,17 @@ while running:
     for tx, ty in target_path:
         pygame.draw.circle(screen, GREEN, (tx, ty), 5)
 
+    # Botones ajustados dentro de la sección del juego
+    prev_button_rect = pygame.Rect(
+        50, HEIGHT - button_height - 30, button_width, button_height
+    )
+    next_button_rect = pygame.Rect(
+        GAME_WIDTH - button_width - 50, HEIGHT - button_height - 30, button_width, button_height
+    )
+    evaluate_button_rect = pygame.Rect(
+        GAME_WIDTH // 2 - button_width // 2, HEIGHT - button_height - 30, button_width, button_height
+    )
+
     # Dibujar el trazo del usuario
     if len(user_path) > 1:  # Asegurarse de que haya al menos 2 puntos
         pygame.draw.lines(screen, WHITE, False, user_path, 15)
@@ -282,7 +315,27 @@ while running:
     # Mostrar mensaje de evaluación
     if message:
         result_text = button_font.render(message, True, GREEN if message == "Correcto" else RED)
-        screen.blit(result_text, (WIDTH // 2 - result_text.get_width() // 2, HEIGHT // 2 + 150))
+        screen.blit(result_text, (GAME_WIDTH // 2 - result_text.get_width() // 2, HEIGHT // 2 + 150))
+
+    # ======= SECCIÓN DE LA CÁMARA =======
+    ret, frame = camera.read()
+    if ret:
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = pygame.surfarray.make_surface(frame)
+        frame = pygame.transform.scale(frame, (CAM_WIDTH, CAM_HEIGHT))
+        screen.blit(frame, cam_section)
+
+    # ======= SECCIÓN DE INSTRUCCIONES =======
+    pygame.draw.rect(screen, BLACK, instruction_section)
+    instructions = [
+        "Instrucciones:",
+        "1. Traza el número mostrado.",
+        "2. Presiona 'Evaluar'", "      para comprobar tu trazo.",
+        "3. Usa 'Anterior' y 'Siguiente'", "        para cambiar de número.",
+    ]
+    for i, line in enumerate(instructions):
+        text_surface = instruction_font.render(line, True, WHITE)
+        screen.blit(text_surface, (GAME_WIDTH + 10, CAM_HEIGHT + 10 + i * 30))
 
     # Manejo de eventos
     for event in pygame.event.get():
@@ -309,5 +362,6 @@ while running:
     pygame.display.flip()
 
 # Salir de Pygame
+camera.release()
 pygame.quit()
 sys.exit()

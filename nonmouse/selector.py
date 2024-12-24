@@ -4,6 +4,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import os
 from.instruccJuego4 import mostrar_instrucciones
+import subprocess
 from .datosGlobales import set_game_active, set_instruction_active,get_game_active
 
 
@@ -71,6 +72,7 @@ def main_selector():
         set_game_active(2) 
         root.destroy()
         messagebox.showinfo("Juego", "¡Escribir Números seleccionado!")
+        subprocess.run(["python", "nonmouse/juego2.py"])
 
     def presionar_colores():
         set_game_active(3) 
