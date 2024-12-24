@@ -116,8 +116,8 @@ def instructions_game4(game_frame):
         limpiar_canvas()
         root_window = carrusel_canva.winfo_toplevel()
         root_window.destroy()
-        set_instruction_active(False) #Activar flags normales de mouse
-        game_window = GameWindow("Juego4: Pellizca el insecto")
+        set_instruction_active(False) #Activar flags normales de mpellizco
+        game_window = GameWindow("Juego4: Pellizca el insecto", is_instruction = False)
         game_window.setGameFrame(logicaJuego4)
         game_window.run()
 

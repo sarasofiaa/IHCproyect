@@ -15,18 +15,17 @@ import math
 class GameWindow:
     current_instance = None
 
-    def __init__(self,gameName, is_instruction= False):
+    def __init__(self,gameName, is_instruction = False):
         self.root = tk.Tk()
         self.root.title(gameName) #Se asigna el nombre del juego llamado al crear el objeto
-        set_instruction_active(value=is_instruction)
+        set_instruction_active(is_instruction)
         if is_instruction:
-
             self.root.state('normal')
         else:
             self.root.attributes('-fullscreen', True)
             self.root.bind('<Escape>', self.exit_fullscreen)
         GameWindow.current_instance = self
-    
+            
         #COLORES
         color_principal = "#141240" #Azul
         color_botones = "#4f722a" #Verde
@@ -195,31 +194,33 @@ class GameWindow:
         landmark8 = [calculate_moving_average(hand_landmarks.landmark[8].x, self.ran, self.list8x),
                     calculate_moving_average(hand_landmarks.landmark[8].y, self.ran, self.list8y)]
 
+
         # Calcular movimiento del mouse
         nowX = calculate_moving_average(hand_landmarks.landmark[8].x, self.ran, self.LiTx)
         nowY = calculate_moving_average(hand_landmarks.landmark[8].y, self.ran, self.LiTy)
-        
+            
         dx = self.kando * (nowX - self.preX) * self.cap_width
         dy = self.kando * (nowY - self.preY) * self.cap_height
-        
+                
         self.preX = nowX
         self.preY = nowY
 
-        # Mover el mouse
+            # Mover el mouse
         screen_width = self.root.winfo_screenwidth()
         screen_height = self.root.winfo_screenheight()
         current_x, current_y = self.mouse.position
 
         new_x = max(0, min(screen_width, current_x + dx))
         new_y = max(0, min(screen_height, current_y + dy))
-        
+                
         self.mouse.position = (new_x, new_y)
-    
 
 #AQUI ESTA LA LOGICA SEGUN EL TIPO DE JUEGO ESCOGIDO FLAGS
         #JUEGO 4 PELIZCA EL insecto        
         if get_game_active() == 4:
             if get_instruction_active()  == True:
+                #Ocultar el mouse
+                self.root.configure(cursor="None")
                 # Puntos clave para detectar el deslizamiento
                 wrist = hand_landmarks.landmark[self.mp_hands.HandLandmark.WRIST]
                 thumb_tip = hand_landmarks.landmark[self.mp_hands.HandLandmark.THUMB_TIP]
@@ -267,9 +268,7 @@ class GameWindow:
                 
                 if thumb_up and fingers_closed:
                     try:
-                        print("Intentando generar evento StartGame")
                         self.root.event_generate('<<StartGame>>')
-                        print("Evento StartGame generado exitosamente")
                     except Exception as e:
                         print(f"Error al generar evento: {e}")
                     return True
@@ -278,7 +277,6 @@ class GameWindow:
             #self.update_game4_info()
             # Detectar gesto de pellizco
             else:
-                print(get_instruction_active())
                 distancia_pellizco = calculate_distance(landmark4, landmark8)
                 if distancia_pellizco < 0.05:
                     self.mouse.press(Button.left)
@@ -287,7 +285,8 @@ class GameWindow:
                             hand_landmarks.landmark[8].x * image.shape[1],  # Use image width
                             hand_landmarks.landmark[8].y * image.shape[0],  # Use image height 
                             20, (255, 105, 180))
-                #Dibujar el juego en el frame donde va el juego
+                
+                #
 
     def update_camera(self):
         success, image = self.cap.read()

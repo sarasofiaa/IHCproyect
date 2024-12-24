@@ -11,7 +11,7 @@ from .datosGlobales import set_game_active, set_instruction_active,get_game_acti
 def main_selector():
     root = tk.Tk()
     root.title("SkillPointer")
-    root.geometry("800x550")
+    root.geometry("800x500")
 
     # Crear título centrado
     
@@ -62,15 +62,6 @@ def main_selector():
 
 
     # Funciones para cada juego AQUI CADA UNO LLAME A SUS JUEGOS EN NUEVO ARCHIVO JUEGO4 EJEMPLO
-    def escribir_letras():
-        set_game_active(1) 
-        root.destroy()
-        messagebox.showinfo("Juego", "¡Escribir Letras seleccionado!")
-
-    def escribir_numeros():
-        set_game_active(2) 
-        root.destroy()
-        messagebox.showinfo("Juego", "¡Escribir Números seleccionado!")
 
     def presionar_colores():
         set_game_active(3) 
@@ -95,27 +86,19 @@ def main_selector():
 
     # Construir las rutas relativas con os.path.join()
     base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene el directorio del script
-    ruta_letras = os.path.join(base_dir, "..", "images", "juego1.png")
-    ruta_numeros = os.path.join(base_dir, "..", "images", "juego2.png")
     ruta_colores = os.path.join(base_dir, "..", "images", "juego3.png")
     ruta_animales = os.path.join(base_dir, "..", "images", "juego4.png")
     # Cargar imágenes
-    imagen_letras = cargar_imagen_desde_ruta(ruta_letras)
-    imagen_numeros = cargar_imagen_desde_ruta(ruta_numeros)
     imagen_colores = cargar_imagen_desde_ruta(ruta_colores)
     imagen_animales = cargar_imagen_desde_ruta(ruta_animales)
 
     # Crear botones con imágenes para cada juego
-    boton_letras = tk.Button(root, text="Escribir Letras", image=imagen_letras, compound="bottom", font=("Arial", 14), bg="#31e7d1", command=escribir_letras, width=20, height=20)
-    boton_numeros = tk.Button(root, text="Escribir Números", image=imagen_numeros, compound="bottom", font=("Arial", 14), bg="#7CB755", command=escribir_numeros, width=20, height=20)
     boton_colores = tk.Button(root, text="Presionar Colores", image=imagen_colores, compound="bottom", font=("Arial", 14), bg="#f1d6bb", command=presionar_colores, width=20, height=20)
-    boton_animales = tk.Button(root, text="Presionar Animales", image=imagen_animales, compound="bottom", font=("Arial", 14), bg="#beca68", command=presionar_animales, width=20, height=20)
+    boton_animales = tk.Button(root, text="Pellizca el insecto", image=imagen_animales, compound="bottom", font=("Arial", 14), bg="#beca68", command=presionar_animales, width=20, height=20)
 
     # Colocar los botones con el método 'place()' en posiciones específicas con tamaños definidos
-    boton_letras.place(x=150, y=120, width=200, height=200)
-    boton_numeros.place(x=450, y=120, width=200, height=200)
-    boton_colores.place(x=150, y=340, width=200, height=200)
-    boton_animales.place(x=450, y=340, width=200, height=200)
+    boton_colores.place(x=100, y=140, width=250, height=250)
+    boton_animales.place(x=430, y=140, width=250, height=250)
 
     root.mainloop()
 
