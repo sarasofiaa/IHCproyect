@@ -2,14 +2,10 @@ import pygame
 import sys
 import math
 import cv2
+from utils3 import detect_gesture, close_camera
 
 # Inicializar Pygame
 pygame.init()
-
-# Configuración de la ventana
-#WIDTH, HEIGHT = 800, 600
-#screen = pygame.display.set_mode((WIDTH, HEIGHT))
-#pygame.display.set_caption("Traza el número")
 
 # Configuración de la ventana
 WIDTH, HEIGHT = 1400, 600  # Ancho ampliado para la cámara y las instrucciones
@@ -19,6 +15,9 @@ INST_HEIGHT = 300         # Altura para las instrucciones
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Traza el número")
+
+# Definir la región en la que se mostrará la cámara
+cam_section = pygame.Rect(0, 0, CAM_WIDTH, CAM_HEIGHT)  # Región donde se mostrará la imagen de la cámara
 
 # Inicializar la cámara
 camera = cv2.VideoCapture(0)  # Usar la cámara predeterminada
@@ -255,6 +254,21 @@ def evaluate_path():
 # Bucle principal
 running = True
 while running:
+    ret, frame = camera.read()
+    if ret:
+        gesture = detect_gesture(frame)  # Detectar gesto
+
+        # Usar el gesto detectado para controlar el juego
+        if gesture == "click":
+            # Implementar acción para "clic" en el juego
+            print("Gesto detectado: clic")
+
+        # Mostrar la imagen de la cámara procesada
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = pygame.surfarray.make_surface(frame)
+        frame = pygame.transform.scale(frame, (CAM_WIDTH, CAM_HEIGHT))
+        screen.blit(frame, cam_section)
+        
     # Llenar la pantalla con el color de fondo actual
     screen.fill(background_colors[current_color_index])
 
