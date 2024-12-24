@@ -92,26 +92,10 @@ def instructions_game4(game_frame):
         limpiar_canvas()
         estado['indice_actual'] = (estado['indice_actual'] + 1) % len(rutas_gifs)
         
-        if estado['indice_actual'] == len(rutas_gifs) - 1:
-            boton_siguiente.destroy()
-            crear_boton_jugar()
         
         mostrar_gif(estado['indice_actual'])
     
-    def crear_boton_jugar():
-        boton_jugar = tk.Button(
-            carrusel_canva,
-            text="JUGAR",
-            command=jugar,
-            fg="white",
-            bg="#4CAF50",
-            font=("Arial", 14, "bold"),
-            relief="flat",
-            padx=20,
-            pady=10
-        )
-        boton_jugar.place(x=500, y=440)
-    
+
     def jugar():
         limpiar_canvas()
         root_window = carrusel_canva.winfo_toplevel()
@@ -125,14 +109,6 @@ def instructions_game4(game_frame):
         if not estado['canvas_ready']:
             estado['canvas_ready'] = True
             mostrar_gif(estado['indice_actual'])
-
-    # Botón siguiente
-    boton_siguiente = tk.Button(
-        carrusel_canva, 
-        text="Siguiente", 
-        command=siguiente_gif
-    )
-    boton_siguiente.place(x=700, y=550)
     
     window = GameWindow.get_current_instance()
     if window and window.root:
