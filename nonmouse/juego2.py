@@ -2,7 +2,7 @@ import pygame
 import sys
 import math
 import cv2
-from utils3 import detect_gesture, close_camera
+from utils3 import detect_gesture
 
 # Inicializar Pygame
 pygame.init()

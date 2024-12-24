@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import math
+import numpy as np
 
 # Inicializar MediaPipe para detección de manos
 mp_hands = mp.solutions.hands
@@ -23,17 +24,15 @@ def detect_gesture(frame):
             wrist = landmarks.landmark[mp_hands.HandLandmark.WRIST]
             index_finger = landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
 
-            # Calcular la distancia entre la muñeca y el dedo índice para detectar un "gesto de clic"
-            wrist_x, wrist_y = int(wrist.x * frame.shape[1]), int(wrist.y * frame.shape[0])
-            index_x, index_y = int(index_finger.x * frame.shape[1]), int(index_finger.y * frame.shape[0])
+            # Si la distancia entre el pulgar y el índice es pequeña, podría indicar un clic
+            thumb_tip = landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP]
+            index_tip = landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
 
-            distance = math.sqrt((index_x - wrist_x) ** 2 + (index_y - wrist_y) ** 2)
+            # Calcular la distancia entre el pulgar y el índice (simple ejemplo)
+            distance = np.sqrt((thumb_tip.x - index_tip.x) ** 2 + (thumb_tip.y - index_tip.y) ** 2)
 
-            # Si la distancia es suficientemente pequeña, consideramos un gesto de "clic"
-            if distance < 50:
-                return "click"  # El gesto es un clic
-            else:
-                return "no_click"  # No hay clic
+            if distance < 0.05:  # Si la distancia es pequeña, detectar un "click"
+                return "click"
 
     # Si no se detectan manos
     return "no_hand"
