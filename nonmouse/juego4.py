@@ -141,7 +141,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
         # Actualizar la imagen en el canvas con una etiqueta "gif" para poder eliminarla después
         canvas.create_image(pos_x, pos_y, image=frame, anchor=NW, tags=tag)
         # Mover el GIF hacia la izquierda
-        pos_x -= 5  # Ajustar este valor para controlar la velocidad del movimiento
+        pos_x -= 9  # Ajustar este valor para controlar la velocidad del movimiento
 
         # Si el gif ha llegado al borde izquierdo, lo reiniciamos
         posDesaparece = 120
@@ -169,7 +169,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
 
         # Reprograma la actualización del GIF
-        gif_ids[tag] = root.after(100, update_gif, ind, frames_resized, tag, pos_x, pos_y, grupo)  # Número que regula la velocidad del gif
+        gif_ids[tag] = root.after(130, update_gif, ind, frames_resized, tag, pos_x, pos_y, grupo)  # Número que regula la velocidad del gif
 
     # Generar GIFs repetidamente
     def generar_gifs_repetidamente():
