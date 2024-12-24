@@ -41,7 +41,7 @@ class GameWindow:
         self.main_frame.pack(expand=True, fill='both')
 
         # Frame para el juego (lado izquierdo) Se tiene que reemplazar con cada juego en especifico
-        self.game_frame = tk.Frame(self.main_frame, width=1250, height=950)
+        self.game_frame = tk.Frame(self.main_frame, bg= color_principal, width=1250, height=950)
         self.game_frame.pack(side='left', expand=True, fill='both')
 
         # Contenedor vertical para cámara y descripción
@@ -272,9 +272,7 @@ class GameWindow:
                     except Exception as e:
                         print(f"Error al generar evento: {e}")
                     return True
-            # Funcion de desplazar en las instrucciones
-            # Mostrar el mensaje de info del juego
-            #self.update_game4_info()
+            
             # Detectar gesto de pellizco
             else:
                 distancia_pellizco = calculate_distance(landmark4, landmark8)

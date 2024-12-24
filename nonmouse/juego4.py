@@ -12,7 +12,6 @@ insects_pass = 0  # Puntaje de insectos pasados
 pet_pass = 0  # Puntaje de mascotas pasadas
 insectos_pellizcados = 0  
 mascotas_pellizcadas = 0
-error = 0  # ¿Para qué se usaría este? Puedes aclararlo si lo necesitas
 tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
 posiciones_y = [80, 180, 280, 380, 480]
 pasaron_gifs = set()  # Conjunto para almacenar los GIFs que ya han pasado
@@ -372,50 +371,7 @@ def mostrar_resultado(root, mensaje):
     canvas.image = fondo_tk
 
     root.wait_window(ventana_resultado)  # Esperar hasta que la ventana sea cerrada
-
-
-"""
-def logicaJuego4(frame):
-    # Fondo en canvas
-    base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
-    ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
-
-    # Carga de gifs
-    ruta_insecto1 = os.path.join(base_dir, "..", "images", "juego4", "insecto1.gif")
-    ruta_insecto2 = os.path.join(base_dir, "..", "images", "juego4", "insecto2.gif")
-    ruta_insecto3 = os.path.join(base_dir, "..", "images", "juego4", "insecto3.gif")
-    ruta_insecto4 = os.path.join(base_dir, "..", "images", "juego4", "insecto4.gif")
-    ruta_mascota1 = os.path.join(base_dir, "..", "images", "juego4", "perro1.gif")
-    ruta_mascota2 = os.path.join(base_dir, "..", "images", "juego4", "perro2.gif")
-    ruta_mascota3 = os.path.join(base_dir, "..", "images", "juego4", "perro3.gif")
-    ruta_mascota4 = os.path.join(base_dir, "..", "images", "juego4", "perro4.gif")
-
-    root = Tk()
-
-    # Configuramos el canvas dentro del frame proporcionado
-    canvas = Canvas(frame, width=1100, height=600)  # Crear el canvas dentro del frame
-    canvas.pack()  # O usa .grid() o .place() si prefieres otro layout
-
-    # Normalizar las rutas para asegurarse de que usan las barras invertidas correctamente
-    ruta_gif_insecto1_normalizada = os.path.normpath(ruta_insecto1)
-    ruta_gif_insecto2_normalizada = os.path.normpath(ruta_insecto2)
-    ruta_gif_insecto3_normalizada = os.path.normpath(ruta_insecto3)
-    ruta_gif_insecto4_normalizada = os.path.normpath(ruta_insecto4)
-    ruta_gif_mascota1_normalizada = os.path.normpath(ruta_mascota1)
-    ruta_gif_mascota2_normalizada = os.path.normpath(ruta_mascota2)
-    ruta_gif_mascota3_normalizada = os.path.normpath(ruta_mascota3)
-    ruta_gif_mascota4_normalizada = os.path.normpath(ruta_mascota4)
-    ruta_imagen_fondo_normalizada = os.path.normpath(ruta_fondo)
-
-    grupoInsectos = [ruta_gif_insecto1_normalizada, ruta_gif_insecto2_normalizada,ruta_gif_insecto3_normalizada,ruta_gif_insecto4_normalizada]
-    grupoMascotas = [ruta_gif_mascota1_normalizada, ruta_gif_mascota2_normalizada,ruta_gif_mascota3_normalizada,ruta_gif_mascota4_normalizada]
-    crear_gif_con_fondo(root, 
-                        grupoInsectos,  # Lista de insectos
-                        grupoMascotas,  # Lista de mascotas
-                        ruta_imagen_fondo_normalizada, 
-                        width=1100, height=600, gif_height=100)
-    root.mainloop() 
-"""
+    
 def logicaJuego4(frame):
     # Fondo en canvas
     base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
