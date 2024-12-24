@@ -46,7 +46,7 @@ def instrucciones():
         padx=2,
         pady=2,
         anchor="nw"
-    ).place(x=125, y=150)
+    ).place(x=220, y=40)
 
     # Instrucción visual del click
     try:
@@ -85,12 +85,12 @@ def instrucciones():
         justify="left",
         bg="#d4e7ff",
         fg="black",
-        width=45,
-        height=5,
+        width=50,
+        height=12,
         padx=2,
         pady=2,
         anchor="nw"
-    ).place(x=370, y=300)
+    ).place(x=200, y=160)
 
     # Botón de continuar
     def continuar():
