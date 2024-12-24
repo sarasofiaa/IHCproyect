@@ -1,8 +1,10 @@
 from tkinter import *
 import os
 import random
+import pygame
 from PIL import Image, ImageTk
-from .baseJuego import GameWindow
+
+pygame.mixer.init()
 
 # Variables globales
 colores_pad = ["red", "blue", "green", "yellow"]  # Colores del pad
@@ -10,6 +12,15 @@ secuencia = []  # Secuencia de colores generada
 entrada_usuario = []  # Secuencia ingresada por el usuario
 nivel = 1  # Nivel actual
 tiempo = 20000  # Tiempo de juego en milisegundos (20 segundos)
+
+sonidos = {
+    "red": pygame.mixer.Sound(os.path.join("sounds", "Sound1.wav")),
+    "blue": pygame.mixer.Sound(os.path.join("sounds", "Sound2.wav")),
+    "green": pygame.mixer.Sound(os.path.join("sounds", "Sound3.wav")),
+    "yellow": pygame.mixer.Sound(os.path.join("sounds", "Sound4.wav")),
+    "passed": pygame.mixer.Sound(os.path.join("sounds", "passed.wav")),
+    "error": pygame.mixer.Sound(os.path.join("sounds", "error.wav")),
+}
 
 # Crear el pad de colores
 def crear_pad_colores(root, canvas, width, height):
@@ -37,11 +48,12 @@ def generar_secuencia():
 def mostrar_secuencia(canvas):
     """Muestra la secuencia de colores al usuario parpadeando los colores en el pad."""
     for i, color in enumerate(secuencia):
-        canvas.after(i * 1000, lambda c=color: parpadear_color(canvas, c))
+        canvas.after(i * 500, lambda c=color: parpadear_color(canvas, c))
 
 # Hacer parpadear un color
 def parpadear_color(canvas, color):
     """Simula el parpadeo de un color en el canvas."""
+    sonidos[color].play()
     canvas.itemconfig(color, fill="white")
     canvas.after(500, lambda: canvas.itemconfig(color, fill=color))
 
@@ -50,10 +62,12 @@ def verificar_entrada(canvas):
     global secuencia, entrada_usuario, nivel
 
     if entrada_usuario == secuencia:
+        sonidos["passed"].play()
         nivel += 1
         entrada_usuario = []
         canvas.after(1000, iniciar_nivel, canvas)
     elif len(entrada_usuario) >= len(secuencia):
+        sonidos["error"].play()
         print("¡Has perdido!")
         mostrar_resultado(canvas.master, "¡Perdiste! Intenta de nuevo.")
 
@@ -74,6 +88,7 @@ def manejar_click(event, canvas):
     if tags:
         color = tags[0]
         if color in colores_pad:
+            sonidos[color].play()
             entrada_usuario.append(color)
             print("Entrada del usuario:", entrada_usuario)
             verificar_entrada(canvas)
@@ -120,4 +135,4 @@ if __name__ == "__main__":
 
     logicaJuego3(frame_juego)
 
-    root.mainloop()
+    root.mainloop()  # Aquí se ejecuta el bucle principal de Tkinter
