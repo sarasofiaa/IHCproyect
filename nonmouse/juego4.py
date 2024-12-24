@@ -4,8 +4,15 @@ import random
 from PIL import Image, ImageTk
 from .baseJuego import GameWindow
 from tkinter import Toplevel, Label, Button
+import pygame
+# Inicializar pygame
+pygame.mixer.init()  # Esto es necesario para usar los sonidos en pygame
+# Cargar sonidos
+base_dir = os.path.dirname(os.path.abspath(__file__)) 
 
-
+sonido_insecto = pygame.mixer.Sound(os.path.join(base_dir, "..","sonido", "insecto_sound.mp3"))
+sonido_mascota = pygame.mixer.Sound(os.path.join(base_dir, "..","sonido", "mascota_sound.mp3"))
+sonido_general = pygame.mixer.Sound(os.path.join(base_dir, "..","sonido",  "sonido_general.mp3"))
 
 # Variables Globales
 insects_pass = 0  # Puntaje de insectos pasados
@@ -224,9 +231,11 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
             if "insecto" in tag:  # Si el tag contiene "insecto", es un insecto
                 grupo = "insecto"
                 insectos_pellizcados += 1
+                sonido_insecto.play() 
             elif "mascota" in tag:  # Si el tag contiene "mascota", es una mascota
                 grupo = "mascota"
                 mascotas_pellizcadas += 1
+                sonido_mascota.play() 
             else:
                 return  # Si no es ni insecto ni mascota, no hacer nada
 
@@ -374,7 +383,14 @@ def mostrar_resultado(root, mensaje):
     
 def logicaJuego4(frame):
     # Fondo en canvas
+    # Cargar música de fondo
     base_dir = os.path.dirname(os.path.abspath(__file__))  # Obtiene la dirección actual
+    ruta_musica_fondo = os.path.join(base_dir, "..", "sonido", "sonido_general.mp3")  # Ruta a tu archivo MP3
+    
+    # Reproducir música de fondo en bucle
+    pygame.mixer.music.load(ruta_musica_fondo)  # Cargar la música
+    pygame.mixer.music.play(loops=-1, start=0.0)  # Reproducir música en bucle infinito (loops=-1)
+
     ruta_fondo = os.path.join(base_dir, "..", "images", "juego4", "fondoPatio.png")
 
     # Carga de gifs
