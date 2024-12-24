@@ -35,7 +35,7 @@ def crear_gif_con_fondo(root, insectos_rutas, mascotas_rutas, fondo_ruta, width,
 
     # Crear el canvas con las dimensiones de la imagen
     canvas = Canvas(root, width=width, height=height)
-    canvas.pack()
+    canvas.pack(expand=True, padx=(50, 50), pady=(20, 20))
 
     # Cargar la imagen de fondo
     fondo = Image.open(fondo_ruta)
