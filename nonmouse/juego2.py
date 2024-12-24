@@ -254,20 +254,6 @@ def evaluate_path():
 # Bucle principal
 running = True
 while running:
-    ret, frame = camera.read()
-    if ret:
-        gesture = detect_gesture(frame)  # Detectar gesto
-
-        # Usar el gesto detectado para controlar el juego
-        if gesture == "click":
-            # Implementar acción para "clic" en el juego
-            print("Gesto detectado: clic")
-
-        # Mostrar la imagen de la cámara procesada
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = pygame.surfarray.make_surface(frame)
-        frame = pygame.transform.scale(frame, (CAM_WIDTH, CAM_HEIGHT))
-        screen.blit(frame, cam_section)
         
     # Llenar la pantalla con el color de fondo actual
     screen.fill(background_colors[current_color_index])
@@ -334,10 +320,28 @@ while running:
     # ======= SECCIÓN DE LA CÁMARA =======
     ret, frame = camera.read()
     if ret:
+        # Detectar gestos en la imagen de la cámara
+        gesture = detect_gesture(frame)
+        
+        # Usar el gesto detectado para controlar el juego
+        if gesture == "click":
+            # Implementar acción para "clic" en el juego
+            print("Gesto detectado: clic")
+
+        # Rotar la imagen -90 grados (sentido antihorario)
+        frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
+        # Convertir la imagen de la cámara de BGR a RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = pygame.surfarray.make_surface(frame)
-        frame = pygame.transform.scale(frame, (CAM_WIDTH, CAM_HEIGHT))
-        screen.blit(frame, cam_section)
+
+        # Convertir la imagen de la cámara (numpy array) a una superficie de Pygame
+        frame_surface = pygame.surfarray.make_surface(frame)
+
+        # Escalar la imagen para que se ajuste al tamaño de la región definida
+        frame_surface = pygame.transform.scale(frame_surface, (CAM_WIDTH, CAM_HEIGHT))
+
+        # Dibujar la imagen de la cámara en la pantalla en la región especificada
+        screen.blit(frame_surface, cam_section)
 
     # ======= SECCIÓN DE INSTRUCCIONES =======
     pygame.draw.rect(screen, BLACK, instruction_section)
