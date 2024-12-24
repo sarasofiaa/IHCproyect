@@ -14,14 +14,14 @@ def instrucciones():
         base_dir = os.path.dirname(os.path.abspath(__file__))
         project_dir = os.path.dirname(base_dir)
         ruta_imagen_fondo = os.path.join(project_dir, "images", "juego3", "fondo.jpg")
+        print(f"Ruta absoluta de la imagen de fondo: {ruta_imagen_fondo}")
 
         imagen_fondo = Image.open(ruta_imagen_fondo)
-        imagen_fondo = imagen_fondo.resize((1000, 600), Image.ANTIALIAS)
         fondo_tk = ImageTk.PhotoImage(imagen_fondo)
 
         fondo_label = tk.Label(root, image=fondo_tk)
-        fondo_label.place(relwidth=1, relheight=1)
-        fondo_label.image = fondo_tk
+        fondo_label.place(relwidth=1, relheight=1)  # Ocupa todo el fondo
+        fondo_label.image = fondo_tk  # Mantiene una referencia para evitar que se libere
     except Exception as e:
         print(f"No se pudo cargar la imagen de fondo: {e}")
 
@@ -41,7 +41,7 @@ def instrucciones():
         justify="center",
         bg="#d4e7ff",
         fg="black",
-        width=42,
+        width=45,
         height=5,
         padx=2,
         pady=2,
@@ -85,7 +85,7 @@ def instrucciones():
         justify="left",
         bg="#d4e7ff",
         fg="black",
-        width=42,
+        width=45,
         height=5,
         padx=2,
         pady=2,
