@@ -2,6 +2,7 @@ import pygame
 import sys
 import math
 import cv2
+import random
 from utils3 import detect_gesture
 
 # Inicializar Pygame
@@ -52,14 +53,15 @@ background_colors = [
     (0, 0, 255),      # Blue
     (255, 255, 0),    # Yellow
     (128, 0, 128),    # Purple
-    (255, 0, 0),      # Red
+    (255, 100, 10),      # Red
     (0, 255, 255),    # Cyan
     (255, 20, 147),   # Deep pink
-    (0, 255, 0),      # Lime
+    (100, 255, 100),      # Lime
 ]
 
 # Fuente para textos
 font = pygame.font.SysFont(None, 500)  # Fuente para el número
+score_font = pygame.font.SysFont(None, 40)  # Fuente para el puntaje
 button_font = pygame.font.SysFont(None, 40)  # Fuente para los botones
 instruction_font = pygame.font.SysFont(None, 30)  # Fuente para las instrucciones
 
@@ -215,21 +217,24 @@ number_paths = {
 # Función para cambiar al siguiente número y color
 def next_number():
     global current_number, current_color_index, user_path, message
-    current_number = (current_number + 1) % 10  # Ciclo entre 0 y 9
-    current_color_index = (current_color_index + 1) % len(background_colors)
+    current_number = random.randint(0, 9)  # Número aleatorio entre 0 y 9
+    current_color_index = random.randint(0, len(background_colors) - 1)  # Índice aleatorio para el color
     user_path = []  # Limpiar el trazo al cambiar de número
     message = ""
 
 # Función para cambiar al número anterior y color
 def previous_number():
     global current_number, current_color_index, user_path, message
-    current_number = (current_number - 1) % 10  # Ciclo entre 0 y 9
-    current_color_index = (current_color_index - 1) % len(background_colors)
+    current_number = random.randint(0,9) # Ciclo entre 0 y 9
+    current_color_index = random.randint(0, len(background_colors) - 1)  # Índice aleatorio para el color
     user_path = []  # Limpiar el trazo al cambiar de número
     message = ""
 
+# Inicializar el puntaje
+score = 0.0
+
 def evaluate_path():
-    global message
+    global message, score
     if current_number not in number_paths:
         message = "Número no implementado"
         return
@@ -241,7 +246,12 @@ def evaluate_path():
     )
     
     accuracy = correct_points / len(user_path) if user_path else 0
-    message = "Correcto" if correct_points >= (len(target_path) * 0.25) and accuracy > 0.8 else "Incorrecto"
+    if correct_points >= (len(target_path) * 0.05) and accuracy > 0.8:
+        message = "Correcto"
+        score = score + 1.0 
+    else:
+        message = "Incorrecto"
+        score = score - 0.5
     
     # Mostrar las estadísticas en la consola
     print(f"Evaluación del trazo para el número {current_number}:")
@@ -311,6 +321,10 @@ while running:
     # Dibujar el trazo del usuario
     if len(user_path) > 1:  # Asegurarse de que haya al menos 2 puntos
         pygame.draw.lines(screen, WHITE, False, user_path, 15)
+    
+    # Renderizar el puntaje en texto
+    score_text = score_font.render(f"Score: {score}", True, (0, 0, 0))  # Blanco
+    screen.blit(score_text, (10, 10))  # Posición en la esquina superior izquierda
 
     # Mostrar mensaje de evaluación
     if message:
@@ -348,8 +362,9 @@ while running:
     instructions = [
         "Instrucciones:",
         "1. Traza el número mostrado.",
-        "2. Presiona 'Evaluar'", "      para comprobar tu trazo.",
-        "3. Usa 'Anterior' y 'Siguiente'", "        para cambiar de número.",
+        "2. Cierra la mano para", "     empezar a dibujar.",
+        "3. Presiona 'Evaluar'", "      para comprobar tu trazo.",
+        "4. Usa 'Anterior' y 'Siguiente'", "        para cambiar de número.",
     ]
     for i, line in enumerate(instructions):
         text_surface = instruction_font.render(line, True, WHITE)
